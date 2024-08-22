@@ -58,6 +58,8 @@ func registerRoute(r *gin.Engine, handle *jwt.GinJWTMiddleware) {
 	r.POST("/login", handle.LoginHandler)
 	r.NoRoute(handle.MiddlewareFunc(), handleNoRoute())
 
+	r.GET("/", handleBase())
+
 	auth := r.Group("/auth", handle.MiddlewareFunc())
 	auth.GET("/refresh_token", handle.RefreshHandler)
 	auth.GET("/hello", helloHandler)
@@ -157,6 +159,15 @@ func handleNoRoute() func(c *gin.Context) {
 		claims := jwt.ExtractClaims(c)
 		log.Printf("NoRoute claims: %#v\n", claims)
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
+	}
+}
+
+func handleBase() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		claims := jwt.ExtractClaims(c)
+		log.Printf("kek claims: %#v\n", claims)
+		//c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
+		c.File("public/index.html")
 	}
 }
 
