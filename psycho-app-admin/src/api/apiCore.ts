@@ -55,8 +55,8 @@ function addToHeaderCors(config: InternalAxiosRequestConfig<any>){
     if (!config.headers){
         return
     }
-    config.headers["Access-Control-Allow-Origin"] = "*"
-    config.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
+    // config.headers["Access-Control-Allow-Origin"] = "*"
+    // config.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
 }
 
 function generateUrl(baseUrl: string, urlParams: Array<string>): string {
