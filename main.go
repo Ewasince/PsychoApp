@@ -55,12 +55,14 @@ func main() {
 }
 
 func registerRoute(r *gin.Engine, handle *jwt.GinJWTMiddleware) {
-	r.POST("/login", handle.LoginHandler)
 	r.NoRoute(handle.MiddlewareFunc(), handleNoRoute())
 
-	r.GET("/", handleBase())
+	//r.GET("/", handleBase())
 
-	auth := r.Group("/auth", handle.MiddlewareFunc())
+	api := r.Group("/api")
+	api.POST("login", handle.LoginHandler)
+
+	auth := api.Group("/auth", handle.MiddlewareFunc())
 	auth.GET("/refresh_token", handle.RefreshHandler)
 	auth.GET("/hello", helloHandler)
 }

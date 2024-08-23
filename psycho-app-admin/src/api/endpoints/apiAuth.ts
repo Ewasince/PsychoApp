@@ -2,10 +2,10 @@
 import {makeGet, makePost} from "../apiCore";
 
 
+export const LOGIN_URL = "api/login";
 export const SIGN_UP_STUDENT_URL = "api/auth/student/register";
 export const SIGN_UP_TUTOR_URL = "api/auth/tutor/register";
 // export const SIGN_UP_SUPPORT_URL = "api/auth/support/register";
-export const LOGIN_URL = "api/auth/token";
 export const REFRESH_URL = "api/auth/refresh";
 export const GET_ME_URL = "api/auth";
 // auth
