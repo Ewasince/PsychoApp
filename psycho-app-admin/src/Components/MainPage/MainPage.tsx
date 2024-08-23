@@ -11,6 +11,7 @@ import account from "../../images/account.png"
 import {goToAuthUser, handleError} from "../../core/errors";
 
 import {exitUser, isUserEntered} from "../../api/userControl";
+import {getToastContainer} from "../componetsCore";
 
 export const MainPage = () => {
     const [currentPage, setCurrentPage] = useState<string>("/dashboard")
@@ -88,6 +89,7 @@ export const MainPage = () => {
             <div className="w-full min-h-full p-4 md:p-6 xl:p-8">
                 <Outlet/>
             </div>
+            {getToastContainer()}
         </div>
     );
 };
