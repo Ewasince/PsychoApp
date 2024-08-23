@@ -11,6 +11,11 @@
 // import {goToAuthUser, handleError} from "../../core/errors";
 // import {isUserEntered, exitUser} from "../../api/apiToken";
 
+import {toast} from "react-toastify";
+import account from "../../../images/account.png";
+import * as React from "react";
+import {setUser} from "../../../api/userControl";
+
 export const Dashboard = () => {
     // const [currentPage, setCurrentPage] = useState<string>("/dashboard")
     // const location = useLocation();
@@ -23,6 +28,25 @@ export const Dashboard = () => {
 
     return <>
         <p>Hello, World!</p>
+
+        <button
+            className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
+            onClick={() => {
+                console.log("tests")
+                setUser()
+                    .then(() => {
+                        toast.info("user was set")
+                    })
+
+            }}
+        >
+            <img
+                src={account}
+                alt={"test"}
+                className="w-[15px] sm:w-[19px]"
+            />
+            <p className="hidden sm:block">{"test"}</p>
+        </button>
 
     </>
 };

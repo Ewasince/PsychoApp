@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -18,12 +19,15 @@ type login struct {
 
 var (
 	identityKey = "id"
+	usernameKey = "username"
 	port        string
 )
 
 // User demo
 type User struct {
-	UserName  string
+	id        float64
+	username  string
+	password  string `private:"true"`
 	FirstName string
 	LastName  string
 }
@@ -33,6 +37,41 @@ func init() {
 	if port == "" {
 		port = "8181"
 	}
+}
+
+//	var users = map[string]User{
+//		"admin": {
+//			id:        10,
+//			username:  "adminUserName",
+//			FirstName: "adminFirstName",
+//			LastName:  "adminLastName",
+//			password:  "admin",
+//		},
+//		"qwer": {
+//			id:        11,
+//			username:  "qwerUserName",
+//			FirstName: "qwerFirstName",
+//			LastName:  "qwerLastName",
+//			password:  "qwer",
+//		},
+//	}
+var usersCreds = map[string]User{}
+var usersByIds = map[float64]User{}
+var users = []User{
+	{
+		id:        0,
+		username:  "admin",
+		FirstName: "adminFirstName",
+		LastName:  "adminLastName",
+		password:  "admin",
+	},
+	{
+		id:        1,
+		username:  "qwer",
+		FirstName: "qwerFirstName",
+		LastName:  "qwerLastName",
+		password:  "qwer",
+	},
 }
 
 func main() {
@@ -51,17 +90,23 @@ func main() {
 		MaxAge: 12 * time.Hour,
 	}))
 
-	// the jwt middleware
+	// add jwt middleware
 	authMiddleware, err := jwt.New(initParams())
 	if err != nil {
 		log.Fatal("JWT Error:" + err.Error())
 	}
-
-	// register middleware
 	engine.Use(handlerMiddleWare(authMiddleware))
 
 	// register route for auth
 	registerRoute(engine, authMiddleware)
+
+	//prepare users data
+	for _, user := range users {
+		usersCreds[user.username] = user
+	}
+	for _, user := range users {
+		usersByIds[user.id] = user
+	}
 
 	// start http server
 	if err = http.ListenAndServe(":"+port, engine); err != nil {
@@ -78,6 +123,7 @@ func registerRoute(r *gin.Engine, handle *jwt.GinJWTMiddleware) {
 	api.POST("login", handle.LoginHandler)
 
 	auth := api.Group("/auth", handle.MiddlewareFunc())
+	auth.GET("/getme", getMeHandler)
 	auth.GET("/refresh_token", handle.RefreshHandler)
 	auth.GET("/hello", helloHandler)
 }
@@ -117,7 +163,8 @@ func payloadFunc() func(data interface{}) jwt.MapClaims {
 	return func(data interface{}) jwt.MapClaims {
 		if v, ok := data.(*User); ok {
 			return jwt.MapClaims{
-				identityKey: v.UserName,
+				identityKey: v.id,
+				usernameKey: v.username,
 			}
 		}
 		return jwt.MapClaims{}
@@ -127,8 +174,20 @@ func payloadFunc() func(data interface{}) jwt.MapClaims {
 func identityHandler() func(c *gin.Context) interface{} {
 	return func(c *gin.Context) interface{} {
 		claims := jwt.ExtractClaims(c)
+
+		fmt.Printf("identityHandler user_id0=%v\n", claims[identityKey])
+		user_id := claims[identityKey].(float64)
+		user := usersByIds[user_id]
+		//if err {
+		//	panic("Cannot find user")
+		//}
+		fmt.Printf("identityHandler user_id=%v\n", user_id)
+		fmt.Printf("identityHandler user=%v\n", user)
 		return &User{
-			UserName: claims[identityKey].(string),
+			id:        user.id,
+			username:  user.username,
+			FirstName: user.FirstName,
+			LastName:  user.LastName,
 		}
 	}
 }
@@ -139,26 +198,34 @@ func authenticator() func(c *gin.Context) (interface{}, error) {
 		if err := c.ShouldBind(&loginVals); err != nil {
 			return "", jwt.ErrMissingLoginValues
 		}
-		userID := loginVals.Username
+		username := loginVals.Username
 		password := loginVals.Password
 
-		if (userID == "admin" && password == "admin") || (userID == "test" && password == "test") {
-			return &User{
-				UserName:  userID,
-				LastName:  "Bo-Yi",
-				FirstName: "Wu",
-			}, nil
+		fmt.Printf("usersCreds=%v\n", usersCreds)
+		fmt.Printf("usersByIds=%v\n", usersByIds)
+
+		user, ok := usersCreds[username]
+
+		if !ok {
+			return nil, jwt.ErrFailedAuthentication
 		}
-		return nil, jwt.ErrFailedAuthentication
+
+		if user.password != password {
+			return nil, jwt.ErrFailedAuthentication
+		}
+
+		return &user, nil
 	}
 }
 
 func authorizator() func(data interface{}, c *gin.Context) bool {
 	return func(data interface{}, c *gin.Context) bool {
-		if v, ok := data.(*User); ok && v.UserName == "admin" {
-			return true
-		}
-		return false
+		//fmt.Printf("authorizator %s\n", data.(*User))
+		//if v, ok := data.(*User); ok && v.UserName == "admin" {
+		//	return true
+		//}
+		//return false.
+		return true
 	}
 }
 
@@ -193,7 +260,24 @@ func helloHandler(c *gin.Context) {
 	user, _ := c.Get(identityKey)
 	c.JSON(200, gin.H{
 		"userID":   claims[identityKey],
-		"userName": user.(*User).UserName,
+		"username": user.(*User).username,
 		"text":     "Hello World.",
+	})
+}
+
+func getMeHandler(c *gin.Context) {
+	//claims := jwt.ExtractClaims(c)
+	user, exists := c.Get(identityKey)
+	if !exists {
+		c.JSON(404, gin.H{"code": "USER_NOT_FOUND", "message": "User not found"})
+		return
+	}
+	userStruct := user.(*User)
+	fmt.Printf("getMeHandler userStruct=%v\n", *userStruct)
+	c.JSON(200, gin.H{
+		"id":       userStruct.id,
+		"username": userStruct.username,
+		//"FirstName": userStruct.FirstName,
+		//"LastName":  userStruct.LastName,
 	})
 }

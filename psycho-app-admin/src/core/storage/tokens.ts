@@ -1,16 +1,23 @@
 import {IAuthResponse} from "../../api/endpoints/apiAuth";
 
 let ACCESS_TOKEN_KEY = "access_token"
-let REFRESH_TOKEN_KEY = "refresh_token"
+// let REFRESH_TOKEN_KEY = "refresh_token"
+let REFRESH_TOKEN_KEY = ACCESS_TOKEN_KEY
+let EXPIRE_TOKEN_KEY = "expire_token"
 
 
-export function setTokens(tokensData: IAuthResponse) {
-    localStorage.setItem(ACCESS_TOKEN_KEY, tokensData.access_token);
-    localStorage.setItem(REFRESH_TOKEN_KEY, tokensData.refresh_token);
+export function setTokenData(tokensData: IAuthResponse) {
+    setAccessToken(tokensData.token)
+    setAccessTokenExpire(tokensData.expire)
+    // localStorage.setItem(REFRESH_TOKEN_KEY, tokensData.refresh_token);
 }
 
-export function saveAccessToken(access_token: string) {
+export function setAccessToken(access_token: string) {
     localStorage.setItem(ACCESS_TOKEN_KEY, access_token);
+}
+
+export function setAccessTokenExpire(expire: string) {
+    localStorage.setItem(EXPIRE_TOKEN_KEY, expire);
 }
 
 export function getAccessToken(): string {
@@ -23,9 +30,14 @@ export function getRefreshToken(): string {
     return token || ''
 }
 
+export function getAccessTokenExpire(): Date | undefined {
+    const expire_date = localStorage.getItem(EXPIRE_TOKEN_KEY)
+    return expire_date ? new Date(expire_date) : undefined
+}
+
 export function clearTokens() {
-    setTokens({
-        access_token: '',
-        refresh_token: '',
+    setTokenData({
+        token: '',
+        expire: '',
     })
 }

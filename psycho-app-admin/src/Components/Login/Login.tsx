@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {handleError} from "../../core/errors";
-import {setTokens} from "../../core/storage/tokens";
+import {setTokenData} from "../../core/storage/tokens";
 import {toast} from "react-toastify";
 
 import {getMe, IAuthResponse, postLogin, postSingUpStudent, postSingUpTutor} from "../../api/endpoints/apiAuth";
@@ -67,15 +67,15 @@ export function Login() {
                 // if (!res) {
                 //     return
                 // }
-                const response: IAuthResponse = res.data;
-                setTokens(response)
+                const tokenData: IAuthResponse = res.data;
+                setTokenData(tokenData)
                 setUser()
                     .then(navigateToDashboard)
             })
             .catch(err => {
                 if (err?.response?.status === 401) {
                     // wrong login and pass!!!
-                    toast.success("Неправильный логин и/или пароль!")
+                    toast.error("Неправильный логин и/или пароль!")
                     return
                 }
                 handleError(err, navigate)
@@ -103,7 +103,7 @@ export function Login() {
                     return
                 }
                 const keys: IAuthResponse = res.data;
-                setTokens(keys)
+                setTokenData(keys)
                 setUser()
 
                 navigate("/dashboard")

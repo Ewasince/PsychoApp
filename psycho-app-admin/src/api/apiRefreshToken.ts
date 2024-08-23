@@ -1,4 +1,4 @@
-import {saveAccessToken} from "../core/storage/tokens";
+import {setAccessToken} from "../core/storage/tokens";
 import {handleError} from "../core/errors";
 import {IAuthResponse, postRefresh} from "./endpoints/apiAuth";
 import {setUser} from "./userControl";
@@ -9,8 +9,8 @@ export function refreshToken(callback: (code: any) => void) {
             // if (!res) {
             //     return
             // }
-            const keys: IAuthResponse = res.data;
-            saveAccessToken(keys.access_token);
+            const tokenData: IAuthResponse = res.data;
+            setAccessToken(tokenData.token);
             setUser();
             callback(200);
         })
