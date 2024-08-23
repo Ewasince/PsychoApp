@@ -4,7 +4,7 @@ import {makeGet, makePost} from "../apiCore";
 
 export const LOGIN_URL = "api/login";
 export const REFRESH_URL = "api/auth/refresh_token";
-export const GET_ME_URL = "api/auth/getme";
+export const GET_ME_URL = "api/auth/get_me";
 
 export const SIGN_UP_STUDENT_URL = "api/auth/student/register";
 export const SIGN_UP_TUTOR_URL = "api/auth/tutor/register";

@@ -123,7 +123,7 @@ func registerRoute(r *gin.Engine, handle *jwt.GinJWTMiddleware) {
 	api.POST("login", handle.LoginHandler)
 
 	auth := api.Group("/auth", handle.MiddlewareFunc())
-	auth.GET("/getme", getMeHandler)
+	auth.GET("/get_me", getMeHandler)
 	auth.GET("/refresh_token", handle.RefreshHandler)
 	auth.GET("/hello", helloHandler)
 }
