@@ -1,13 +1,132 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url(./fonts/stylesheet.css);
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+
+  --primary-color: #161819;
+  --secondary-color: #252728;
+  --blue-color: #275FEC;
+  --font-color: #fff;
+  --font-opacity-color: #ffffff50;
+
+  /* this is the default value below*/
+
+  --toastify-color-light: #fff;
+  --toastify-color-dark: #121212;
+  --toastify-color-info: #275eea;
+  --toastify-color-error: #fd8b00;
+
+  /*--toastify-color-success: #07bc0c;*/
+  /*--toastify-color-warning: #f1c40f;*/
+  /*--toastify-color-transparent: rgba(255, 255, 255, 0.7);*/
+
+  /*--toastify-toast-width: 999px;*/
+
+  /*!*--toastify-color-progress-dark: #bb86fc;*!*/
+  /*!*--toastify-color-progress-info: var(--toastify-color-info);*!*/
+  /*!*--toastify-color-progress-success: var(--toastify-color-success);*!*/
+  /*!*--toastify-color-progress-warning: var(--toastify-color-warning);*!*/
+  /*!*--toastify-color-progress-error: var(--toastify-color-error);*!*/
+
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer base {
+  html, body, #root {
+    height: 100%;
+    font-family: Rubik, system-ui, sans-serif;
+  }
+}
+
+.clickable-img {
+  filter: invert(100%);
+  width: 2em; /* Ширина чекбокса равна размеру шрифта */
+  height: 2em; /* Высота чекбокса равна размеру шрифта */
+  border: 2px solid rgba(0, 0, 0, 255);
+  border-radius: 3px;
+}
+
+.clickable-img:hover {
+  filter: invert(100%) brightness(70%);
+  /*border: 2px solid #000000;*/
+}
+
+.entry-container, .entry-container-disabled {
+  border: 2px solid #1c1c1e; /* Добавляем границы */
+  border-radius: 10px; /* Добавляем закругления углов */
+  /*height: 300px; !* Фиксируем высоту контейнера *!*/
+  padding: 20px; /* Внутренний отступ для элементов внутри */
+}
+
+.entry-container {
+  background-color: #373a3b; /* Цвет фона контейнера */
+}
+
+.entry-container-disabled {
+  background-color: #2d2f2f; /* Цвет фона контейнера */
+}
+
+.checkbox-container, .custom-checkbox, .checkmark {
+  width: 2em; /* Ширина чекбокса равна размеру шрифта */
+  height: 2em; /* Высота чекбокса равна размеру шрифта */
+}
+
+/*img {*/
+/*    filter: invert(100%);*/
+/*    width: 2em; !* Ширина чекбокса равна размеру шрифта *!*/
+/*    height: 2em; !* Высота чекбокса равна размеру шрифта *!*/
+/*    border: 2px solid rgba(0, 0, 0, 255);*/
+/*    border-radius: 3px;*/
+/*}*/
+
+/*img:hover {*/
+/*    filter: invert(100%) brightness(70%);*/
+/*    !*border: 2px solid #000000;*!*/
+/*}*/
+
+/* Общие стили */
+.custom-checkbox {
+  display: inline-block;
+  position: relative;
+  /*padding-left: 25px;*/
+  cursor: pointer;
+}
+
+/* Скрываем стандартный чекбокс */
+.custom-checkbox input[type="checkbox"] {
+  visibility: hidden;
+}
+
+/* Создаем кастомный чекбокс */
+/*.custom-checkbox .checkmark {*/
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /*width: 2em;*/
+  /*height: 2em;*/
+  background-color: transparent;
+  border: 2px solid #fff;
+  border-radius: 3px;
+}
+
+/* Стили для чекбокса при наведении курсора мыши */
+.custom-checkbox input:checked ~ .checkmark {
+  background-color: #3b81f4;
+}
+
+/* Стили галочки при активированном чекбоксе */
+.custom-checkbox input:checked ~ .checkmark:after {
+  content: "";
+  position: absolute;
+  display: block;
+  left: 6px;
+  top: 1px;
+  width: 1em;
+  height: 1em;
+  border: solid #fff;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
 }

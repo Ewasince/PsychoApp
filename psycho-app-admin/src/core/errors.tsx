@@ -1,7 +1,9 @@
 // import {refreshToken} from "../api/apiToken";
 import {NavigateFunction} from "react-router-dom";
-import {isUserEntered, refreshToken} from "../api/apiToken";
+import {refreshToken} from "../api/apiRefreshToken";
 import {getRefreshToken} from "./storage/tokens";
+import {isUserEntered} from "../api/userControl";
+import {toast} from "react-toastify";
 
 let LOCATION_WHEN_NOT_VALID_TOKEN = "/login"
 
@@ -15,6 +17,7 @@ export function handleError(error: any, navigate?: NavigateFunction) {
     if (error.response) {
         if (!navigate) {
             logErrorToConsole()
+            errorToast(error)
             return
         }
         if (error.response.status === 401) {
@@ -38,20 +41,28 @@ export function handleError(error: any, navigate?: NavigateFunction) {
         }
         if (error.response.status !== 403) {
             logErrorToConsole()
+            errorToast(error)
             return
         }
     } else if (error.request) {
+        errorToast(error)
         console.log(error.request);
     } else {
+        errorToast(error)
         console.log('Error', error.message);
     }
-    // console.log(error.config);
 }
 
 export function goToAuthUser(navigate: NavigateFunction) {
     console.log("goToAuthUser")
     navigate(LOCATION_WHEN_NOT_VALID_TOKEN)
 }
+
+function errorToast(error: any) {
+    toast.error("Невозможно выполнить запрос: " + error.message)
+}
+
+
 
 
 

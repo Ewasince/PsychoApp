@@ -2,9 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {handleError} from "../../core/errors";
 import {setTokens} from "../../core/storage/tokens";
+import {toast} from "react-toastify";
 
-import {setUser} from "../../api/apiToken";
 import {getMe, IAuthResponse, postLogin, postSingUpStudent, postSingUpTutor} from "../../api/endpoints/apiAuth";
+import {setUser} from "../../api/userControl";
+import {getToastContainer} from "../componetsCore"
 
 //
 // type ILog = {
@@ -30,6 +32,8 @@ export function Login() {
         getMe()
             .then(() => {
                 navigateToDashboard()
+            })
+            .catch(e => {
             })
     }, []);
 
@@ -69,8 +73,9 @@ export function Login() {
                     .then(navigateToDashboard)
             })
             .catch(err => {
-                if (err.response.status === 401) {
+                if (err?.response?.status === 401) {
                     // wrong login and pass!!!
+                    toast.success("Неправильный логин и/или пароль!")
                     return
                 }
                 handleError(err, navigate)
@@ -240,8 +245,11 @@ export function Login() {
     }
 
     return (
-        <div className="w-full h-fit min-h-full py-10 bg-cover bg-background">
-            {inOut ? getLoginPage() : getRegisterPage()}
-        </div>
+        <>
+            <div className="w-full h-fit min-h-full py-10 bg-cover bg-background">
+                {inOut ? getLoginPage() : getRegisterPage()}
+                {getToastContainer()}
+            </div>
+        </>
     );
 }

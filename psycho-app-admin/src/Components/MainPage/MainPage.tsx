@@ -9,7 +9,8 @@ import account from "../../images/account.png"
 // import {clearConfig, getConfig} from "../../core/storage/config";
 // import {getMe} from "../../api/endpoints/apiAuth";
 import {goToAuthUser, handleError} from "../../core/errors";
-import {isUserEntered, exitUser} from "../../api/apiToken";
+
+import {exitUser, isUserEntered} from "../../api/userControl";
 
 export const MainPage = () => {
     const [currentPage, setCurrentPage] = useState<string>("/dashboard")
@@ -37,7 +38,7 @@ export const MainPage = () => {
 
     if (!isUserEntered()){
         goToAuthUser(navigate)
-        return
+        // return
     }
 
 

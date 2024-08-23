@@ -1,6 +1,6 @@
 // auth
 import {makeGet, makePost} from "../apiCore";
-import {EnumRole} from "../apiToken";
+
 
 export const SIGN_UP_STUDENT_URL = "api/auth/student/register";
 export const SIGN_UP_TUTOR_URL = "api/auth/tutor/register";
@@ -9,6 +9,12 @@ export const LOGIN_URL = "api/auth/token";
 export const REFRESH_URL = "api/auth/refresh";
 export const GET_ME_URL = "api/auth";
 // auth
+
+
+export enum EnumRole {
+    student = "STUDENT",
+    tutor = "TUTOR",
+}
 
 export type IReg = {
     username: string;
@@ -59,4 +65,10 @@ export const postLogin = makePost<ILogin, IAuthResponse>(
 )
 export const getMe = makeGet<IMe>(
     GET_ME_URL,
+)
+
+export const postRefresh = makePost<null, IAuthResponse>(
+    REFRESH_URL,
+    false,
+    true,
 )
