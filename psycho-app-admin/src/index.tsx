@@ -20,6 +20,11 @@ function page404() {
 
 const router = createBrowserRouter([
     {
+        path: "/login",
+        element: <Login/>,
+        errorElement: page404(),
+    },
+    {
         path: "/",
         element: <Login/>,
         errorElement: page404(),

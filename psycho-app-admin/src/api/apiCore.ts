@@ -48,7 +48,7 @@ function addToHeaderToken(config: InternalAxiosRequestConfig<any>, tokenFunc: ()
         return
     }
     const token = tokenFunc()
-    config.headers.Authorization = "Bearer " + token
+    config.headers.Authorization = "Bearer " + token || ''
 }
 
 function addToHeaderCors(config: InternalAxiosRequestConfig<any>){

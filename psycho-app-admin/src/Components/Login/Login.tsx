@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {logError} from "../../core/errors";
-import {saveTokens} from "../../core/storage/tokens";
+import {handleError} from "../../core/errors";
+import {setTokens} from "../../core/storage/tokens";
 
-import {setMyRole} from "../../api/apiToken";
+import {setUser} from "../../api/apiToken";
 import {getMe, IAuthResponse, postLogin, postSingUpStudent, postSingUpTutor} from "../../api/endpoints/apiAuth";
-import {getConfig} from "../../core/storage/config";
 
 //
 // type ILog = {
@@ -36,11 +35,13 @@ export function Login() {
 
 
     function navigateToDashboard() {
-        if (getConfig().accessRights.isStudent) {
-            navigate("/dashboard")
-        } else if (getConfig().accessRights.isTutor) {
-            navigate("/dashboard_tutor")
-        }
+        navigate("/dashboard")
+
+        // if (getConfig().accessRights.isStudent) {
+        //     navigate("/dashboard")
+        // } else if (getConfig().accessRights.isTutor) {
+        //     navigate("/dashboard_tutor")
+        // }
     }
 
     const onInputLog = (e: any) => {
@@ -58,18 +59,22 @@ export function Login() {
             username: email,
             password: password,
         })
-            .catch(err => {
-                logError(err, navigate)
-            })
             .then(res => {
-                if (!res) {
+                // if (!res) {
+                //     return
+                // }
+                const response: IAuthResponse = res.data;
+                setTokens(response)
+                setUser()
+                    .then(navigateToDashboard)
+            })
+            .catch(err => {
+                if (err.response.status === 401) {
+                    // wrong login and pass!!!
                     return
                 }
-                const response: IAuthResponse = res.data;
-                saveTokens(response)
-                setMyRole()
-                    .then(navigateToDashboard)
-            });
+                handleError(err, navigate)
+            })
     }
 
     const onSubmitRegister = (e: any) => {
@@ -86,15 +91,15 @@ export function Login() {
             // isTutor: isTutor,
         })
             .catch(err => {
-                logError(err, navigate)
+                handleError(err, navigate)
             })
             .then(res => {
                 if (!res) {
                     return
                 }
                 const keys: IAuthResponse = res.data;
-                saveTokens(keys)
-                setMyRole()
+                setTokens(keys)
+                setUser()
 
                 navigate("/dashboard")
             });

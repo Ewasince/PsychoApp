@@ -1,12 +1,15 @@
 export type IConfig = {
-    accessRights: {
-        isTutor?: boolean,
-        isStudent?: boolean,
-    },
-    userId?: string,
+    // accessRights: {
+    //     isTutor?: boolean,
+    //     isStudent?: boolean,
+    // },
+    userId: string,
 }
 
-let EMPTY_CONFIG: IConfig = {accessRights: {}}
+let EMPTY_CONFIG: IConfig = {
+    // accessRights: {},
+    userId: ''
+}
 
 export function setConfig(config: IConfig) {
     console.log("config", config)

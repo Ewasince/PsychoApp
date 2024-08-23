@@ -1,8 +1,8 @@
-import {saveAccessToken} from "../core/storage/tokens";
-import {logError} from "../core/errors";
+import {clearTokens, getRefreshToken, saveAccessToken} from "../core/storage/tokens";
+import {handleError} from "../core/errors";
 import {getMe, IAuthResponse, REFRESH_URL} from "./endpoints/apiAuth";
 import {makePost} from "./apiCore";
-import {IConfig, setConfig} from "../core/storage/config";
+import {clearConfig, getConfig, IConfig, setConfig} from "../core/storage/config";
 
 export enum EnumRole {
     student = "STUDENT",
@@ -13,7 +13,7 @@ export enum EnumRole {
 export const refresh = makePost<null, IAuthResponse>(REFRESH_URL, false, true)
 
 
-export function setMyRole() {
+export function setUser() {
     return getMe()
         .then(res => {
             // if (!res) {
@@ -21,20 +21,29 @@ export function setMyRole() {
             // }
             const meResponse = res.data;
             const appConfig: IConfig = {
-                accessRights: {
-                    isTutor: meResponse.role === EnumRole.tutor,
-                    isStudent: meResponse.role === EnumRole.student,
-                },
+                // accessRights: {
+                //     isTutor: meResponse.role === EnumRole.tutor,
+                //     isStudent: meResponse.role === EnumRole.student,
+                // },
                 userId: meResponse.id,
             }
             setConfig(appConfig)
         })
         .catch(error => {
-            logError(error)
+            handleError(error)
         })
 }
 
-export const refreshToken = (callback: (code: any) => void) => {
+export function isUserEntered() {
+    return !!getConfig().userId;
+}
+
+export function exitUser() {
+    clearTokens()
+    clearConfig()
+}
+
+export function refreshToken (callback: (code: any) => void) {
     refresh()
         .then(res => {
             // if (!res) {
@@ -42,13 +51,11 @@ export const refreshToken = (callback: (code: any) => void) => {
             // }
             const keys: IAuthResponse = res.data;
             saveAccessToken(keys.access_token);
-            setMyRole();
+            setUser();
             callback(200);
         })
         .catch(error => {
-            logError(error)
-            if (error.response.status === 401) {
-                callback(401);
-            }
+            handleError(error)
+            callback(error.response.status)
         })
 }

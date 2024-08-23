@@ -1,28 +1,43 @@
 // import {refreshToken} from "../api/apiToken";
 import {NavigateFunction} from "react-router-dom";
+import {isUserEntered, refreshToken} from "../api/apiToken";
+import {getRefreshToken} from "./storage/tokens";
 
-export function logError(error: any, navigate?: NavigateFunction) {
+let LOCATION_WHEN_NOT_VALID_TOKEN = "/login"
 
-    function logErrorInner() {
+export function handleError(error: any, navigate?: NavigateFunction) {
+    function logErrorToConsole() {
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
     }
 
-    // return
     if (error.response) {
-
         if (!navigate) {
-            logErrorInner()
+            logErrorToConsole()
             return
         }
         if (error.response.status === 401) {
-            navigate('/')
-            logErrorInner()
+            if (!isUserEntered()){
+                goToAuthUser(navigate)
+            }
+            if (!getRefreshToken()){
+                goToAuthUser(navigate)
+            }
+
+            refreshToken((err) => {
+                if (err === 200) {
+                    window.location.reload();
+                }
+                logErrorToConsole()
+                if (err === 401) {
+                    goToAuthUser(navigate)
+                }
+            })
             return
         }
         if (error.response.status !== 403) {
-            logErrorInner()
+            logErrorToConsole()
             return
         }
     } else if (error.request) {
@@ -33,8 +48,14 @@ export function logError(error: any, navigate?: NavigateFunction) {
     // console.log(error.config);
 }
 
+export function goToAuthUser(navigate: NavigateFunction) {
+    console.log("goToAuthUser")
+    navigate(LOCATION_WHEN_NOT_VALID_TOKEN)
+}
 
-// export function logError(error: any, navigate?: any, refresh = true) {
+
+
+// export function handleError(error: any, navigate?: any, refresh = true) {
 //
 //     function logErrorInner() {
 //         console.log(error.response.data);
@@ -65,7 +86,7 @@ export function logError(error: any, navigate?: NavigateFunction) {
 //
 //         refreshToken((err) => {
 //             if (err === 401) {
-//                 console.log("logError refreshToken err === 401")
+//                 console.log("handleError refreshToken err === 401")
 //                 logErrorInner()
 //                 navigate('/')
 //                 return

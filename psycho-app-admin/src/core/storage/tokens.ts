@@ -4,7 +4,7 @@ let ACCESS_TOKEN_KEY = "access_token"
 let REFRESH_TOKEN_KEY = "refresh_token"
 
 
-export function saveTokens(tokensData: IAuthResponse) {
+export function setTokens(tokensData: IAuthResponse) {
     localStorage.setItem(ACCESS_TOKEN_KEY, tokensData.access_token);
     localStorage.setItem(REFRESH_TOKEN_KEY, tokensData.refresh_token);
 }
@@ -15,16 +15,16 @@ export function saveAccessToken(access_token: string) {
 
 export function getAccessToken(): string {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY)
-    return token ? token : ''
+    return token || ''
 }
 
 export function getRefreshToken(): string {
     const token = localStorage.getItem(REFRESH_TOKEN_KEY)
-    return token ? token : ''
+    return token || ''
 }
 
 export function clearTokens() {
-    saveTokens({
+    setTokens({
         access_token: '',
         refresh_token: '',
     })
