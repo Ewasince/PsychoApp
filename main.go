@@ -7,6 +7,7 @@ import (
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,6 +37,20 @@ func init() {
 
 func main() {
 	engine := gin.Default()
+
+	// add cors middleware
+	engine.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8181"},
+		AllowMethods:     []string{"POST", "OPTIONS", "GET", "PUT"},
+		AllowHeaders:     []string{"Content-Type", "Content-Length", "Accept-Encoding", "Cache-Control", "Authorization", "Control-Allow-Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		//AllowOriginFunc: func(origin string) bool {
+		//	return origin == "https://github.com"
+		//},
+		MaxAge: 12 * time.Hour,
+	}))
+
 	// the jwt middleware
 	authMiddleware, err := jwt.New(initParams())
 	if err != nil {
