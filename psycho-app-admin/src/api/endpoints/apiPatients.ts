@@ -10,10 +10,24 @@ export type IPatient = {
     lastName:  string
 }
 
+
 export const getPatients = makeGet<IPatient[]>(
     PATIENTS_URL,
 )
 
 export const getPatient = makeGet<IPatient>(
+    PATIENTS_URL,
+)
+
+export type IStory = {
+    id:           number
+    date:         string
+    situation:    string
+    mind:         string
+    emotion:      string
+    emotionPower: number
+}
+
+export const getPatientStories = makeGet<IStory[]>(
     PATIENTS_URL,
 )

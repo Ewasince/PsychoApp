@@ -57,18 +57,16 @@ func main() {
 
 func registerRoute(r *gin.Engine, handle *jwt.GinJWTMiddleware) {
 	r.NoRoute(handle.MiddlewareFunc(), handlers.HandleNoRoute())
-
-	//r.GET("/", handleBase())
-
 	r.POST("/login", handle.LoginHandler)
+
 	api := r.Group("/api", handle.MiddlewareFunc())
 	api.GET("/patient", handlers.GetPatientsHandler)
 	api.GET("/patient/:id", handlers.GetPatientHandler)
+	api.GET("/patient/:id/story", handlers.GetPatientStoriesHandler)
 
 	auth := api.Group("/auth")
 	auth.GET("/get_me", handlers.GetMeHandler)
 	auth.GET("/refresh_token", handle.RefreshHandler)
-
 }
 
 func handlerMiddleWare(authMiddleware *jwt.GinJWTMiddleware) gin.HandlerFunc {
