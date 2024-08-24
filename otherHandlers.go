@@ -8,15 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func helloHandler(c *gin.Context) {
-	claims := jwt.ExtractClaims(c)
-	user, _ := c.Get(identityKey)
-	c.JSON(200, gin.H{
-		"userID":   claims[identityKey],
-		"username": user.(*User).username,
-		"text":     "Hello World.",
-	})
-}
+//func helloHandler(c *gin.Context) {
+//	claims := jwt.ExtractClaims(c)
+//	user, _ := c.Get(identityKey)
+//	c.JSON(200, gin.H{
+//		"userID":   claims[identityKey],
+//		"username": user.(*User).Username,
+//		"text":     "Hello World.",
+//	})
+//}
 
 func getMeHandler(c *gin.Context) {
 	//claims := jwt.ExtractClaims(c)
