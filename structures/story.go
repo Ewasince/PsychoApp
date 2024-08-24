@@ -19,10 +19,10 @@ type Story struct {
 func (p *Story) ToMap() gin.H {
 	return map[string]interface{}{
 		"id":           p.Id,
-		"Date":         p.Date.Format(time.RFC3339),
-		"Situation":    p.Situation,
-		"Mind":         p.Mind,
-		"Emotion":      p.Emotion,
-		"EmotionPower": p.EmotionPower,
+		"date":         p.Date.Format(time.RFC3339),
+		"situation":    p.Situation,
+		"mind":         p.Mind,
+		"emotion":      p.Emotion,
+		"emotionPower": p.EmotionPower,
 	}
 }
