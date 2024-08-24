@@ -59,16 +59,16 @@ func authenticator() func(c *gin.Context) (interface{}, error) {
 	}
 }
 
-func authorizator() func(data interface{}, c *gin.Context) bool {
-	return func(data interface{}, c *gin.Context) bool {
-		//fmt.Printf("authorizator %s\n", data.(*User))
-		//if v, ok := data.(*User); ok && v.UserName == "admin" {
-		//	return true
-		//}
-		//return false.
-		return true
-	}
-}
+//func authorizator() func(data interface{}, c *gin.Context) bool {
+//	return func(data interface{}, c *gin.Context) bool {
+//		//fmt.Printf("authorizator %s\n", data.(*User))
+//		//if v, ok := data.(*User); ok && v.UserName == "admin" {
+//		//	return true
+//		//}
+//		//return false.
+//		return true
+//	}
+//}
 
 func unauthorized() func(c *gin.Context, code int, message string) {
 	return func(c *gin.Context, code int, message string) {
