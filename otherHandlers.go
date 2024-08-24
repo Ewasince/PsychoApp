@@ -1,6 +1,8 @@
 package main
 
 import (
+	"PsychoAppAdmin/storage"
+	. "PsychoAppAdmin/structures"
 	"fmt"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
@@ -25,10 +27,11 @@ func getMeHandler(c *gin.Context) {
 	}
 	userStruct := user.(*User)
 	fmt.Printf("getMeHandler userStruct=%v\n", *userStruct)
-	c.JSON(200, gin.H{
-		"id":       userStruct.id,
-		"username": userStruct.username,
-		//"FirstName": userStruct.FirstName,
-		//"LastName":  userStruct.LastName,
-	})
+	//c.JSON(200, gin.H{
+	//	"id":       userStruct.Id,
+	//	"username": userStruct.Username,
+	//	//"FirstName": userStruct.FirstName,
+	//	//"LastName":  userStruct.LastName,
+	//})
+	c.JSON(200, gin.H(userStruct.Map()))
 }

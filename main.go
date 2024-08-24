@@ -17,47 +17,11 @@ var (
 	port        string
 )
 
-// User demo
-type User struct {
-	id        float64
-	username  string
-	password  string `private:"true"`
-	FirstName string
-	LastName  string
-}
-
 func init() {
 	port = os.Getenv("PORT")
 	if port == "" {
 		port = "8181"
 	}
-
-	//prepare users data
-	for _, user := range users {
-		usersCreds[user.username] = user
-	}
-	for _, user := range users {
-		usersByIds[user.id] = user
-	}
-}
-
-var usersCreds = map[string]User{}
-var usersByIds = map[float64]User{}
-var users = []User{
-	{
-		id:        0,
-		username:  "admin",
-		FirstName: "adminFirstName",
-		LastName:  "adminLastName",
-		password:  "admin",
-	},
-	{
-		id:        1,
-		username:  "qwer",
-		FirstName: "qwerFirstName",
-		LastName:  "qwerLastName",
-		password:  "qwer",
-	},
 }
 
 func main() {
