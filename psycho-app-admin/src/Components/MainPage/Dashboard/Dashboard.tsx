@@ -15,7 +15,7 @@ import {toast} from "react-toastify";
 import account from "../../../images/account.png";
 import * as React from "react";
 import {setUser} from "../../../api/userControl";
-import {getPatients} from "../../../api/endpoints/apiPatients";
+import {getPatient, getPatients} from "../../../api/endpoints/apiPatients";
 
 export const Dashboard = () => {
     // const [currentPage, setCurrentPage] = useState<string>("/dashboard")
@@ -61,6 +61,24 @@ export const Dashboard = () => {
         >
             <img src={account} alt={"test"} className="w-[15px] sm:w-[19px]"/>
             <p className="hidden sm:block">Patients</p>
+        </button>
+
+        <button
+            className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
+            onClick={() => {
+                getPatient({}, "20")
+                    .then(res => {
+                        let patient = res.data
+                        console.log(patient)
+                        toast.info("patient were received")
+                    })
+                    .catch(err => {
+                        toast.error("patient weren't received ((")
+                    })
+            }}
+        >
+            <img src={account} alt={"test"} className="w-[15px] sm:w-[19px]"/>
+            <p className="hidden sm:block">Current Patient</p>
         </button>
 
     </>

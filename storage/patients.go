@@ -19,6 +19,18 @@ var patientsByUser = map[UserId][]Patient{
 	},
 }
 
+var patientsByUserById = map[UserId]map[PatientId]Patient{}
+
+func init() {
+	for userId, patients := range patientsByUser {
+		patientsMap := map[PatientId]Patient{}
+		patientsByUserById[userId] = patientsMap
+		for _, patient := range patients {
+			patientsMap[patient.Id] = patient
+		}
+	}
+}
+
 func GetPatients(userId UserId) ([]Patient, errors.IWebError) {
 	// STUB: !!!
 	patients, found := patientsByUser[userId]
@@ -28,4 +40,20 @@ func GetPatients(userId UserId) ([]Patient, errors.IWebError) {
 	}
 
 	return patients, nil
+}
+
+func GetPatient(userId UserId, patientId PatientId) (*Patient, errors.IWebError) {
+	// STUB: !!!
+
+	patientsById, foundU := patientsByUserById[userId]
+	if !foundU {
+		return nil, errors.UserNotFound
+	}
+
+	patient, foundP := patientsById[patientId]
+	if !foundP {
+		return nil, errors.PatientNotFound
+	}
+
+	return &patient, nil
 }

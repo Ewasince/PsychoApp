@@ -13,3 +13,7 @@ export type IPatient = {
 export const getPatients = makeGet<IPatient[]>(
     PATIENTS_URL,
 )
+
+export const getPatient = makeGet<IPatient>(
+    PATIENTS_URL,
+)
