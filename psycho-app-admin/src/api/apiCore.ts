@@ -23,23 +23,17 @@ export const refreshRequest = axios.create({
 credentialsRequest.interceptors.request.use((config) => {
     addToHeaderCors(config)
     addToHeaderToken(config, getAccessToken)
-
-    console.log("credentialsRequest config.headers", config.headers)
     return config;
 })
 
 regularRequest.interceptors.request.use((config) => {
     addToHeaderCors(config)
-
-    console.log("regularRequest config.headers", config.headers)
     return config;
 })
 
 refreshRequest.interceptors.request.use((config) => {
     addToHeaderCors(config)
     addToHeaderToken(config, getRefreshToken)
-
-    console.log("refreshRequest config.headers", config.headers)
     return config;
 })
 
