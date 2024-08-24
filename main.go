@@ -91,9 +91,9 @@ func initParams() *jwt.GinJWTMiddleware {
 
 		IdentityHandler: identityHandler(),
 		Authenticator:   authenticator(),
-		Unauthorized:    unauthorized(),
-		TokenLookup:     "header: Authorization, query: token, cookie: jwt",
 		//Authorizator:    authorizator(),
+		Unauthorized: unauthorized(),
+		TokenLookup:  "header: Authorization, query: token, cookie: jwt",
 		// TokenLookup: "query:token",
 		// TokenLookup: "cookie:token",
 		TokenHeadName: "Bearer",
