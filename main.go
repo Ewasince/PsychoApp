@@ -1,6 +1,7 @@
 package main
 
 import (
+	"PsychoAppAdmin/handlers"
 	"log"
 	"net/http"
 	"os"
@@ -12,9 +13,7 @@ import (
 )
 
 var (
-	identityKey = "id"
-	usernameKey = "username"
-	port        string
+	port string
 )
 
 func init() {
@@ -57,17 +56,18 @@ func main() {
 }
 
 func registerRoute(r *gin.Engine, handle *jwt.GinJWTMiddleware) {
-	r.NoRoute(handle.MiddlewareFunc(), handleNoRoute())
+	r.NoRoute(handle.MiddlewareFunc(), handlers.HandleNoRoute())
 
 	//r.GET("/", handleBase())
 
-	api := r.Group("/api")
-	api.POST("login", handle.LoginHandler)
+	r.POST("/login", handle.LoginHandler)
+	api := r.Group("/api", handle.MiddlewareFunc())
+	api.GET("/patient", handlers.GetPatientsHandler)
 
-	auth := api.Group("/auth", handle.MiddlewareFunc())
-	auth.GET("/get_me", getMeHandler)
+	auth := api.Group("/auth")
+	auth.GET("/get_me", handlers.GetMeHandler)
 	auth.GET("/refresh_token", handle.RefreshHandler)
-	//auth.GET("/hello", helloHandler)
+
 }
 
 func handlerMiddleWare(authMiddleware *jwt.GinJWTMiddleware) gin.HandlerFunc {
@@ -86,13 +86,13 @@ func initParams() *jwt.GinJWTMiddleware {
 		Key:         []byte("secret key"),
 		Timeout:     time.Hour,
 		MaxRefresh:  time.Hour,
-		IdentityKey: identityKey,
-		PayloadFunc: payloadFunc(),
+		IdentityKey: handlers.IdentityKey,
+		PayloadFunc: handlers.PayloadFunc(),
 
-		IdentityHandler: identityHandler(),
-		Authenticator:   authenticator(),
+		IdentityHandler: handlers.IdentityHandler(),
+		Authenticator:   handlers.Authenticator(),
 		//Authorizator:    authorizator(),
-		Unauthorized: unauthorized(),
+		Unauthorized: handlers.Unauthorized(),
 		TokenLookup:  "header: Authorization, query: token, cookie: jwt",
 		// TokenLookup: "query:token",
 		// TokenLookup: "cookie:token",

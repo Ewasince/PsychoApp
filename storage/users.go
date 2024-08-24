@@ -3,6 +3,7 @@ package storage
 import (
 	"PsychoAppAdmin/errors"
 	. "PsychoAppAdmin/structures"
+	"fmt"
 	jwt "github.com/appleboy/gin-jwt/v2"
 )
 
@@ -53,9 +54,14 @@ func AuthUser(username string, password string) (*User, error) {
 }
 
 func GetUser(userId UserId) (*User, error) {
-	user, err := usersByIds[userId]
-	if err {
+	fmt.Printf("identityHandler usersByIds=%v\n", usersByIds)
+	user, found := usersByIds[userId]
+	fmt.Printf("identityHandler user=%v\n", user)
+	fmt.Printf("identityHandler err=%v\n", found)
+	if !found {
+		fmt.Println("identityHandler if err")
 		return nil, errors.UserNotFound
 	}
+	fmt.Println("identityHandler else err")
 	return &user, nil
 }

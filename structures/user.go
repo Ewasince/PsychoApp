@@ -1,5 +1,7 @@
 package structures
 
+import "github.com/gin-gonic/gin"
+
 // User demo
 type UserId int
 type User struct {
@@ -10,8 +12,8 @@ type User struct {
 	LastName  string
 }
 
-// Map turn User struct into map
-func (u *User) Map() map[string]any {
+// ToMap turn User struct into map
+func (u *User) ToMap() gin.H {
 	return map[string]interface{}{
 		"id":       u.Id,
 		"username": u.Username,

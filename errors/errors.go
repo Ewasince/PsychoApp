@@ -1,6 +1,4 @@
 package errors
 
-import "errors"
-
 // var UserNotAuthorized = errors.New("incorrect Username or Password")
-var UserNotFound = errors.New("user not found")
+var UserNotFound = newError("user not found", "USER_NOT_FOUND", nil)
