@@ -1,103 +1,70 @@
-// import * as React from 'react';
-// import {useEffect, useState} from 'react';
-// import {Link, Outlet, useLocation, useNavigate} from "react-router-dom";
-//
-// // import account from "../../images/account.png"
-// import account from "../../images/account.png"
-//
-// // import {clearTokens} from "../../core/storage/tokens";
-// // import {clearConfig, getConfig} from "../../core/storage/config";
-// // import {getMe} from "../../api/endpoints/apiAuth";
-// import {goToAuthUser, handleError} from "../../core/errors";
-// import {isUserEntered, exitUser} from "../../api/apiToken";
-
-import {toast} from "react-toastify";
-import account from "../../../images/account.png";
-import * as React from "react";
-import {setUser} from "../../../api/userControl";
-import {getPatient, getPatients, getPatientStories} from "../../../api/endpoints/apiPatients";
+import * as React from 'react';
+import {useEffect, useState} from 'react';
+import {Link, useNavigate} from "react-router-dom";
+import {getPatients, IPatient} from "../../../api/endpoints/apiPatients";
+import {handleError} from "../../../core/errors";
+import {generateHeading} from "../../componetsCore";
 
 export const Dashboard = () => {
-    // const [currentPage, setCurrentPage] = useState<string>("/dashboard")
-    // const location = useLocation();
-    // const navigate = useNavigate();
-    // const config = getConfig();
+    const [patients, setPatients] = useState<IPatient[]>();
+    const [emptyText, setEmptyText] = useState<string>("Пока у вас нету ни одного пациента");
 
-    // useEffect(() => {
-    //     setCurrentPage(location.pathname);
-    // }, [location]);
+    const navigate = useNavigate()
 
-    return <>
-        <p>Hello, World!</p>
+    useEffect(() => {
+        getPatients()
+            .then(res => {
+                setPatients(res.data);
+            })
+            .catch(err => {
+                handleError(err, navigate)
+                setEmptyText("Ошибка при загрузке пациентов")
+            })
+    }, [])
 
-        <button
-            className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
-            onClick={() => {
-                console.log("tests")
-                setUser()
-                    .then(() => {
-                        toast.info("user was set")
-                    })
+    function getPatientBlock(patient: IPatient, patientId: number) {
+        return (
+            <div className="container mt-5" key={patientId}>
+                <Link to={`/patient/${patient.id}`}>
+                    <div className="entry-container flex flex-col-reverse 2xl:flex-row gap-1 sm:gap-2">
+                        <div className="flex flex-col w-full 2xl:max-w-[310px]">
+                            <p className="text-lg sm:text-xl font-medium">{patient.firstName}</p>
+                            <p className="text-lg sm:text-xl font-medium">{patient.lastName}</p>
+                            {/*<p className="text-md sm:text-lg opacity-70">{author}</p>*/}
+                        </div>
+                        <div className="opacity-70 flex-col w-full items-start gap-5">
+                            {/* Прогресс-бар */}
+                            {/*<div className="flex flex-col w-full gap-3">*/}
+                            {/*    <div className="w-full h-4 bg-gray-300 rounded-sm overflow-hidden">*/}
+                            {/*        <div style={{width: `${course.progress}%`}} className="h-full bg-blue-500"></div>*/}
+                            {/*    </div>*/}
+                            {/*    <div className="flex justify-between items-end">*/}
+                            {/*        <div>{course.progress}% выполнено</div>*/}
+                            {/*        <div style={is_deadline_close ? {color: "#ff615a"} : {}}>до {deadlineDateStr}</div>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
+                        </div>
+                    </div>
+                </Link>
+            </div>
 
-            }}
-        >
-            <img src={account} alt={"test"} className="w-[15px] sm:w-[19px]"/>
-            <p className="hidden sm:block">{"test"}</p>
-        </button>
+        )
+    }
 
-        <button
-            className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
-            onClick={() => {
-                getPatients()
-                    .then(res => {
-                        let patients = res.data
-                        console.log(patients)
-                        toast.info("patients were received")
-                    })
-                    .catch(err => {
-                        toast.error("patients weren't received ((")
-                    })
-            }}
-        >
-            <img src={account} alt={"test"} className="w-[15px] sm:w-[19px]"/>
-            <p className="hidden sm:block">Patients</p>
-        </button>
+    return (
+        <>
+            <div
+                className="w-full bg-secondary-color rounded-lg sm:rounded-xl p-4 sm:p-6 xl:p-8 text-font-color flex flex-col">
+                {generateHeading("Мои кореша")}
+                <div className="flex flex-col gap-6">
+                    {patients && patients.length ?
+                        patients.map((patients, patientId) => getPatientBlock(patients, patientId)) :
+                        <>
+                            <p className="text-center">{emptyText}</p>
+                        </>}
+                </div>
+            </div>
+        </>
 
-        <button
-            className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
-            onClick={() => {
-                getPatient({}, "20")
-                    .then(res => {
-                        let patient = res.data
-                        console.log(patient)
-                        toast.info("patient were received")
-                    })
-                    .catch(err => {
-                        toast.error("patient weren't received ((")
-                    })
-            }}
-        >
-            <img src={account} alt={"test"} className="w-[15px] sm:w-[19px]"/>
-            <p className="hidden sm:block">Current Patient</p>
-        </button>
-
-        <button
-            className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
-            onClick={() => {
-                getPatientStories({}, "20", "story")
-                    .then(res => {
-                        let stories = res.data
-                        console.log(stories)
-                        toast.info("stories were received")
-                    })
-                    .catch(err => {
-                        toast.error("stories weren't received ((")
-                    })
-            }}
-        >
-            <img src={account} alt={"test"} className="w-[15px] sm:w-[19px]"/>
-            <p className="hidden sm:block">Patient stories</p>
-        </button>
-
-    </>
+    );
 };

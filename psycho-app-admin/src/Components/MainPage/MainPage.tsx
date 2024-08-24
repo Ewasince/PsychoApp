@@ -20,28 +20,12 @@ export const MainPage = () => {
     // const config = getConfig();
 
     useEffect(() => {
+        if (!isUserEntered()){
+            goToAuthUser(navigate)
+            return
+        }
         setCurrentPage(location.pathname);
     }, [location]);
-    // useEffect(() => {
-    //     if (!isUserEntered()){
-    //         goToAuthUser(navigate)
-    //         return
-    //     }
-    //
-    //     // getMe()
-    //     //     .then(() => {
-    //     //
-    //     //     })
-    //     //     .catch(e => {
-    //     //         handleError(e, navigate);
-    //     //     })
-    // }, []);
-
-    if (!isUserEntered()){
-        goToAuthUser(navigate)
-        // return
-    }
-
 
     function getMenuElement(path: string, title: string){
         return (<>
@@ -73,15 +57,16 @@ export const MainPage = () => {
                 <div className="flex flex-col mt-12">
                     <p className="text-xl mb-6 hidden sm:block">Меню</p>
                     <div className="flex flex-col gap-4">
-                        {getMenuElement("/dashboard", "Мои курсы")}
-                        {getMenuElement("/account", "Профиль")}
+                        {getMenuElement("/dashboard", "Главная")}
+                        {getMenuElement("/test_page", "Тест Апи")}
+                        {/*{getMenuElement("/account", "Профиль")}*/}
                     </div>
                 </div>
                 <div className="flex flex-col mt-12">
                     <p className="text-xl mb-6 hidden sm:block">Помощь</p>
                     <div className="flex flex-col gap-4">
-                        {getMenuElement("/help", "Поддержка")}
-                        {getMenuElement("/settings", "Настройки")}
+                        {/*{getMenuElement("/help", "Поддержка")}*/}
+                        {/*{getMenuElement("/settings", "Настройки")}*/}
                         {getExitElement()}
                     </div>
                 </div>

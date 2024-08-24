@@ -6,6 +6,8 @@ import {Login} from './Components/Login/Login';
 import {createBrowserRouter, RouterProvider,} from "react-router-dom";
 import {MainPage} from "./Components/MainPage/MainPage";
 import {Dashboard} from "./Components/MainPage/Dashboard/Dashboard";
+import {TestPage} from "./Components/MainPage/TestPage/TestPage";
+import {PatientBoard} from "./Components/MainPage/PatientBoard/PatientBoard";
 
 function page404() {
     return (
@@ -34,6 +36,14 @@ const router = createBrowserRouter([
             {
                 path: "dashboard",
                 element: <Dashboard/>
+            },
+            {
+                path: "patient/:patientId",
+                element: <PatientBoard/>
+            },
+            {
+                path: "test_page",
+                element: <TestPage/>
             }
         ]
     },
