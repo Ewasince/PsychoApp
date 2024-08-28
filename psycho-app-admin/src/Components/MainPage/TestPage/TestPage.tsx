@@ -111,5 +111,33 @@ export const TestPage = () => {
             <p className="hidden sm:block">Patient stories</p>
         </button>
 
+        <button
+            className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
+            onClick={() => {
+                const date = new Date();
+                const todayStr = date.toISOString()
+                date.setDate(date.getDate() - 2)
+                const twoDaysAgoStr = date.toISOString()
+                console.log(todayStr)
+                getPatientStories({
+                    params: {
+                        // dateStart: todayStr,
+                        // dateFinish: twoDaysAgoStr,
+                    }
+                }, "20", "story")
+                    .then(res => {
+                        let stories = res.data
+                        console.log(stories)
+                        toast.info("stories were received")
+                    })
+                    .catch(err => {
+                        toast.error("stories weren't received ((")
+                    })
+            }}
+        >
+            <img src={account} alt={"test"} className="w-[15px] sm:w-[19px]"/>
+            <p className="hidden sm:block">Patient stories empty</p>
+        </button>
+
     </>
 };

@@ -68,13 +68,21 @@ func GetPatientStoriesHandler(c *gin.Context) {
 		return
 	}
 
-	dateStart, errParse := time.Parse(time.RFC3339, c.Query("dateStart"))
-	if errParse != nil {
+	dateStart, errParseStart := time.Parse(time.RFC3339, c.Query("dateStart"))
+	dateFinish, errParseFinish := time.Parse(time.RFC3339, c.Query("dateFinish"))
+	if errParseStart != nil && errParseFinish != nil {
+		// Just get min date and return
+		minDate, _ := storage.GetStoryMinDate(patientId)
+		c.JSON(200, gin.H{
+			"minDate": minDate.Unix(),
+		})
+		return
+	}
+	if errParseStart != nil {
 		errors.WrongDateFormat.JSONError(c)
 		return
 	}
-	dateFinish, errParse := time.Parse(time.RFC3339, c.Query("dateFinish"))
-	if errParse != nil {
+	if errParseFinish != nil {
 		errors.WrongDateFormat.JSONError(c)
 		return
 	}
@@ -86,16 +94,12 @@ func GetPatientStoriesHandler(c *gin.Context) {
 	}
 
 	var JSONStories []gin.H
-
 	for _, story := range stories {
 		JSONStories = append(JSONStories, story.ToMap())
 	}
 
-	minDate, _ := storage.GetStoryMinDate(patientId)
-
 	var Response = gin.H{
 		"stories": JSONStories,
-		"minDate": minDate.Format(time.RFC3339),
 	}
 
 	c.JSON(200, Response)

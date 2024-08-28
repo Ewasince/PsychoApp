@@ -28,6 +28,17 @@ export type IStory = {
     emotionPower: number
 }
 
-export const getPatientStories = makeGet<IStory[]>(
+export type IStoriesResponse = {
+    stories: IStory[]
+}
+export type IStoriesMinDate = {
+    minDate: number
+}
+
+export const getPatientStoriesMinDate = makeGet<IStoriesMinDate>(
+    PATIENTS_URL,
+)
+
+export const getPatientStories = makeGet<IStoriesResponse>(
     PATIENTS_URL,
 )

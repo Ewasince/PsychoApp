@@ -69,5 +69,5 @@ func GetStories(patientId PatientId, dateStart, dateFinish time.Time) ([]Story, 
 func GetStoryMinDate(patientId PatientId) (time.Time, errors.IWebError) {
 	// STUB: !!!
 
-	return time.Now().AddDate(0, 0, -5), nil
+	return time.Now().AddDate(0, -1, -5), nil
 }
