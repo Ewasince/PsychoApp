@@ -1,11 +1,13 @@
 package handlers
 
 import (
+	"PsychoAppAdmin/errors"
 	"PsychoAppAdmin/storage"
 	. "PsychoAppAdmin/structures"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"time"
 )
 
 func GetPatientsHandler(c *gin.Context) {
@@ -66,7 +68,18 @@ func GetPatientStoriesHandler(c *gin.Context) {
 		return
 	}
 
-	stories, errS := storage.GetStories(patient.Id)
+	dateStart, errParse := time.Parse(time.RFC3339, c.Query("dateStart"))
+	if errParse != nil {
+		errors.WrongDateFormat.JSONError(c)
+		return
+	}
+	dateFinish, errParse := time.Parse(time.RFC3339, c.Query("dateFinish"))
+	if errParse != nil {
+		errors.WrongDateFormat.JSONError(c)
+		return
+	}
+
+	stories, errS := storage.GetStories(patient.Id, dateStart, dateFinish)
 	if errS != nil {
 		errS.JSONError(c)
 		return
@@ -78,5 +91,12 @@ func GetPatientStoriesHandler(c *gin.Context) {
 		JSONStories = append(JSONStories, story.ToMap())
 	}
 
-	c.JSON(200, JSONStories)
+	minDate, _ := storage.GetStoryMinDate(patientId)
+
+	var Response = gin.H{
+		"stories": JSONStories,
+		"minDate": minDate.Format(time.RFC3339),
+	}
+
+	c.JSON(200, Response)
 }

@@ -86,7 +86,17 @@ export const TestPage = () => {
         <button
             className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
             onClick={() => {
-                getPatientStories({}, "20", "story")
+                const date = new Date();
+                const todayStr = date.toISOString()
+                date.setDate(date.getDate() - 2)
+                const twoDaysAgoStr = date.toISOString()
+                console.log(todayStr)
+                getPatientStories({
+                    params: {
+                        dateStart: todayStr,
+                        dateFinish: twoDaysAgoStr,
+                    }
+                }, "20", "story")
                     .then(res => {
                         let stories = res.data
                         console.log(stories)
