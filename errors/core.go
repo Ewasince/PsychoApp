@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var defaultErrorCode int16 = 400
+var defaultErrorCode int16 = 404
 
 type webError struct {
 	error
