@@ -10,7 +10,7 @@ var storiesByPatients = map[PatientId][]Story{
 	20: {
 		{
 			Id:           31,
-			Date:         time.Date(2023, 8, 15, 10, 0, 0, 0, time.UTC),
+			Date:         time.Now().AddDate(0, 0, -2).Add(-5 * time.Hour),
 			Situation:    "Had a stressful day at work",
 			Mind:         "Worried about meeting deadlines",
 			Emotion:      "Anxiety",
@@ -18,7 +18,7 @@ var storiesByPatients = map[PatientId][]Story{
 		},
 		{
 			Id:           32,
-			Date:         time.Date(2023, 8, 16, 14, 30, 0, 0, time.UTC),
+			Date:         time.Now().AddDate(0, 0, -1).Add(-2 * time.Hour),
 			Situation:    "Spent time with family",
 			Mind:         "Felt connected and happy",
 			Emotion:      "Joy",
@@ -28,7 +28,7 @@ var storiesByPatients = map[PatientId][]Story{
 	21: {
 		{
 			Id:           33,
-			Date:         time.Date(2023, 8, 17, 9, 0, 0, 0, time.UTC),
+			Date:         time.Now().AddDate(0, 0, -2).Add(-5 * time.Hour),
 			Situation:    "Missed an important appointment",
 			Mind:         "Regretful and frustrated",
 			Emotion:      "Frustration",
@@ -36,7 +36,7 @@ var storiesByPatients = map[PatientId][]Story{
 		},
 		{
 			Id:           34,
-			Date:         time.Date(2023, 8, 18, 18, 15, 0, 0, time.UTC),
+			Date:         time.Now().AddDate(0, 0, -1).Add(-2 * time.Hour),
 			Situation:    "Received a compliment at work",
 			Mind:         "Proud and motivated",
 			Emotion:      "Pride",
@@ -46,7 +46,7 @@ var storiesByPatients = map[PatientId][]Story{
 	22: {
 		{
 			Id:           35,
-			Date:         time.Date(2023, 8, 19, 22, 45, 0, 0, time.UTC),
+			Date:         time.Now().AddDate(0, 0, -2).Add(-6 * time.Hour),
 			Situation:    "Had a difficult conversation with a friend",
 			Mind:         "Confused and uncertain",
 			Emotion:      "Sadness",
@@ -55,7 +55,7 @@ var storiesByPatients = map[PatientId][]Story{
 	},
 }
 
-func GetStories(patientId PatientId) ([]Story, errors.IWebError) {
+func GetStories(patientId PatientId, dateStart, dateFinish time.Time) ([]Story, errors.IWebError) {
 	// STUB: !!!
 	stories, found := storiesByPatients[patientId]
 
@@ -64,4 +64,10 @@ func GetStories(patientId PatientId) ([]Story, errors.IWebError) {
 	}
 
 	return stories, nil
+}
+
+func GetStoryMinDate(patientId PatientId) (time.Time, errors.IWebError) {
+	// STUB: !!!
+
+	return time.Now().AddDate(0, 0, -5), nil
 }
