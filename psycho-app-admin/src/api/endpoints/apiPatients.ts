@@ -21,7 +21,7 @@ export const getPatient = makeGet<IPatient>(
 
 export type IStory = {
     id:           number
-    date:         string
+    date:         number
     situation:    string
     mind:         string
     emotion:      string
