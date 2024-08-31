@@ -13,6 +13,7 @@ import {handleError} from "../../../core/errors";
 import {Pagination} from "flowbite-react";
 import dayjs, {Dayjs} from "dayjs";
 import weekday from "dayjs/plugin/weekday";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 dayjs.extend(weekday)
 
@@ -119,10 +120,45 @@ export const PatientBoard = () => {
 
         return (sundayForLastMonday.diff(date) % 7 | 0)+ 1
     }
+    const data = [
+        { id: 1, name: 'Анна Иванова', age: 29, gender: 'Женский', diagnosis: 'Тревожное расстройство', notes: 'Начало терапии: Январь 2024' },
+        { id: 2, name: 'Дмитрий Петров', age: 34, gender: 'Мужской', diagnosis: 'Депрессия', notes: 'Начало терапии: Февраль 2024' },
+        { id: 3, name: 'Ольга Смирнова', age: 41, gender: 'Женский', diagnosis: 'Биполярное расстройство', notes: 'Начало терапии: Март 2024' },
+        // Добавьте больше данных по необходимости
+    ];
+    const PsychologyTable = () => {
+        return (
+            <TableContainer component={Paper} className="shadow-md rounded-lg">
+                <Table>
+                    <TableHead className="bg-blue-500">
+                        <TableRow>
+                            <TableCell className="text-white">Имя</TableCell>
+                            <TableCell className="text-white">Возраст</TableCell>
+                            <TableCell className="text-white">Пол</TableCell>
+                            <TableCell className="text-white">Диагноз</TableCell>
+                            <TableCell className="text-white">Примечания</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {data.map((row) => (
+                            <TableRow key={row.id} className="hover:bg-blue-100 transition duration-300">
+                                <TableCell>{row.name}</TableCell>
+                                <TableCell>{row.age}</TableCell>
+                                <TableCell>{row.gender}</TableCell>
+                                <TableCell>{row.diagnosis}</TableCell>
+                                <TableCell>{row.notes}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    }
 
     return (
         <>
-            {page}
+            {PsychologyTable()}
+            {/*{page}*/}
             <div className="flex overflow-x-auto sm:justify-center">
                 <Pagination currentPage={currentPage} totalPages={countPages} onPageChange={onPageChange}/>
             </div>
