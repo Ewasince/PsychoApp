@@ -18,7 +18,7 @@ dayjs.extend(weekday)
 
 export const PatientBoard = () => {
     const [patient, setPatient] = useState<IPatient>();
-    const [stories, setStories] = useState<IStory[]>([]);
+    const [storiesByWeek, setStoriesByWeek] = useState<Map<number, IStory[]>>(new Map([]));
     const [minDate, setMinDate] = useState<Dayjs>();
     const [todayDate, setTodayDate] = useState<Dayjs>();
     const [countPages, setCountPages] = useState<number>(5);
@@ -38,7 +38,7 @@ export const PatientBoard = () => {
             })
         getPatientStoriesMinDate({}, patientId as string, "story")
             .then(res => {
-                const minDate = dayjs(res.data.minDate * 1000)
+                const minDate = dayjs.unix(res.data.minDate)
                 setMinDate(minDate);
 
                 const todayDate = dayjs()
@@ -48,6 +48,8 @@ export const PatientBoard = () => {
                 setCountPages(countWeeks)
 
                 fetchStories(minDate, todayDate)
+
+                onPageChange(1)
             })
             .catch(err => {
                 handleError(err, navigate)
@@ -62,20 +64,41 @@ export const PatientBoard = () => {
             }
         }, patientId as string, "story")
             .then(res => {
-                setStories(res.data.stories)
+                console.log("getPatientStories", res.data)
+                processStoriesByWeek(res.data.stories)
             })
             .catch(err => {
                 handleError(err, navigate)
             })
     }
 
+    function processStoriesByWeek(stories: IStory[]) {
+        const storiesByWeek = new Map<number, IStory[]>();
+        for (const story of stories) {
+            const weekNum = getWeekNum(dayjs.unix(story.date))
+            if (!storiesByWeek.has(weekNum)) {
+                storiesByWeek.set(weekNum, [])
+            }
+            storiesByWeek.get(weekNum)?.push(story)
+        }
+        setStoriesByWeek(storiesByWeek)
+    }
+
+
     const [page, setPage] = useState(<div>{emptyText}</div>);
 
     const [currentPage, setCurrentPage] = useState(1);
+    const getStoryBlock = (story: IStory) => {
+        return (<>
+            <p>{story.date}</p>
+            <p>"{story.situation}"</p>
+        </>)
+    }
     const onPageChange = (page: number) => {
         const [startDate, endDate] = getWeekDates(page - 1)
         setPage(<>
             <h1>Week starts from {startDate.toString()} to {endDate.toString()}!</h1>
+            <p>{storiesByWeek.get(page - 1)?.map(getStoryBlock)}</p>
         </>)
         setCurrentPage(page);
     }
@@ -88,6 +111,13 @@ export const PatientBoard = () => {
         const endDate = lastMonday.subtract(weekNum, 'week')
 
         return [startDate, endDate]
+    }
+
+    function getWeekNum(date: Dayjs): number { // 0 week means is current
+        const lastMonday = dayjs().weekday(-6)
+        const sundayForLastMonday = lastMonday.add(1, 'week') // last monday
+
+        return (sundayForLastMonday.diff(date) % 7 | 0)+ 1
     }
 
     return (
