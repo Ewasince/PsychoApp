@@ -124,7 +124,16 @@ export function Login() {
                         <input required id="password" type="password"
                                value={password}
                                onChange={onInputLog}
-                               className={`text-xl px-6 py-2 bg-secondary-color ${correct ? "border-red-500" : 'border-blue-color'} border-[3px] rounded-xl focus:outline-none`}
+                               className={`
+                                   text-xl 
+                                   px-6 
+                                   py-2 
+                                   bg-secondary-color 
+                                   ${correct ? "border-red-500" : 'border-blue-color'} 
+                                   border-[3px] 
+                                   rounded-xl 
+                                   focus:outline-none
+                               `}
                                placeholder="∗∗∗∗∗∗∗∗∗∗∗∗∗"/>
                     </div>
                     <button onClick={onSubmitLogin}
