@@ -9,6 +9,7 @@ import {Dashboard} from "./Components/MainPage/Dashboard/Dashboard";
 import {TestPage} from "./Components/MainPage/TestPage/TestPage";
 import {PatientBoard} from "./Components/MainPage/PatientBoard/PatientBoard";
 import {Page404} from "./Components/componetsCore";
+import {Account} from "./Components/MainPage/Account/Account";
 
 const router = createBrowserRouter([
     {
@@ -32,7 +33,11 @@ const router = createBrowserRouter([
             {
                 path: "test_page",
                 element: <TestPage/>
-            }
+            },
+            {
+                path: "account",
+                element: <Account/>
+            },
         ]
     },
 ]);
