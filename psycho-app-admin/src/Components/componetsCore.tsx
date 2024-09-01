@@ -3,7 +3,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 
 
-export function getToastContainer() {
+export const PredeclaredToastContainer = () => {
     return (
         <ToastContainer
             position="bottom-center"
@@ -22,7 +22,7 @@ export function getToastContainer() {
 }
 
 
-export function generateHeading(heading?: string, backButton?: any) {
+export function Heading({heading, backButton} : {heading: string, backButton?: any}) {
     return (
         <>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end"}}>
@@ -41,10 +41,12 @@ export function generateBackButton(link: string, caption?: string, onClick?: any
     )
 }
 
-export function forbidden() {
+export function Forbidden() {
     return (
         <>
-            {generateHeading("Forbidden")}
+            <Heading
+                heading="Forbidden"
+            />
         </>
     )
 }

@@ -6,7 +6,7 @@ import {toast} from "react-toastify";
 
 import {getMe, IAuthResponse, postLogin, postSingUpStudent, postSingUpTutor} from "../../api/endpoints/apiAuth";
 import {setUser} from "../../api/userControl";
-import {getToastContainer} from "../componetsCore"
+import {PredeclaredToastContainer} from "../componetsCore"
 
 //
 // type ILog = {
@@ -248,7 +248,7 @@ export function Login() {
         <>
             <div className="w-full h-fit min-h-full py-10 bg-cover bg-background">
                 {inOut ? getLoginPage() : getRegisterPage()}
-                {getToastContainer()}
+                <PredeclaredToastContainer/>
             </div>
         </>
     );

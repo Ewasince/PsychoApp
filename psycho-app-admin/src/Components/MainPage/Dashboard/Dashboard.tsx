@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import {getPatients, IPatient} from "../../../api/endpoints/apiPatients";
 import {handleError} from "../../../core/errors";
-import {generateHeading} from "../../componetsCore";
+import {Heading} from "../../componetsCore";
 
 export const Dashboard = () => {
     const [patients, setPatients] = useState<IPatient[]>();
@@ -55,7 +55,9 @@ export const Dashboard = () => {
         <>
             <div
                 className="w-full bg-secondary-color rounded-lg sm:rounded-xl p-4 sm:p-6 xl:p-8 text-font-color flex flex-col">
-                {generateHeading("Мои кореша")}
+                <Heading
+                    heading="Мои кореша"
+                />
                 <div className="flex flex-col gap-6">
                     {patients && patients.length ?
                         patients.map((patients, patientId) => getPatientBlock(patients, patientId)) :
