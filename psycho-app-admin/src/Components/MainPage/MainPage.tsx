@@ -60,7 +60,7 @@ export const MainPage = () => {
 
     return (
         <div className="w-full min-h-full h-fit bg-secondary-color text-font-color flex justify-between items-stretch">
-            <div className="min-w-[50px] sm:min-w-[200px] bg-primary-color flex flex-col px-2 sm:px-4 items-start">
+            <div className="min-w-[50px] sm:min-w-[200px] bg-primary-color flex flex-col px-2 sm:px-4 items-start flex flex-row justify-between">
                 <div className="flex flex-col mt-12 ml-2">
                     <p className="text-xl mb-6 hidden sm:block">Меню</p>
                     <div className="flex flex-col gap-4">
@@ -81,8 +81,8 @@ export const MainPage = () => {
                         />}
                     </div>
                 </div>
-                <div className="flex flex-col mt-12 ml-2">
-                    <p className="text-xl mb-6 hidden sm:block">Помощь</p>
+                <div className="flex flex-col mt-12 ml-2 mb-6">
+                    <p className="text-xl mb-6 hidden sm:block"></p>
                     <div className="flex flex-col gap-4">
                         {/*{getMenuElement("/help", "Поддержка")}*/}
                         {/*{getMenuElement("/settings", "Настройки")}*/}
