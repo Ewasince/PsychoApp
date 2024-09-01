@@ -169,10 +169,6 @@ export const PatientBoard = () => {
         );
     }
 
-    const handlePageChange = (event: any, value: number) => {
-        setCurrentPage(value);
-    };
-
     return (
         <>
             <Heading
@@ -186,7 +182,7 @@ export const PatientBoard = () => {
                 }}
                 count={countPages}
                 page={currentPage}
-                onChange={handlePageChange}
+                onChange={(event, value) => setCurrentPage(value)}
                 color="primary"
                 variant="outlined"
                 shape="rounded"
