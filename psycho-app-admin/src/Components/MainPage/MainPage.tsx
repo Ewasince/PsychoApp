@@ -8,7 +8,7 @@ import account from "../../images/account.png"
 // import {clearTokens} from "../../core/storage/tokens";
 // import {clearConfig, getConfig} from "../../core/storage/config";
 // import {getMe} from "../../api/endpoints/apiAuth";
-import {goToAuthUser, handleError} from "../../core/errors";
+import {goToAuthUser} from "../../core/errors";
 
 import {exitUser, isUserEntered} from "../../api/userControl";
 import {PredeclaredToastContainer} from "../componetsCore";
@@ -21,14 +21,14 @@ export const MainPage = () => {
     // const config = getConfig();
 
     useEffect(() => {
-        if (!isUserEntered()){
+        if (!isUserEntered()) {
             goToAuthUser(navigate)
             return
         }
         setCurrentPage(location.pathname);
     }, [location]);
 
-    function getMenuElement(path: string, title: string){
+    const MenuElement = ({path, title}: { path: string, title: string }) => {
         return (<>
             <Link
                 className={`px-2 sm:px-4 py-2 w-full ${currentPage === path ? "bg-blue-color" : 'opacity-70'} rounded-lg flex gap-3 items-center`}
@@ -39,7 +39,7 @@ export const MainPage = () => {
         </>)
     }
 
-    function getExitElement(){
+    const ExitElement = () => {
         return (
             <a
                 className="px-2 sm:px-4 py-2 w-full opacity-70 rounded-lg flex gap-3 items-center"
@@ -54,21 +54,30 @@ export const MainPage = () => {
 
     return (
         <div className="w-full min-h-full h-fit bg-primary-color text-font-color flex justify-between items-stretch">
-            <div className="min-w-[50px] sm:min-w-[200px] bg-secondary-color flex flex-col px-2 sm:px-4 items-center">
-                <div className="flex flex-col mt-12">
+            <div className="min-w-[50px] sm:min-w-[200px] bg-secondary-color flex flex-col px-2 sm:px-4 items-start">
+                <div className="flex flex-col mt-12 ml-2">
                     <p className="text-xl mb-6 hidden sm:block">Меню</p>
                     <div className="flex flex-col gap-4">
-                        {getMenuElement("/dashboard", "Главная")}
-                        {IS_DEV && getMenuElement("/test_page", "Тест Апи") }
-                        {/*{getMenuElement("/account", "Профиль")}*/}
+                        <MenuElement
+                            path="/dashboard"
+                            title="Главная"
+                        />
+                        <MenuElement
+                            path="/account"
+                            title="Профиль"
+                        />
+                        {IS_DEV && <MenuElement
+                            path="/test_page"
+                            title="Тест Апи"
+                        />}
                     </div>
                 </div>
-                <div className="flex flex-col mt-12">
+                <div className="flex flex-col mt-12 ml-2">
                     <p className="text-xl mb-6 hidden sm:block">Помощь</p>
                     <div className="flex flex-col gap-4">
                         {/*{getMenuElement("/help", "Поддержка")}*/}
                         {/*{getMenuElement("/settings", "Настройки")}*/}
-                        {getExitElement()}
+                        <ExitElement/>
                     </div>
                 </div>
             </div>
