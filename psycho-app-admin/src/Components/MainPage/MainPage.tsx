@@ -59,8 +59,8 @@ export const MainPage = () => {
     }
 
     return (
-        <div className="w-full min-h-full h-fit bg-primary-color text-font-color flex justify-between items-stretch">
-            <div className="min-w-[50px] sm:min-w-[200px] bg-secondary-color flex flex-col px-2 sm:px-4 items-start">
+        <div className="w-full min-h-full h-fit bg-secondary-color text-font-color flex justify-between items-stretch">
+            <div className="min-w-[50px] sm:min-w-[200px] bg-primary-color flex flex-col px-2 sm:px-4 items-start">
                 <div className="flex flex-col mt-12 ml-2">
                     <p className="text-xl mb-6 hidden sm:block">Меню</p>
                     <div className="flex flex-col gap-4">
