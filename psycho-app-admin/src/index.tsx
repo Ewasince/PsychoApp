@@ -8,30 +8,18 @@ import {MainPage} from "./Components/MainPage/MainPage";
 import {Dashboard} from "./Components/MainPage/Dashboard/Dashboard";
 import {TestPage} from "./Components/MainPage/TestPage/TestPage";
 import {PatientBoard} from "./Components/MainPage/PatientBoard/PatientBoard";
-
-function page404() {
-    return (
-        <>
-            <div className="flex flex-col w-full h-full items-center justify-center">
-                <p>Такой страницы не существует!</p>
-                <a className="font-bold text-3xl"
-                   href="/">Вернуться на главную</a>
-            </div>
-        </>
-
-    )
-}
+import {Page404} from "./Components/componetsCore";
 
 const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login/>,
-        errorElement: page404(),
+        errorElement: Page404(),
     },
     {
         path: "/",
         element: <MainPage/>,
-        errorElement: page404(),
+        errorElement: Page404(),
         children: [
             {
                 path: "dashboard",
@@ -47,32 +35,6 @@ const router = createBrowserRouter([
             }
         ]
     },
-    // ...[
-    //     "dashboard",
-    //     "dashboard_tutor",
-    //     "course_tutor/add",
-    //     "course_tutor/:courseId/edit",
-    //     "course_tutor/:courseId/students",
-    //     "course_tutor/:courseId/students/:studentId/marks",
-    //     "course_tutor/:courseId/students/:studentId/events",
-    //     "course_tutor/:courseId/students/add",
-    //
-    //     "module_tutor/:courseId/add",
-    //     "module_tutor/:moduleId",
-    //     "module_tutor/:moduleId/answers",
-    //
-    //     "help",
-    //     "account",
-    //     "settings",
-    //     "course/:courseId",
-    //     "module/:moduleId",
-    //     "module/:moduleId/answers",
-    // ].map((path: string) => {
-    //     return {
-    //         path: path,
-    //         element: <MainPage/>,
-    //     }
-    // }),
 ]);
 
 const root = ReactDOM.createRoot(
