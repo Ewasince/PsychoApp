@@ -175,8 +175,6 @@ export const PatientBoard = () => {
 
     return (
         <>
-            <KptTable/>
-
             <Pagination
                 style={{
                     backgroundColor: "white",
@@ -191,6 +189,8 @@ export const PatientBoard = () => {
                 showFirstButton
                 showLastButton
             />
+            <KptTable/>
+
         </>
     );
 };
