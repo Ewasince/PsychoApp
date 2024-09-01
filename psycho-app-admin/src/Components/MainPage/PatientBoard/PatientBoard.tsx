@@ -15,6 +15,7 @@ import weekday from "dayjs/plugin/weekday";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import "dayjs/locale/ru"
+import {generateBackButton, Heading} from "../../componetsCore";
 
 dayjs.extend(weekday)
 dayjs.locale('ru')
@@ -168,13 +169,16 @@ export const PatientBoard = () => {
         );
     }
 
-
     const handlePageChange = (event: any, value: number) => {
         setCurrentPage(value);
     };
 
     return (
         <>
+            <Heading
+                heading={`Дневник ${patient?.firstName}`}
+                backButton={generateBackButton("/dashboard")}
+            />
             <Pagination
                 style={{
                     backgroundColor: "white",
@@ -190,7 +194,6 @@ export const PatientBoard = () => {
                 showLastButton
             />
             <KptTable/>
-
         </>
     );
 };
