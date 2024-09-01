@@ -12,7 +12,7 @@ import {handleError} from "../../../core/errors";
 
 import dayjs, {Dayjs} from "dayjs";
 import weekday from "dayjs/plugin/weekday";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import {PaginationItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import "dayjs/locale/ru"
 import {generateBackButton, Heading} from "../../componetsCore";
@@ -138,7 +138,7 @@ export const PatientBoard = () => {
 
         function getStoryRow(story: IStoryDto) {
             return (<>
-                <TableRow key={story.id} className="hover:bg-blue-100 transition duration-300">
+                <TableRow key={story.id} className="hover:bg-thirdy-color transition duration-300">
                     <TableCell>{story.date.toString()}</TableCell>
                     <TableCell>{story.situation}</TableCell>
                     <TableCell>{story.mind}</TableCell>
@@ -151,7 +151,7 @@ export const PatientBoard = () => {
         return (<>
                 <TableContainer component={Paper} className="shadow-md rounded-lg">
                     <Table>
-                        <TableHead className="bg-blue-500">
+                        <TableHead className="bg-primary-color">
                             <TableRow>
                                 <TableCell className="text-white">Время</TableCell>
                                 <TableCell className="text-white">Ситуация</TableCell>
@@ -175,21 +175,38 @@ export const PatientBoard = () => {
                 heading={`Дневник ${patient?.firstName}`}
                 backButton={generateBackButton("/dashboard")}
             />
-            <Pagination
-                style={{
-                    backgroundColor: "white",
-                    color: "red"
-                }}
-                count={countPages}
-                page={currentPage}
-                onChange={(event, value) => setCurrentPage(value)}
-                color="primary"
-                variant="outlined"
-                shape="rounded"
-                showFirstButton
-                showLastButton
-            />
-            <KptTable/>
+            <div className={`flex flex-col justify-between items-center space-y-5`}>
+                <div className={`flex flex-row w-full space-x-5`}>
+                    <p>Недель назад: </p>
+
+                    <Pagination
+                        // style={{
+                        //     backgroundColor: "white",
+                        //     color: "red"
+                        // }}
+                        count={countPages}
+                        page={currentPage}
+                        onChange={(event, value) => setCurrentPage(value)}
+                        color="primary"
+                        variant="outlined"
+                        shape="rounded"
+                        showFirstButton
+                        // showLastButton
+                        renderItem={(item) => (
+                            <PaginationItem
+                                {...item}
+                                page={
+                                    item.page === 1 ? "Эта" :
+                                        // item.page === 2 ? "Предыдущая" :
+                                        typeof item.page === "number" ? item.page - 1 :
+                                            item.page
+                                }
+                            />
+                        )}
+                    />
+                </div>
+                <KptTable/>
+            </div>
         </>
     );
 };
