@@ -36,7 +36,7 @@ export function Heading({heading, backButton} : {heading: string, backButton?: a
 export function generateBackButton(link: string, caption?: string, onClick?: any) {
     caption ??= "Назад"
     return (
-        <Link className="text-lg sm:text-xl mb-6 font-normal hover:underline text-gray-300" to={link}
+        <Link className="text-lg sm:text-xl mb-6 font-normal hover:underline text-gray-700" to={link}
               onClick={onClick}>{caption}</Link>
     )
 }
