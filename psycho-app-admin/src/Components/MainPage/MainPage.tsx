@@ -12,6 +12,7 @@ import {goToAuthUser, handleError} from "../../core/errors";
 
 import {exitUser, isUserEntered} from "../../api/userControl";
 import {PredeclaredToastContainer} from "../componetsCore";
+import {IS_DEV} from "../../core/env";
 
 export const MainPage = () => {
     const [currentPage, setCurrentPage] = useState<string>("/dashboard")
@@ -58,7 +59,7 @@ export const MainPage = () => {
                     <p className="text-xl mb-6 hidden sm:block">Меню</p>
                     <div className="flex flex-col gap-4">
                         {getMenuElement("/dashboard", "Главная")}
-                        {getMenuElement("/test_page", "Тест Апи")}
+                        {IS_DEV && getMenuElement("/test_page", "Тест Апи") }
                         {/*{getMenuElement("/account", "Профиль")}*/}
                     </div>
                 </div>
