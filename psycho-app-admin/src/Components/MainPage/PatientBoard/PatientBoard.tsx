@@ -10,16 +10,30 @@ import {
 } from "../../../api/endpoints/apiPatients";
 import {handleError} from "../../../core/errors";
 
-import {Pagination} from "flowbite-react";
 import dayjs, {Dayjs} from "dayjs";
 import weekday from "dayjs/plugin/weekday";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import Pagination from '@mui/material/Pagination';
+import "dayjs/locale/ru"
 
 dayjs.extend(weekday)
+dayjs.locale('ru')
+
+
+type IStoryDto = {
+    id: number
+    date: Dayjs
+    situation: string
+    mind: string
+    emotion: string
+    emotionPower: number
+}
 
 export const PatientBoard = () => {
+    dayjs.locale('ru')
+
     const [patient, setPatient] = useState<IPatient>();
-    const [storiesByWeek, setStoriesByWeek] = useState<Map<number, IStory[]>>(new Map([]));
+    const [storiesByWeek, setStoriesByWeek] = useState<Map<number, IStoryDto[]>>(new Map([]));
     const [minDate, setMinDate] = useState<Dayjs>();
     const [todayDate, setTodayDate] = useState<Dayjs>();
     const [countPages, setCountPages] = useState<number>(5);
@@ -74,42 +88,36 @@ export const PatientBoard = () => {
     }
 
     function processStoriesByWeek(stories: IStory[]) {
-        const storiesByWeek = new Map<number, IStory[]>();
+        const storiesByWeek = new Map<number, IStoryDto[]>();
         for (const story of stories) {
             const weekNum = getWeekNum(dayjs.unix(story.date))
             if (!storiesByWeek.has(weekNum)) {
                 storiesByWeek.set(weekNum, [])
             }
-            storiesByWeek.get(weekNum)?.push(story)
+            const storyDto: IStoryDto = {
+                id: story.id,
+                date: dayjs.unix(story.date),
+                situation: story.situation,
+                mind: story.mind,
+                emotion: story.emotion,
+                emotionPower: story.emotionPower,
+            }
+            storiesByWeek.get(weekNum)?.push(storyDto)
         }
         setStoriesByWeek(storiesByWeek)
     }
 
-
-    const [page, setPage] = useState(<div>{emptyText}</div>);
-
     const [currentPage, setCurrentPage] = useState(1);
-    const getStoryBlock = (story: IStory) => {
-        return (<>
-            <p>{story.date}</p>
-            <p>"{story.situation}"</p>
-        </>)
-    }
     const onPageChange = (page: number) => {
-        const [startDate, endDate] = getWeekDates(page - 1)
-        setPage(<>
-            <h1>Week starts from {startDate.toString()} to {endDate.toString()}!</h1>
-            <p>{storiesByWeek.get(page - 1)?.map(getStoryBlock)}</p>
-        </>)
         setCurrentPage(page);
     }
 
-    function getWeekDates(weekNum: number): [Dayjs, Dayjs] { // 0 week means is current
+    function getWeekDates(weekIndex: number): [Dayjs, Dayjs] { // 0 week means is current
         const lastMonday = dayjs().weekday(-6)
         const sundayForLastMonday = lastMonday.add(1, 'week') // last monday
 
-        const startDate = sundayForLastMonday.subtract(weekNum, 'week')
-        const endDate = lastMonday.subtract(weekNum, 'week')
+        const startDate = lastMonday.subtract(weekIndex, 'week')
+        const endDate = sundayForLastMonday.subtract(weekIndex, 'week')
 
         return [startDate, endDate]
     }
@@ -118,50 +126,71 @@ export const PatientBoard = () => {
         const lastMonday = dayjs().weekday(-6)
         const sundayForLastMonday = lastMonday.add(1, 'week') // last monday
 
-        return (sundayForLastMonday.diff(date) % 7 | 0)+ 1
+        return (sundayForLastMonday.diff(date) % 7 | 0) + 1
     }
-    const data = [
-        { id: 1, name: 'Анна Иванова', age: 29, gender: 'Женский', diagnosis: 'Тревожное расстройство', notes: 'Начало терапии: Январь 2024' },
-        { id: 2, name: 'Дмитрий Петров', age: 34, gender: 'Мужской', diagnosis: 'Депрессия', notes: 'Начало терапии: Февраль 2024' },
-        { id: 3, name: 'Ольга Смирнова', age: 41, gender: 'Женский', diagnosis: 'Биполярное расстройство', notes: 'Начало терапии: Март 2024' },
-        // Добавьте больше данных по необходимости
-    ];
-    const PsychologyTable = () => {
-        return (
-            <TableContainer component={Paper} className="shadow-md rounded-lg">
-                <Table>
-                    <TableHead className="bg-blue-500">
-                        <TableRow>
-                            <TableCell className="text-white">Имя</TableCell>
-                            <TableCell className="text-white">Возраст</TableCell>
-                            <TableCell className="text-white">Пол</TableCell>
-                            <TableCell className="text-white">Диагноз</TableCell>
-                            <TableCell className="text-white">Примечания</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {data.map((row) => (
-                            <TableRow key={row.id} className="hover:bg-blue-100 transition duration-300">
-                                <TableCell>{row.name}</TableCell>
-                                <TableCell>{row.age}</TableCell>
-                                <TableCell>{row.gender}</TableCell>
-                                <TableCell>{row.diagnosis}</TableCell>
-                                <TableCell>{row.notes}</TableCell>
+
+    const KptTable = () => {
+        const weekIndex = currentPage - 1
+        const [startDate, endDate] = getWeekDates(weekIndex)
+
+        const currentStories = storiesByWeek.get(weekIndex) || []
+
+        function getStoryRow(story: IStoryDto) {
+            return (<>
+                <TableRow key={story.id} className="hover:bg-blue-100 transition duration-300">
+                    <TableCell>{story.date.toString()}</TableCell>
+                    <TableCell>{story.situation}</TableCell>
+                    <TableCell>{story.mind}</TableCell>
+                    <TableCell>{story.emotion}</TableCell>
+                    <TableCell>{story.emotionPower}</TableCell>
+                </TableRow>
+            </>)
+        }
+
+        return (<>
+                <TableContainer component={Paper} className="shadow-md rounded-lg">
+                    <Table>
+                        <TableHead className="bg-blue-500">
+                            <TableRow>
+                                <TableCell className="text-white">Время</TableCell>
+                                <TableCell className="text-white">Ситуация</TableCell>
+                                <TableCell className="text-white">Автоматическая мысль</TableCell>
+                                <TableCell className="text-white">Эмоция</TableCell>
+                                <TableCell className="text-white">Сила эмоции</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {currentStories.map(getStoryRow)}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </>
         );
     }
 
+
+    const handlePageChange = (event: any, value: number) => {
+        setCurrentPage(value);
+    };
+
     return (
         <>
-            {PsychologyTable()}
-            {/*{page}*/}
-            <div className="flex overflow-x-auto sm:justify-center">
-                <Pagination currentPage={currentPage} totalPages={countPages} onPageChange={onPageChange}/>
-            </div>
+            <KptTable/>
+
+            <Pagination
+                style={{
+                    backgroundColor: "white",
+                    color: "red"
+                }}
+                count={countPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                variant="outlined"
+                shape="rounded"
+                showFirstButton
+                showLastButton
+            />
         </>
     );
 };
