@@ -37,8 +37,19 @@ export const MainPage = () => {
     }) => {
         return (<>
             <Link
-                className={`px-2 sm:px-4 py-2 w-full ${currentPage === path ? "bg-blue-color" : 'opacity-70'} rounded-lg flex gap-3 items-center`}
-                to={path}>
+                className={`
+                    px-2 
+                    sm:px-4 
+                    py-2 
+                    w-full 
+                    rounded-lg 
+                    flex 
+                    gap-3 
+                    items-center
+                    ${currentPage === path ? "bg-blue-color" : 'opacity-70'} 
+                `}
+                to={path}
+            >
                 <Icon/>
                 <p className="hidden sm:block">{title}</p>
             </Link>
