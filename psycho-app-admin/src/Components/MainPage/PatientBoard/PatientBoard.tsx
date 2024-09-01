@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import {
     getPatient,
@@ -12,7 +12,25 @@ import {handleError} from "../../../core/errors";
 
 import dayjs, {Dayjs} from "dayjs";
 import weekday from "dayjs/plugin/weekday";
-import {PaginationItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Menu,
+    MenuItem,
+    PaginationItem,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow
+} from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
 import Pagination from '@mui/material/Pagination';
 import "dayjs/locale/ru"
 import {generateBackButton, Heading} from "../../componetsCore";
@@ -169,42 +187,112 @@ export const PatientBoard = () => {
         );
     }
 
+    const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+    const open = Boolean(menuAnchor);
+    const [openAlert, setOpenAlert] = useState<boolean>(false);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setMenuAnchor(event.currentTarget);
+    };
+    const handleCloseMenu = (el: any) => {
+        if (el.target.id === "delete-patient") {
+            setOpenAlert(true)
+        }
+        setMenuAnchor(null);
+    };
+    const handleCloseAlert = (el: any) => {
+        if (el.target.id === "delete-submit") {
+            alert(`Вы "удалили" ${patient?.firstName} (в разработке)`)
+        }
+        setOpenAlert(false)
+    };
+
+    const CustomMenu = () => (
+        <>
+            <Button
+                id="basic-button"
+                aria-controls={open ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={handleClick}
+            >
+                <SettingsIcon
+                    className={'text-gray-600'}
+                    // color={`secondary`}
+                />
+            </Button>
+            <Menu
+                id="basic-menu"
+                anchorEl={menuAnchor}
+                open={open}
+                onClose={handleCloseMenu}
+                MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                }}
+            >
+                <MenuItem id="delete-patient" onClick={handleCloseMenu}>Удалить пациента</MenuItem>
+            </Menu>
+
+            <Dialog
+                open={openAlert}
+                onClose={() => setOpenAlert(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Подтвердите действие"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Вы уверены, что хотите удалить <b>{patient?.firstName}?</b> Это действие нельзя отменить
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button id="delete-cancel" onClick={handleCloseAlert}>Отмена</Button>
+                    <Button id="delete-submit" onClick={handleCloseAlert} autoFocus>
+                        Удалить
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    )
+
     return (
         <>
             <Heading
                 heading={`Дневник ${patient?.firstName}`}
                 backButton={generateBackButton("/dashboard")}
             />
-            <div className={`flex flex-col justify-between items-center space-y-5`}>
-                <div className={`flex flex-row w-full space-x-5`}>
-                    <p>Недель назад: </p>
+            <div className={`flex flex-col items-center space-y-5`}>
+                <div className={`flex flex-row justify-between w-full`}>
+                    <div className={`flex flex-row w-full space-x-5 items-center`}>
+                        <p>Недель назад: </p>
 
-                    <Pagination
-                        // style={{
-                        //     backgroundColor: "white",
-                        //     color: "red"
-                        // }}
-                        count={countPages}
-                        page={currentPage}
-                        onChange={(event, value) => setCurrentPage(value)}
-                        color="primary"
-                        variant="outlined"
-                        shape="rounded"
-                        showFirstButton
-                        // showLastButton
-                        renderItem={(item) => (
-                            <PaginationItem
-                                {...item}
-                                page={
-                                    item.page === 1 ? "Эта" :
-                                        // item.page === 2 ? "Предыдущая" :
-                                        typeof item.page === "number" ? item.page - 1 :
-                                            item.page
-                                }
-                            />
-                        )}
-                    />
+                        <Pagination
+                            count={countPages}
+                            page={currentPage}
+                            onChange={(event, value) => setCurrentPage(value)}
+                            color="primary"
+                            variant="outlined"
+                            shape="rounded"
+                            showFirstButton
+                            // showLastButton
+                            renderItem={(item) => (
+                                <PaginationItem
+                                    {...item}
+                                    page={
+                                        item.page === 1 ? "Эта" :
+                                            // item.page === 2 ? "Предыдущая" :
+                                            typeof item.page === "number" ? item.page - 1 :
+                                                item.page
+                                    }
+                                />
+                            )}
+                        />
+                    </div>
+
+                    {CustomMenu()}
                 </div>
+
                 <KptTable/>
             </div>
         </>
