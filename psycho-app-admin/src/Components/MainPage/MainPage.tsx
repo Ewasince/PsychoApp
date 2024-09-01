@@ -14,8 +14,10 @@ import {exitUser, isUserEntered} from "../../api/userControl";
 import {PredeclaredToastContainer} from "../componetsCore";
 import {IS_DEV} from "../../core/env";
 
+const DEFAULT_PATH = "/dashboard"
+
 export const MainPage = () => {
-    const [currentPage, setCurrentPage] = useState<string>("/dashboard")
+    const [currentPage, setCurrentPage] = useState<string>(DEFAULT_PATH)
     const location = useLocation();
     const navigate = useNavigate();
     // const config = getConfig();
@@ -26,6 +28,9 @@ export const MainPage = () => {
             return
         }
         setCurrentPage(location.pathname);
+        if (location.pathname === "/"){
+            navigate(DEFAULT_PATH)
+        }
     }, [location]);
 
     const MenuElement = ({path, title}: { path: string, title: string }) => {
