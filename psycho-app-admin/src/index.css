@@ -8,10 +8,11 @@
 
 :root {
 
-  --primary-color: #161819;
-  --secondary-color: #252728;
-  --blue-color: #275FEC;
-  --font-color: #fff;
+  --primary-color: #fbdabc;
+  --secondary-color: #fbe3cb;
+  --thirdy-color: #fbead8;
+  --blue-color: #a99abb;
+  --font-color: #000000;
   --font-opacity-color: #ffffff50;
 
   /* this is the default value below*/
@@ -56,14 +57,14 @@
 }
 
 .entry-container, .entry-container-disabled {
-  border: 2px solid #1c1c1e; /* Добавляем границы */
+  border: 2px solid #ecc8a2; /* Добавляем границы */
   border-radius: 10px; /* Добавляем закругления углов */
   /*height: 300px; !* Фиксируем высоту контейнера *!*/
   padding: 20px; /* Внутренний отступ для элементов внутри */
 }
 
 .entry-container {
-  background-color: #373a3b; /* Цвет фона контейнера */
+  background-color: var(--thirdy-color); /* Цвет фона контейнера */
 }
 
 .entry-container-disabled {
