@@ -1,12 +1,15 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {Link, Outlet, useLocation, useNavigate} from "react-router-dom";
-import account from "../../images/account.png"
 import {goToAuthUser} from "../../core/errors";
 
 import {exitUser, isUserEntered} from "../../api/userControl";
 import {PredeclaredToastContainer} from "../componetsCore";
 import {IS_DEV} from "../../core/env";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import BugReportIcon from '@mui/icons-material/BugReport';
 
 const DEFAULT_PATH = "/dashboard"
 
@@ -22,18 +25,22 @@ export const MainPage = () => {
             return
         }
         setCurrentPage(location.pathname);
-        if (location.pathname === "/"){
+        if (location.pathname === "/") {
             navigate(DEFAULT_PATH)
         }
     }, [location]);
 
-    const MenuElement = ({path, title}: { path: string, title: string }) => {
+    const MenuElement = ({path, title, Icon}: {
+        path: string,
+        title: string,
+        Icon: any
+    }) => {
         return (<>
             <Link
                 className={`px-2 sm:px-4 py-2 w-full ${currentPage === path ? "bg-blue-color" : 'opacity-70'} rounded-lg flex gap-3 items-center`}
                 to={path}>
-                <img src={account} alt={title} className="w-[15px] sm:w-[19px]"/> <p
-                className="hidden sm:block">{title}</p>
+                <Icon/>
+                <p className="hidden sm:block">{title}</p>
             </Link>
         </>)
     }
@@ -45,7 +52,7 @@ export const MainPage = () => {
                 href="/"
                 onClick={exitUser}
             >
-                <img src={account} alt="settings" className="w-[15px] sm:w-[19px]"/>
+                <ExitToAppIcon/>
                 <p className="hidden sm:block">Выйти</p>
             </a>
         )
@@ -60,14 +67,17 @@ export const MainPage = () => {
                         <MenuElement
                             path="/dashboard"
                             title="Главная"
+                            Icon={DashboardIcon}
                         />
                         <MenuElement
                             path="/account"
                             title="Профиль"
+                            Icon={AccountBoxIcon}
                         />
                         {IS_DEV && <MenuElement
                             path="/test_page"
                             title="Тест Апи"
+                            Icon={BugReportIcon}
                         />}
                     </div>
                 </div>
