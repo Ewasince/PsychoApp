@@ -9,7 +9,9 @@ module.exports = {
       colors: {
         "primary-color": "var(--primary-color)",
         "secondary-color": "var(--secondary-color)",
+        "thirdy-color": "var(--thirdy-color)",
         "blue-color": "var(--blue-color)",
+        "dark-blue-color": "var(--dark-blue-color)",
         "font-color": "var(--font-color)",
         "font-opacity-color": "var(--font-opacity-color)",
       },

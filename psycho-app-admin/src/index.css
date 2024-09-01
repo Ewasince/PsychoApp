@@ -9,9 +9,10 @@
 :root {
 
   --primary-color: #fbdabc;
-  --secondary-color: #fbe3cb;
-  --thirdy-color: #fbead8;
+  --secondary-color: #fbead8;
+  --thirdy-color: #fbe3cb;
   --blue-color: #a99abb;
+  --dark-blue-color: #5e4393;
   --font-color: #000000;
   --font-opacity-color: #ffffff50;
 
