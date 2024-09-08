@@ -22,6 +22,7 @@ var patientsByUser = map[UserId][]Patient{
 var patientsByUserById = map[UserId]map[PatientId]Patient{}
 
 func init() {
+	// STUB: !!!
 	for userId, patients := range patientsByUser {
 		patientsMap := map[PatientId]Patient{}
 		patientsByUserById[userId] = patientsMap
