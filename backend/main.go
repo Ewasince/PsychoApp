@@ -2,6 +2,7 @@ package main
 
 import (
 	"PsychoAppAdmin/handlers"
+	"github.com/joho/godotenv"
 
 	"log"
 	"net/http"
@@ -18,8 +19,13 @@ var (
 )
 
 func init() {
-	port = os.Getenv("PORT")
-	if port == "" {
+	// loads values from .env into the system
+	if err := godotenv.Load(); err != nil {
+		log.Print("No .env file found")
+	}
+	var portExists bool
+	port, portExists = os.LookupEnv("PORT")
+	if portExists {
 		port = "8181"
 	}
 }

@@ -10,7 +10,7 @@ require (
 	github.com/gin-gonic/gin v1.10.0
 )
 
-require migrations v0.0.0
+require github.com/joho/godotenv v1.5.1
 
 require MigrateModule v0.0.0
 
