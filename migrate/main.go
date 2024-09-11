@@ -53,7 +53,6 @@ func GetSQLiteDB() *sql.DB {
 	}
 
 	// Путь к миграциям
-	fmt.Printf("Migrations path: '%s'\n", migrationsPath)
 	m, err := migrate.NewWithDatabaseInstance(
 		migrationsPath,
 		"sqlite3",
