@@ -1,27 +1,27 @@
 CREATE TABLE user
 (
-    id    INTEGER PRIMARY KEY AUTOINCREMENT,
-    name  TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE
+    UserId    INTEGER PRIMARY KEY AUTOINCREMENT,
+    UserName  TEXT NOT NULL,
+    UserEmail TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE patient
 (
-    id      INTEGER PRIMARY KEY AUTOINCREMENT,
-    name    TEXT NOT NULL,
-    email   TEXT NOT NULL UNIQUE,
-    user_id INTEGER  NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user (id)
+    PatientId    INTEGER PRIMARY KEY AUTOINCREMENT,
+    PatientName  TEXT    NOT NULL,
+    PatientEmail TEXT    NOT NULL UNIQUE,
+    UserId       INTEGER NOT NULL,
+    FOREIGN KEY (UserId) REFERENCES user (UserId)
 );
 
 CREATE TABLE story
 (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    date       DATE NOT NULL,
-    situation  TEXT NOT NULL,
-    mind       TEXT NOT NULL,
-    emotion    TEXT NOT NULL,
-    power      INTEGER  NOT NULL,
-    patient_id INTEGER  NOT NULL,
-    FOREIGN KEY (patient_id) REFERENCES patient (id)
+    StoryId        INTEGER PRIMARY KEY AUTOINCREMENT,
+    StoryDate      DATE    NOT NULL,
+    StorySituation TEXT    NOT NULL,
+    StoryMind      TEXT    NOT NULL,
+    StoryEmotion   TEXT    NOT NULL,
+    StoryPower     INTEGER NOT NULL,
+    PatientId      INTEGER NOT NULL,
+    FOREIGN KEY (PatientId) REFERENCES patient (PatientId)
 );
