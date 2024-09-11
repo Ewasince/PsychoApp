@@ -1,12 +1,12 @@
 package storage
 
 import (
-	mg "MigrateModule"
+	st "StorageModule"
 	"database/sql"
 )
 
 var DB *sql.DB
 
 func init() {
-	DB = mg.GetSQLiteDB()
+	DB = st.GetSQLiteDB()
 }

@@ -12,9 +12,8 @@ require (
 
 require github.com/joho/godotenv v1.5.1
 
-require MigrateModule v0.0.0
-
-replace MigrateModule v0.0.0 => ./../migrate
+require StorageModule  v0.0.0
+replace StorageModule  v0.0.0 => ./../storage
 
 require (
 	github.com/bytedance/sonic v1.12.1 // indirect
