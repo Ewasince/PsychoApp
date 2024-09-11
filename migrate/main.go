@@ -31,9 +31,7 @@ func init() {
 }
 
 func getEnvVar(key, fallback string) string {
-	var exists bool
-	var value string
-	value, exists = os.LookupEnv(key)
+	value, exists := os.LookupEnv(key)
 	if !exists {
 		panic(fallback)
 	}
