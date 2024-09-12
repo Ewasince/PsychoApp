@@ -141,6 +141,182 @@ func createStories(patientId uint) map[uint]*models.Story {
 				Model: gorm.Model{},
 			},
 		},
+		{
+			Date:      truncateToDay(time.Now(), 3),
+			Situation: "Колени хрустят, кружится спина",
+			Mind:      "Таблеток бы...",
+			Emotion:   "Задумчивость",
+			Power:     4,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 4),
+			Situation: "Болит голова, глаза режет",
+			Mind:      "Может прилечь на часок",
+			Emotion:   "Раздражение",
+			Power:     3,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 5),
+			Situation: "Тянет шею, сложно двигаться",
+			Mind:      "Надо бы массаж сделать",
+			Emotion:   "Усталость",
+			Power:     2,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 6),
+			Situation: "Затекла рука, не чувствую пальцы",
+			Mind:      "Где мой крем?",
+			Emotion:   "Тревога",
+			Power:     3,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 7),
+			Situation: "Ноги как ватные, шатаюсь",
+			Mind:      "Дойти бы до дома...",
+			Emotion:   "Беспокойство",
+			Power:     2,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 8),
+			Situation: "Спина болит при движении",
+			Mind:      "Нужно больше растягиваться",
+			Emotion:   "Недовольство",
+			Power:     3,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 9),
+			Situation: "Ломота в суставах",
+			Mind:      "Завтра к врачу",
+			Emotion:   "Неуверенность",
+			Power:     1,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 10),
+			Situation: "Головокружение, всё плывет",
+			Mind:      "Нужно больше пить воды",
+			Emotion:   "Замешательство",
+			Power:     3,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 11),
+			Situation: "Ощущение тяжести в ногах",
+			Mind:      "Пора бы размяться",
+			Emotion:   "Фрустрация",
+			Power:     4,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 12),
+			Situation: "Немеют пальцы, сложно двигать",
+			Mind:      "Опять руки...",
+			Emotion:   "Огорчение",
+			Power:     2,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 13),
+			Situation: "Слабость в руках, тяжело поднимать",
+			Mind:      "Где мои силы?",
+			Emotion:   "Печаль",
+			Power:     1,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 14),
+			Situation: "Шея затекла, тяжело двигать",
+			Mind:      "Надо больше разминаться",
+			Emotion:   "Неприятие",
+			Power:     3,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 15),
+			Situation: "Хруст в коленях при движении",
+			Mind:      "Пора на обследование",
+			Emotion:   "Задумчивость",
+			Power:     4,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 16),
+			Situation: "Слабость в ногах, тяжело ходить",
+			Mind:      "Нужно больше двигаться",
+			Emotion:   "Разочарование",
+			Power:     2,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 17),
+			Situation: "Чувство усталости, трудно сосредоточиться",
+			Mind:      "Нужен отдых",
+			Emotion:   "Невыразительность",
+			Power:     1,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
+		{
+			Date:      truncateToDay(time.Now(), 18),
+			Situation: "В жопе першит",
+			Mind:      "Нужно прочистить дымоход",
+			Emotion:   "Эйфория",
+			Power:     3,
+			PatientId: patientId,
+			BaseModel: models.BaseModel{
+				Model: gorm.Model{},
+			},
+		},
 	}
 	DB.Create(&stories)
 
