@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	environment "EnvironmentModule"
 	e "PsychoAppAdmin/errors"
 	. "StorageModule/models"
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,11 @@ func GetMeHandler(c *gin.Context) {
 		e.JSONError(c, e.UserNotFound)
 		return
 	}
-	userStruct := user.(*User)
-	c.JSON(200, userStruct.ToMap())
+	userStruct := user.(*User).ToMap()
+	userConfig := environment.GetFrontConfig()
+
+	c.JSON(200, gin.H{
+		"user":   userStruct,
+		"config": userConfig,
+	})
 }
