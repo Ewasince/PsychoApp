@@ -9,9 +9,11 @@ let LOCATION_WHEN_NOT_VALID_TOKEN = "/login"
 
 export function handleError(error: any, navigate?: NavigateFunction) {
     function logErrorToConsole() {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        console.log(
+            "Error: data: ", error.response.data,
+            "status: ", error.response.status,
+            "headers: ", error.response.headers,
+            );
     }
 
     if (error.response) {
