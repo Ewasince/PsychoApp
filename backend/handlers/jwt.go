@@ -13,7 +13,7 @@ import (
 
 var (
 	IdentityKey = "id"
-	EmailKey    = "email"
+	UsernameKey = "username"
 )
 
 type login struct {
@@ -26,7 +26,7 @@ func PayloadFunc() func(data interface{}) jwt.MapClaims {
 		if v, ok := data.(*User); ok {
 			return jwt.MapClaims{
 				IdentityKey: v.ID,
-				EmailKey:    v.Email,
+				UsernameKey: v.Email,
 			}
 		}
 		return jwt.MapClaims{}
@@ -37,8 +37,8 @@ func IdentityHandler() func(c *gin.Context) interface{} {
 	return func(c *gin.Context) interface{} {
 		claims := jwt.ExtractClaims(c)
 
-		fmt.Printf("identityHandler user_id0=%v\n", claims[IdentityKey])
-		userId := claims[IdentityKey].(uint)
+		fmt.Printf("identityHandler user_id0=%v\n", uint(claims[IdentityKey].(float64)))
+		userId := uint(claims[IdentityKey].(float64))
 
 		user, err := storageRepo.GetUser(userId)
 		if err != nil {

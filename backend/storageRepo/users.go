@@ -5,13 +5,13 @@ import (
 	. "StorageModule/models"
 )
 
-func AuthUser(email, password string) (*User, error) {
+func AuthUser(username, password string) (*User, error) {
 	// STUB: !!!
 
 	var user User
 
 	err := DB.
-		Where("Email = ?", email).
+		Where("username = ?", username).
 		First(&user).
 		Error
 

@@ -12,7 +12,7 @@ import (
 func GetPatientsHandler(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 
-	userId := claims[IdentityKey].(uint)
+	userId := uint(claims[IdentityKey].(float64))
 	patients, err := storageRepo.GetPatients(userId)
 
 	if err != nil {

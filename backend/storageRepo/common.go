@@ -37,12 +37,13 @@ func fillDatabase() {
 }
 
 func createUsers() map[uint]*models.User {
-	var usersByIds map[uint]*models.User = make(map[uint]*models.User)
+	var usersByIds = make(map[uint]*models.User)
 
 	var users = []*models.User{
 		{
 			Name:     "admin",
 			Email:    "admin@example.com",
+			Username: "admin",
 			Password: "admin",
 			BaseModel: models.BaseModel{
 				Model: gorm.Model{},
@@ -51,6 +52,7 @@ func createUsers() map[uint]*models.User {
 		{
 			Name:     "qwer",
 			Email:    "qwer@example.com",
+			Username: "qwer",
 			Password: "qwer",
 			BaseModel: models.BaseModel{
 				Model: gorm.Model{},
@@ -67,7 +69,7 @@ func createUsers() map[uint]*models.User {
 }
 
 func createPatients(userId uint) map[uint]*models.Patient {
-	var patientsByIds map[uint]*models.Patient = make(map[uint]*models.Patient)
+	var patientsByIds = make(map[uint]*models.Patient)
 
 	var patients = []*models.Patient{
 		{
@@ -98,7 +100,7 @@ func createPatients(userId uint) map[uint]*models.Patient {
 	return patientsByIds
 }
 func createStories(patientId uint) map[uint]*models.Story {
-	var storiesByIds map[uint]*models.Story = make(map[uint]*models.Story)
+	var storiesByIds = make(map[uint]*models.Story)
 
 	var stories = []*models.Story{
 		{
