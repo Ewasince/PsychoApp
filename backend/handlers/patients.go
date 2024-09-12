@@ -27,10 +27,6 @@ func GetPatientsHandler(c *gin.Context) {
 }
 
 func GetPatientHandler(c *gin.Context) {
-	//// user id
-	//claims := jwt.ExtractClaims(c)
-	//userId := claims[IdentityKey].(uint)
-
 	// patient id
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
