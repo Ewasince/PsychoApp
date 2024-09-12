@@ -1,8 +1,6 @@
 module PsychoAppAdmin
 
-go 1.22.0
-
-toolchain go1.22.7
+go 1.22.7
 
 require (
 	github.com/appleboy/gin-jwt/v2 v2.9.2
@@ -13,9 +11,12 @@ require (
 require github.com/joho/godotenv v1.5.1
 
 require (
+	EnvironmentModule v0.0.0
 	StorageModule v0.0.0
 	gorm.io/gorm v1.25.12
 )
+
+replace EnvironmentModule v0.0.0 => ./../environment
 
 replace StorageModule v0.0.0 => ./../storage
 

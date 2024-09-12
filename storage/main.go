@@ -1,62 +1,31 @@
 package storage
 
 import (
+	env "EnvironmentModule"
 	"database/sql"
 	"fmt"
-	"github.com/joho/godotenv"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
-	"os"
-	"strconv"
-
-	"log"
-
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/mattn/go-sqlite3"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+	"log"
 )
 
-var migrationsPath string
-var dbPath string
-var DEBUG bool
-
 func init() {
-	var err error
-	// loads values from .env into the system
-	if err := godotenv.Load(); err != nil {
-		log.Print("No .env file found")
-	}
 
-	migrationsPath = "file://" + getEnvVar("MIGRATIONS_PATH", "")
-	fmt.Printf("Migrations path: '%s'\n", migrationsPath)
-
-	dbPath = getEnvVar("DATABASE_PATH", "")
-	fmt.Printf("Database path: '%s'\n", dbPath)
-
-	if DEBUG, err = strconv.ParseBool(getEnvVar("DEBUG", "false")); err != nil {
-		panic(err)
-	}
-
-	if DEBUG {
+	if env.DEBUG {
 		resetDb()
 	} else {
 		migrateDb()
 	}
 }
 
-func getEnvVar(key string, defaultValue string) string {
-	value, exists := os.LookupEnv(key)
-	if !exists && defaultValue == "" {
-		panic("No environment variable " + key)
-	}
-	return value
-}
-
 func migrateDb() {
 	fmt.Println("Migrating database...")
 	//Подключение к базе данных
-	db, err := sql.Open("sqlite3", dbPath)
+	db, err := sql.Open("sqlite3", env.DB_PATH)
 	if err != nil {
 		log.Fatalf("Ошибка подключения к базе данных: %v", err)
 	}
@@ -70,7 +39,7 @@ func migrateDb() {
 
 	// Путь к миграциям
 	m, err := migrate.NewWithDatabaseInstance(
-		migrationsPath,
+		env.MIGRATIONS_PATH,
 		"sqlite3",
 		driver,
 	)
@@ -87,7 +56,7 @@ func migrateDb() {
 func resetDb() {
 	fmt.Println("Reset database...")
 	//Подключение к базе данных
-	db, err := sql.Open("sqlite3", dbPath)
+	db, err := sql.Open("sqlite3", env.DB_PATH)
 	if err != nil {
 		log.Fatalf("Ошибка подключения к базе данных: %v", err)
 	}
@@ -101,7 +70,7 @@ func resetDb() {
 
 	// Путь к миграциям
 	m, err := migrate.NewWithDatabaseInstance(
-		migrationsPath,
+		env.MIGRATIONS_PATH,
 		"sqlite3",
 		driver,
 	)
@@ -121,7 +90,7 @@ func resetDb() {
 }
 
 func GetSQLiteDB() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(env.DB_PATH), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}

@@ -1,7 +1,7 @@
-package storage
+package storageRepo
 
 import (
-	"PsychoAppAdmin/misc"
+	env "EnvironmentModule"
 	st "StorageModule"
 	"StorageModule/models"
 	"fmt"
@@ -14,7 +14,7 @@ var DB *gorm.DB
 func init() {
 	DB = st.GetSQLiteDB().Session(&gorm.Session{CreateBatchSize: 1000})
 
-	if misc.DEBUG {
+	if env.DEBUG {
 		var count int64
 
 		DB.Find(&models.User{}).Count(&count)

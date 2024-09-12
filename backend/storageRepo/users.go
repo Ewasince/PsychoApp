@@ -1,4 +1,4 @@
-package storage
+package storageRepo
 
 import (
 	"PsychoAppAdmin/errors"

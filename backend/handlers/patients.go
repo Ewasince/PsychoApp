@@ -2,7 +2,7 @@ package handlers
 
 import (
 	e "PsychoAppAdmin/errors"
-	"PsychoAppAdmin/storage"
+	"PsychoAppAdmin/storageRepo"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"strconv"
@@ -13,7 +13,7 @@ func GetPatientsHandler(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 
 	userId := claims[IdentityKey].(uint)
-	patients, err := storage.GetPatients(userId)
+	patients, err := storageRepo.GetPatients(userId)
 
 	if err != nil {
 		e.JSONError(c, e.UserNotFound)
@@ -38,7 +38,7 @@ func GetPatientHandler(c *gin.Context) {
 	}
 	patientId := uint(id)
 
-	patient, err := storage.GetPatient(patientId)
+	patient, err := storageRepo.GetPatient(patientId)
 
 	if err != nil {
 		e.JSONError(c, e.PatientNotFound)
@@ -57,7 +57,7 @@ func GetPatientStoriesHandler(c *gin.Context) {
 	patientId := uint(id)
 
 	// check access to patient
-	patient, err := storage.GetPatient(patientId)
+	patient, err := storageRepo.GetPatient(patientId)
 	if err != nil {
 		e.JSONError(c, e.PatientNotFound)
 		return
@@ -68,7 +68,7 @@ func GetPatientStoriesHandler(c *gin.Context) {
 
 	if dateStartQuery == "" && dateFinishQuery == "" {
 		// Just get min date and return
-		minDate, err := storage.GetStoryMinDate(patientId)
+		minDate, err := storageRepo.GetStoryMinDate(patientId)
 		if err != nil {
 			c.JSON(200, gin.H{
 				"minDate": time.Now().Unix(),
@@ -94,7 +94,7 @@ func GetPatientStoriesHandler(c *gin.Context) {
 	dateStart := time.Unix(int64(dateStartTs), 0)
 	dateFinish := time.Unix(int64(dateFinishTs), 0)
 
-	stories, err := storage.GetStories(patient.UserId, dateStart, dateFinish)
+	stories, err := storageRepo.GetStories(patient.UserId, dateStart, dateFinish)
 
 	var JSONStories []gin.H
 	for _, story := range *stories {

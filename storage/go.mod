@@ -1,23 +1,23 @@
 module StorageModule
 
-go 1.22.0
-
-toolchain go1.22.7
+go 1.22.7
 
 require (
+	EnvironmentModule v0.0.0
+	github.com/fatih/structs v1.1.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/golang-migrate/migrate/v4 v4.18.1
-	github.com/joho/godotenv v1.5.1
 	gorm.io/driver/sqlite v1.5.6
 	gorm.io/gorm v1.25.12
 )
+
+replace EnvironmentModule v0.0.0 => ./../environment
 
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
-	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect

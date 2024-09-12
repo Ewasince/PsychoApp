@@ -3,7 +3,7 @@ package handlers
 import (
 	e "PsychoAppAdmin/errors"
 	//"PsychoAppAdmin"
-	"PsychoAppAdmin/storage"
+	"PsychoAppAdmin/storageRepo"
 	. "StorageModule/models"
 	"fmt"
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -40,7 +40,7 @@ func IdentityHandler() func(c *gin.Context) interface{} {
 		fmt.Printf("identityHandler user_id0=%v\n", claims[IdentityKey])
 		userId := claims[IdentityKey].(uint)
 
-		user, err := storage.GetUser(userId)
+		user, err := storageRepo.GetUser(userId)
 		if err != nil {
 			e.JSONError(c, e.UserNotFound)
 			return nil
@@ -58,7 +58,7 @@ func Authenticator() func(c *gin.Context) (interface{}, error) {
 		username := loginVals.Username
 		password := loginVals.Password
 
-		user, err := storage.AuthUser(username, password)
+		user, err := storageRepo.AuthUser(username, password)
 
 		if err != nil {
 			return User{}, e.UserNotAuthorized
