@@ -75,16 +75,18 @@ func createPatients(userId uint) map[uint]*models.Patient {
 		{
 			Name:     "patient",
 			Email:    "admin@example.com",
-			Password: "admin",
+			Username: "patient",
+			Password: "patient",
 			UserId:   userId,
 			BaseModel: models.BaseModel{
 				Model: gorm.Model{},
 			},
 		},
 		{
-			Name:     "qwer",
+			Name:     "patient_qwer",
 			Email:    "qwer@example.com",
-			Password: "qwer",
+			Username: "patient_qwer",
+			Password: "patient_qwer",
 			UserId:   userId,
 			BaseModel: models.BaseModel{
 				Model: gorm.Model{},
