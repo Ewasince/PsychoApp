@@ -2,33 +2,15 @@ package main
 
 import (
 	"PsychoAppAdmin/handlers"
-	"github.com/joho/godotenv"
-
+	"PsychoAppAdmin/misc"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
-
-var (
-	port string
-)
-
-func init() {
-	// loads values from .env into the system
-	if err := godotenv.Load(); err != nil {
-		log.Print("No .env file found")
-	}
-	var portExists bool
-	port, portExists = os.LookupEnv("PORT")
-	if portExists {
-		port = "8181"
-	}
-}
 
 func main() {
 	engine := gin.Default()
@@ -57,7 +39,7 @@ func main() {
 	registerRoute(engine, authMiddleware)
 
 	// start http server
-	if err = http.ListenAndServe(":"+port, engine); err != nil {
+	if err = http.ListenAndServe(":"+misc.Port, engine); err != nil {
 		log.Fatal(err)
 	}
 }

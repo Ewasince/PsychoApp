@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"PsychoAppAdmin/errors"
-	. "PsychoAppAdmin/structures"
+	. "StorageModule/models"
 	"github.com/gin-gonic/gin"
 )
 

@@ -5,12 +5,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var defaultErrorCode int16 = 404
+var NotFoundErrorCode uint16 = 404
+var UnauthorizedErrorCode uint16 = 404
+
+var defaultErrorCode uint16 = NotFoundErrorCode
 
 type webError struct {
 	error
 	textCode     string
-	responseCode int16
+	responseCode uint16
 }
 
 func (w *webError) ToMap() gin.H {
@@ -25,7 +28,7 @@ func (w *webError) JSONError(c *gin.Context) {
 	c.JSON(int(w.responseCode), w.ToMap())
 }
 
-func newError(message string, textCode string, responseCode *int16) IWebError {
+func newError(message string, textCode string, responseCode *uint16) IWebError {
 	err := errors.New(message)
 
 	if responseCode == nil {

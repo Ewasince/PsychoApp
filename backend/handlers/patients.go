@@ -3,7 +3,6 @@ package handlers
 import (
 	"PsychoAppAdmin/errors"
 	"PsychoAppAdmin/storage"
-	. "PsychoAppAdmin/structures"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"strconv"
@@ -13,36 +12,36 @@ import (
 func GetPatientsHandler(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 
-	userId := UserId(claims[IdentityKey].(float64))
-	patients, err := storage.GetPatients(userId)
+	userId := claims[IdentityKey].(uint)
+	patients := storage.GetPatients(userId)
 
-	if err != nil {
-		err.JSONError(c)
+	if patients == nil {
+		errors.UserNotFound.JSONError(c)
 		return
 	}
 	var patientsMap []gin.H
-	for _, patient := range patients {
+	for _, patient := range *patients {
 		patientsMap = append(patientsMap, patient.ToMap())
 	}
 	c.JSON(200, patientsMap)
 }
 
 func GetPatientHandler(c *gin.Context) {
-	// user id
-	claims := jwt.ExtractClaims(c)
-	userId := UserId(claims[IdentityKey].(float64))
+	//// user id
+	//claims := jwt.ExtractClaims(c)
+	//userId := claims[IdentityKey].(uint)
 
 	// patient id
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		panic(err)
 	}
-	patientId := PatientId(id)
+	patientId := uint(id)
 
-	patient, errP := storage.GetPatient(userId, patientId)
+	patient := storage.GetPatient(patientId)
 
-	if errP != nil {
-		errP.JSONError(c)
+	if patient == nil {
+		errors.PatientNotFound.JSONError(c)
 		return
 	}
 
@@ -50,21 +49,21 @@ func GetPatientHandler(c *gin.Context) {
 }
 
 func GetPatientStoriesHandler(c *gin.Context) {
-	// user id
-	claims := jwt.ExtractClaims(c)
-	userId := UserId(claims[IdentityKey].(float64))
+	//// user id
+	//claims := jwt.ExtractClaims(c)
+	//userId := claims[IdentityKey].(uint)
 
 	// patient id
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		panic(err)
 	}
-	patientId := PatientId(id)
+	patientId := uint(id)
 
 	// check access to patient
-	patient, errP := storage.GetPatient(userId, patientId)
-	if errP != nil {
-		errP.JSONError(c)
+	patient := storage.GetPatient(patientId)
+	if patient == nil {
+		errors.PatientNotFound.JSONError(c)
 		return
 	}
 
@@ -73,7 +72,7 @@ func GetPatientStoriesHandler(c *gin.Context) {
 
 	if dateStartQuery == "" && dateFinishQuery == "" {
 		// Just get min date and return
-		minDate, _ := storage.GetStoryMinDate(patientId)
+		minDate := storage.GetStoryMinDate(patientId)
 		c.JSON(200, gin.H{
 			"minDate": minDate.Unix(),
 		})
@@ -94,14 +93,10 @@ func GetPatientStoriesHandler(c *gin.Context) {
 	dateStart := time.Unix(int64(dateStartTs), 0)
 	dateFinish := time.Unix(int64(dateFinishTs), 0)
 
-	stories, errS := storage.GetStories(patient.Id, dateStart, dateFinish)
-	if errS != nil {
-		errS.JSONError(c)
-		return
-	}
+	stories := storage.GetStories(patient.UserId, dateStart, dateFinish)
 
 	var JSONStories []gin.H
-	for _, story := range stories {
+	for _, story := range *stories {
 		JSONStories = append(JSONStories, story.ToMap())
 	}
 

@@ -1,9 +1,10 @@
 package handlers
 
 import (
+	"PsychoAppAdmin/errors"
 	//"PsychoAppAdmin"
 	"PsychoAppAdmin/storage"
-	. "PsychoAppAdmin/structures"
+	. "StorageModule/models"
 	"fmt"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
@@ -12,7 +13,7 @@ import (
 
 var (
 	IdentityKey = "id"
-	UsernameKey = "username"
+	EmailKey    = "email"
 )
 
 type login struct {
@@ -24,8 +25,8 @@ func PayloadFunc() func(data interface{}) jwt.MapClaims {
 	return func(data interface{}) jwt.MapClaims {
 		if v, ok := data.(*User); ok {
 			return jwt.MapClaims{
-				IdentityKey: v.Id,
-				UsernameKey: v.Username,
+				IdentityKey: v.ID,
+				EmailKey:    v.Email,
 			}
 		}
 		return jwt.MapClaims{}
@@ -37,18 +38,14 @@ func IdentityHandler() func(c *gin.Context) interface{} {
 		claims := jwt.ExtractClaims(c)
 
 		fmt.Printf("identityHandler user_id0=%v\n", claims[IdentityKey])
-		userId := UserId(claims[IdentityKey].(float64))
+		userId := claims[IdentityKey].(uint)
 
-		user, err := storage.GetUser(userId)
-		if err != nil {
-			panic(err)
+		user := storage.GetUser(userId)
+		if user == nil {
+			errors.UserNotFound.JSONError(c)
+			return nil
 		}
-		return &User{
-			Id:        user.Id,
-			Username:  user.Username,
-			FirstName: user.FirstName,
-			LastName:  user.LastName,
-		}
+		return user
 	}
 }
 
@@ -61,14 +58,20 @@ func Authenticator() func(c *gin.Context) (interface{}, error) {
 		username := loginVals.Username
 		password := loginVals.Password
 
-		return storage.AuthUser(username, password)
+		user := storage.AuthUser(username, password)
+
+		if user == nil {
+			return nil, errors.UserNotAuthorized
+		}
+
+		return user, nil
 	}
 }
 
 //func authorizator() func(data interface{}, c *gin.Context) bool {
 //	return func(data interface{}, c *gin.Context) bool {
 //		//fmt.Printf("authorizator %s\n", data.(*User))
-//		//if v, ok := data.(*User); ok && v.UserName == "admin" {
+//		//if v, ok := data.(*User); ok && v.Name == "admin" {
 //		//	return true
 //		//}
 //		//return false.
