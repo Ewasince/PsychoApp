@@ -35,7 +35,7 @@ export type IAuthResponse = {
     // access_token: string;
     // refresh_token: string;
     token: string;
-    expire: string; // iso date
+    expire: number; // iso date
 }
 
 export type ILogin = {

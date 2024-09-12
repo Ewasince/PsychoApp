@@ -16,8 +16,8 @@ export function setAccessToken(access_token: string) {
     localStorage.setItem(ACCESS_TOKEN_KEY, access_token);
 }
 
-export function setAccessTokenExpire(expire: string) {
-    localStorage.setItem(EXPIRE_TOKEN_KEY, expire);
+export function setAccessTokenExpire(expire: number) {
+    localStorage.setItem(EXPIRE_TOKEN_KEY, expire.toString());
 }
 
 export function getAccessToken(): string {
@@ -38,6 +38,6 @@ export function getAccessTokenExpire(): Date | undefined {
 export function clearTokens() {
     setTokenData({
         token: '',
-        expire: '',
+        expire: 0,
     })
 }
