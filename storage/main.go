@@ -10,7 +10,9 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"log"
+	"time"
 )
 
 func init() {
@@ -89,7 +91,22 @@ func resetDb() {
 }
 
 func GetSQLiteDB() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open(Env.DB_PATH), &gorm.Config{})
+	var gormConfig = gorm.Config{}
+
+	if Env.DEBUG {
+		// Создаем новый логгер с выводом всех SQL-запросов
+		gormLogger := logger.New(
+			log.New(log.Writer(), "\r\n", log.LstdFlags), // Логгер для вывода в консоль
+			logger.Config{
+				SlowThreshold: time.Second, // Порог времени для медленных запросов (вывод в консоль)
+				LogLevel:      logger.Info, // Уровень логирования: Info для всех SQL-запросов
+				Colorful:      true,        // Включаем цветные логи
+			},
+		)
+		gormConfig.Logger = gormLogger
+	}
+
+	db, err := gorm.Open(sqlite.Open(Env.DB_PATH), &gormConfig)
 	if err != nil {
 		panic("failed to connect database")
 	}
