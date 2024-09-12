@@ -336,5 +336,5 @@ func getFirstKey[T comparable, V any](m map[T]V) T {
 func truncateToDay(t time.Time, daysBackward int) time.Time {
 	return time.
 		Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location()).
-		AddDate(0, 0, daysBackward)
+		AddDate(0, 0, -daysBackward)
 }
