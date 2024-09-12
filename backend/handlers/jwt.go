@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"PsychoAppAdmin/errors"
+	e "PsychoAppAdmin/errors"
 	//"PsychoAppAdmin"
 	"PsychoAppAdmin/storage"
 	. "StorageModule/models"
@@ -40,9 +40,9 @@ func IdentityHandler() func(c *gin.Context) interface{} {
 		fmt.Printf("identityHandler user_id0=%v\n", claims[IdentityKey])
 		userId := claims[IdentityKey].(uint)
 
-		user := storage.GetUser(userId)
-		if user == nil {
-			errors.UserNotFound.JSONError(c)
+		user, err := storage.GetUser(userId)
+		if err != nil {
+			e.JSONError(c, e.UserNotFound)
 			return nil
 		}
 		return user
@@ -58,10 +58,10 @@ func Authenticator() func(c *gin.Context) (interface{}, error) {
 		username := loginVals.Username
 		password := loginVals.Password
 
-		user := storage.AuthUser(username, password)
+		user, err := storage.AuthUser(username, password)
 
-		if user == nil {
-			return nil, errors.UserNotAuthorized
+		if err != nil {
+			return User{}, e.UserNotAuthorized
 		}
 
 		return user, nil

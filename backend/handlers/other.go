@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"PsychoAppAdmin/errors"
+	e "PsychoAppAdmin/errors"
 	. "StorageModule/models"
 	"github.com/gin-gonic/gin"
 )
@@ -9,7 +9,7 @@ import (
 func GetMeHandler(c *gin.Context) {
 	user, exists := c.Get(IdentityKey)
 	if !exists {
-		errors.UserNotFound.JSONError(c)
+		e.JSONError(c, e.UserNotFound)
 		return
 	}
 	userStruct := user.(*User)

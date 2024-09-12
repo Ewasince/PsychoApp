@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"PsychoAppAdmin/errors"
+	e "PsychoAppAdmin/errors"
 	"PsychoAppAdmin/storage"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
@@ -13,10 +13,10 @@ func GetPatientsHandler(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 
 	userId := claims[IdentityKey].(uint)
-	patients := storage.GetPatients(userId)
+	patients, err := storage.GetPatients(userId)
 
-	if patients == nil {
-		errors.UserNotFound.JSONError(c)
+	if err != nil {
+		e.JSONError(c, e.UserNotFound)
 		return
 	}
 	var patientsMap []gin.H
@@ -38,10 +38,10 @@ func GetPatientHandler(c *gin.Context) {
 	}
 	patientId := uint(id)
 
-	patient := storage.GetPatient(patientId)
+	patient, err := storage.GetPatient(patientId)
 
-	if patient == nil {
-		errors.PatientNotFound.JSONError(c)
+	if err != nil {
+		e.JSONError(c, e.PatientNotFound)
 		return
 	}
 
@@ -49,10 +49,6 @@ func GetPatientHandler(c *gin.Context) {
 }
 
 func GetPatientStoriesHandler(c *gin.Context) {
-	//// user id
-	//claims := jwt.ExtractClaims(c)
-	//userId := claims[IdentityKey].(uint)
-
 	// patient id
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -61,9 +57,9 @@ func GetPatientStoriesHandler(c *gin.Context) {
 	patientId := uint(id)
 
 	// check access to patient
-	patient := storage.GetPatient(patientId)
-	if patient == nil {
-		errors.PatientNotFound.JSONError(c)
+	patient, err := storage.GetPatient(patientId)
+	if err != nil {
+		e.JSONError(c, e.PatientNotFound)
 		return
 	}
 
@@ -72,28 +68,33 @@ func GetPatientStoriesHandler(c *gin.Context) {
 
 	if dateStartQuery == "" && dateFinishQuery == "" {
 		// Just get min date and return
-		minDate := storage.GetStoryMinDate(patientId)
-		c.JSON(200, gin.H{
-			"minDate": minDate.Unix(),
-		})
-		return
+		minDate, err := storage.GetStoryMinDate(patientId)
+		if err != nil {
+			c.JSON(200, gin.H{
+				"minDate": time.Now().Unix(),
+			})
+		} else {
+			c.JSON(200, gin.H{
+				"minDate": minDate.Unix(),
+			})
+		}
 	}
 
 	dateStartTs, err := strconv.Atoi(dateStartQuery)
 	if err != nil {
-		errors.WrongDateFormat.JSONError(c)
+		e.JSONError(c, e.WrongDateFormat)
 		return
 	}
 	dateFinishTs, err := strconv.Atoi(dateFinishQuery)
 	if err != nil {
-		errors.WrongDateFormat.JSONError(c)
+		e.JSONError(c, e.WrongDateFormat)
 		return
 	}
 
 	dateStart := time.Unix(int64(dateStartTs), 0)
 	dateFinish := time.Unix(int64(dateFinishTs), 0)
 
-	stories := storage.GetStories(patient.UserId, dateStart, dateFinish)
+	stories, err := storage.GetStories(patient.UserId, dateStart, dateFinish)
 
 	var JSONStories []gin.H
 	for _, story := range *stories {

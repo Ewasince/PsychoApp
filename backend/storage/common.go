@@ -27,7 +27,6 @@ func init() {
 
 func fillDatabase() {
 	fmt.Println("fill database!")
-	// TODO: fill database
 	DB.Exec("DELETE FROM users")
 	DB.Exec("DELETE FROM patients")
 	DB.Exec("DELETE FROM stories")

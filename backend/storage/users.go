@@ -1,63 +1,35 @@
 package storage
 
 import (
+	"PsychoAppAdmin/errors"
 	. "StorageModule/models"
 )
 
-//var usersCreds = map[string]User{}
-//var usersByIds = map[UserId]User{}
-//var users = []User{
-//	{
-//		Id:        10,
-//		Username:  "admin",
-//		FirstName: "adminFirstName",
-//		LastName:  "adminLastName",
-//		Password:  "admin",
-//	},
-//	{
-//		Id:        11,
-//		Username:  "qwer",
-//		FirstName: "qwerFirstName",
-//		LastName:  "qwerLastName",
-//		Password:  "qwer",
-//	},
-//}
-//
-//func init() {
-//	// STUB: !!!
-//	//prepare users data
-//	for _, user := range users {
-//		usersCreds[user.Username] = user
-//	}
-//	for _, user := range users {
-//		usersByIds[user.Id] = user
-//	}
-//}
-
-func AuthUser(email, password string) *User {
+func AuthUser(email, password string) (*User, error) {
 	// STUB: !!!
 
 	var user User
 
-	DB.
+	err := DB.
 		Where("Email = ?", email).
-		First(&user)
+		First(&user).
+		Error
 
-	if &user == nil {
-		return nil
+	if err != nil {
+		return &user, err
 	}
 
 	if user.Password != password {
-		return nil
+		return &User{}, errors.UserNotAuthorized
 	}
 
-	return &user
+	return &user, nil
 }
 
-func GetUser(userId uint) *User {
+func GetUser(userId uint) (*User, error) {
 	var user User
 
-	DB.First(&user, userId)
+	err := DB.First(&user, userId).Error
 
-	return &user
+	return &user, err
 }
