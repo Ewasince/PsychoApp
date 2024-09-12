@@ -17,7 +17,7 @@ type environmentVariables struct {
 	DB_PATH         string
 }
 
-var Env environmentVariables = environmentVariables{}
+var Env = environmentVariables{}
 
 func init() {
 	var err error

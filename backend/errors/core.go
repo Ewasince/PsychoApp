@@ -10,7 +10,7 @@ import (
 var NotFoundErrorCode uint16 = 404
 var UnauthorizedErrorCode uint16 = 404
 
-var defaultErrorCode uint16 = NotFoundErrorCode
+var defaultErrorCode = NotFoundErrorCode
 
 type WebError struct {
 	error
