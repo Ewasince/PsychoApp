@@ -12,12 +12,22 @@ export const SIGN_UP_TUTOR_URL = "api/auth/tutor/register";
 // auth
 
 export type IMe = {
-    id: string, // "31962d5e-7cff-4c47-8cdb-142d5689e9d4",
-    // "created_at": Date, // "2024-04-28T12:45:18.640096",
-    // "updated_at": Date, // null,
-    username: string, // "qwer",
-    // "password_hash": string, // "$2b$12$E85m0tMdHiMNxPlmJ/5jleDfmLkjJWfskUo1evBcQ8bTNVFlaKQFK",
-    // "role": EnumRole, // "STUDENT"
+    id: string
+    username: string
+    email: string
+}
+
+export type IConfig = {
+    // accessRights: {
+    //     isTutor?: boolean,
+    //     isStudent?: boolean,
+    // },
+    // userId: string
+    is_dev: boolean
+}
+export type IMeResponse = {
+    user: IMe
+    config: IConfig
 }
 
 export type IReg = {
@@ -61,7 +71,7 @@ export const postLogin = makePost<ILogin, IAuthResponse>(
     LOGIN_URL,
     true,
 )
-export const getMe = makeGet<IMe>(
+export const getMe = makeGet<IMeResponse>(
     GET_ME_URL,
 )
 

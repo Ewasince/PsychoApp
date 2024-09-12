@@ -81,9 +81,6 @@ export function Login() {
             password: password,
             fio: fio,
         })
-            .catch(err => {
-                handleError(err, navigate)
-            })
             .then(res => {
                 if (!res) {
                     return
@@ -93,7 +90,10 @@ export function Login() {
                 setUser()
 
                 navigate("/dashboard")
-            });
+            })
+            .catch(err => {
+                handleError(err, navigate)
+            })
     }
 
     function LoginPage() {

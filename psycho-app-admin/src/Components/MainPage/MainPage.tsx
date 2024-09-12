@@ -5,11 +5,11 @@ import {goToAuthUser} from "../../core/errors";
 
 import {exitUser, isUserEntered} from "../../api/userControl";
 import {PredeclaredToastContainer} from "../componetsCore";
-import {IS_DEV} from "../../core/env";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import BugReportIcon from '@mui/icons-material/BugReport';
+import {getConfig} from "../../core/storage/config";
 
 const DEFAULT_PATH = "/dashboard"
 
@@ -21,6 +21,7 @@ export const MainPage = () => {
 
     useEffect(() => {
         if (!isUserEntered()) {
+            exitUser()
             goToAuthUser(navigate)
             return
         }
@@ -85,7 +86,7 @@ export const MainPage = () => {
                             title="Профиль"
                             Icon={AccountBoxIcon}
                         />
-                        {IS_DEV && <MenuElement
+                        {getConfig().is_dev && <MenuElement
                             path="/test_page"
                             title="Тест Апи"
                             Icon={BugReportIcon}

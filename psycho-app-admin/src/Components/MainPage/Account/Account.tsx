@@ -1,24 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {getMe, IMe} from "../../../api/endpoints/apiAuth";
-import {handleError} from "../../../core/errors";
+import {IMe} from "../../../api/endpoints/apiAuth";
 import {Heading} from "../../componetsCore";
+import {getGlobalUser} from "../../../core/storage/config";
 
 export const Account = () => {
     const [user, setUser] = useState<IMe>();
     const navigate = useNavigate();
 
     useEffect(() => {
-        getMe()
-            .then(res => {
-                if (res) {
-                    setUser(res.data)
-                }
-            })
-            .catch(err => {
-                handleError(err, navigate)
-            })
-    }, [])
+        setUser(getGlobalUser())
+    }, []);
 
     return (
 
@@ -40,8 +32,10 @@ export const Account = () => {
             </div>
 
 
-            <button onClick={() => {}}
-                    className="text-xl px-6 py-2 bg-blue-color rounded-xl mt-4 sm:mt-6 hover:bg-dark-blue-color">Добавить кореша
+            <button onClick={() => {
+            }}
+                    className="text-xl px-6 py-2 bg-blue-color rounded-xl mt-4 sm:mt-6 hover:bg-dark-blue-color">Добавить
+                кореша
             </button>
 
         </div>
