@@ -1,7 +1,7 @@
 package main
 
 import (
-	env "EnvironmentModule"
+	. "EnvironmentModule"
 	"PsychoAppAdmin/handlers"
 	"log"
 	"net/http"
@@ -39,7 +39,7 @@ func main() {
 	registerRoute(engine, authMiddleware)
 
 	// start http server
-	if err = http.ListenAndServe(":"+env.PORT, engine); err != nil {
+	if err = http.ListenAndServe(":"+Env.PORT, engine); err != nil {
 		log.Fatal(err)
 	}
 }

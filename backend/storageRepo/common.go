@@ -1,7 +1,7 @@
 package storageRepo
 
 import (
-	env "EnvironmentModule"
+	. "EnvironmentModule"
 	st "StorageModule"
 	"StorageModule/models"
 	"fmt"
@@ -14,7 +14,7 @@ var DB *gorm.DB
 func init() {
 	DB = st.GetSQLiteDB().Session(&gorm.Session{CreateBatchSize: 1000})
 
-	if env.DEBUG {
+	if Env.DEBUG {
 		var count int64
 
 		DB.Find(&models.User{}).Count(&count)

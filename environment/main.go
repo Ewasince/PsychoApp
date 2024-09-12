@@ -1,18 +1,23 @@
 package environment
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"reflect"
 	"strconv"
+	"text/tabwriter"
 )
 
-var (
+type environmentVariables struct {
 	PORT            string
 	DEBUG           bool
 	MIGRATIONS_PATH string
 	DB_PATH         string
-)
+}
+
+var Env environmentVariables = environmentVariables{}
 
 func init() {
 	var err error
@@ -22,18 +27,20 @@ func init() {
 	}
 
 	// PORT
-	PORT = getEnv("PORT", "8181")
+	Env.PORT = getEnv("PORT", "8181")
 
 	// DEBUG
-	if DEBUG, err = strconv.ParseBool(getEnv("DEBUG", "false")); err != nil {
+	if Env.DEBUG, err = strconv.ParseBool(getEnv("DEBUG", "false")); err != nil {
 		panic(err)
 	}
 
 	// MIGRATIONS_PATH
-	MIGRATIONS_PATH = "file://" + getEnv("MIGRATIONS_PATH", "")
+	Env.MIGRATIONS_PATH = "file://" + getEnv("MIGRATIONS_PATH", "")
 
 	// DB_PATH
-	DB_PATH = getEnv("DATABASE_PATH", "")
+	Env.DB_PATH = getEnv("DATABASE_PATH", "")
+
+	printEnvVariables()
 }
 
 func getEnv(key, defaultValue string) string {
@@ -46,4 +53,20 @@ func getEnv(key, defaultValue string) string {
 		return defaultValue
 	}
 	panic("No value for " + key)
+}
+
+func printEnvVariables() {
+	fmt.Println("Environment Variables:")
+
+	// Получаем значение и тип структуры
+	val := reflect.ValueOf(Env)
+	fields := reflect.VisibleFields(reflect.TypeOf(Env))
+
+	// Итерируемся по полям структуры
+	w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+	for _, field := range fields {
+		fieldValue := val.FieldByName(field.Name)
+		fmt.Fprintf(w, "%s=\t%v\n", field.Name, fieldValue.Interface())
+	}
+	w.Flush()
 }
