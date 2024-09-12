@@ -11,7 +11,7 @@ type BaseModel struct {
 	gorm.Model
 }
 
-// ToMap turn User struct into map
+// ToMap turn BaseModel struct into map
 func (b *BaseModel) ToMap() gin.H {
 	return structs.Map(b)
 }

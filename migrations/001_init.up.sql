@@ -3,6 +3,7 @@ CREATE TABLE users
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
     name       TEXT NOT NULL,
     email      TEXT NOT NULL UNIQUE,
+    username      TEXT NOT NULL UNIQUE,
     password   TEXT NOT NULL,
     created_at DATE NOT NULL,
     updated_at DATE,
@@ -13,7 +14,9 @@ CREATE TABLE patients
 (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
     name       TEXT    NOT NULL,
+    last_name       TEXT    NOT NULL,
     email      TEXT    NOT NULL UNIQUE,
+    username      TEXT NOT NULL UNIQUE,
     password   TEXT    NOT NULL,
     user_id    INTEGER NOT NULL,
     created_at DATE NOT NULL,
