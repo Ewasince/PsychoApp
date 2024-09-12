@@ -78,6 +78,7 @@ func GetPatientStoriesHandler(c *gin.Context) {
 				"minDate": minDate.Unix(),
 			})
 		}
+		return
 	}
 
 	dateStartTs, err := strconv.Atoi(dateStartQuery)
