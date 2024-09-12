@@ -2,6 +2,9 @@ package handlers
 
 import (
 	e "PsychoAppAdmin/errors"
+	"net/http"
+	"time"
+
 	//"PsychoAppAdmin"
 	"PsychoAppAdmin/storageRepo"
 	. "StorageModule/models"
@@ -84,6 +87,15 @@ func Unauthorized() func(c *gin.Context, code int, message string) {
 		c.JSON(code, gin.H{
 			"code":    code,
 			"message": message,
+		})
+	}
+}
+func LoginResponse() func(c *gin.Context, code int, token string, expire time.Time) {
+	return func(c *gin.Context, code int, token string, expire time.Time) {
+		c.JSON(http.StatusOK, gin.H{
+			"code":   http.StatusOK,
+			"token":  token,
+			"expire": expire.Unix(),
 		})
 	}
 }
