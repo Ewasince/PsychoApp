@@ -9,9 +9,9 @@ func GetStories(patientId uint, dateStart, dateFinish time.Time) (*[]Story, erro
 	// STUB: !!!
 	var stories = make([]Story, 0)
 	err := DB.
-		Where("PatientId = ?", patientId).
-		Where("Date >= ?", dateStart).
-		Where("Date < ?", dateFinish).
+		Where("patient_id = ?", patientId).
+		Where("date >= ?", dateStart).
+		Where("date < ?", dateFinish).
 		Find(&stories).
 		Error
 
@@ -22,8 +22,8 @@ func GetStoryMinDate(patientId uint) (time.Time, error) {
 	var story Story
 
 	err := DB.
-		Where("PatientId = ?", patientId).
-		Order("Date asc").
+		Where("patient_id = ?", patientId).
+		Order("date asc").
 		First(&story).
 		Error
 
