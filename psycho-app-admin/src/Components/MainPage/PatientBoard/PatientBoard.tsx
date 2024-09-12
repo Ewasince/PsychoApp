@@ -22,31 +22,16 @@ import {
     Menu,
     MenuItem,
     PaginationItem,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow
 } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Pagination from '@mui/material/Pagination';
 import "dayjs/locale/ru"
 import {generateBackButton, Heading} from "../../componetsCore";
+import {IStoryDto, KptTable} from "./KPTable";
 
 dayjs.extend(weekday)
 dayjs.locale('ru')
 
-
-type IStoryDto = {
-    id: number
-    date: Dayjs
-    situation: string
-    mind: string
-    emotion: string
-    emotionPower: number
-}
 
 export const PatientBoard = () => {
     dayjs.locale('ru')
@@ -78,12 +63,11 @@ export const PatientBoard = () => {
                 const todayDate = dayjs()
                 setTodayDate(todayDate)
 
-                const countWeeks = Math.ceil(todayDate.diff(minDate, 'day') / 7)
+                const countWeeks = Math.ceil(todayDate.weekday(7).diff(minDate, 'day') / 7) || 1
                 setCountPages(countWeeks)
+                setCurrentPage(0)
 
                 fetchStories(minDate, todayDate)
-
-                onPageChange(1)
             })
             .catch(err => {
                 handleError(err, navigate)
@@ -109,11 +93,11 @@ export const PatientBoard = () => {
     function processStoriesByWeek(stories: IStory[]) {
         const storiesByWeek = new Map<number, IStoryDto[]>();
         for (const story of stories) {
-            const weekNum = getWeekNum(dayjs.unix(story.date))
+            const weekNum = getWeekNumFromDate(dayjs.unix(story.date))
             if (!storiesByWeek.has(weekNum)) {
                 storiesByWeek.set(weekNum, [])
             }
-            const storyDto: IStoryDto = {
+            const storyDto: IStoryDto = { // TODO: конечно хуёвый способ так делать, нужно это в отдельный класс вынести
                 id: story.id,
                 date: dayjs.unix(story.date),
                 situation: story.situation,
@@ -127,64 +111,11 @@ export const PatientBoard = () => {
     }
 
     const [currentPage, setCurrentPage] = useState(1);
-    const onPageChange = (page: number) => {
-        setCurrentPage(page);
-    }
 
-    function getWeekDates(weekIndex: number): [Dayjs, Dayjs] { // 0 week means is current
-        const lastMonday = dayjs().weekday(-6)
-        const sundayForLastMonday = lastMonday.add(1, 'week') // last monday
+    function getWeekNumFromDate(date: Dayjs): number { // 0 week means is current, 1 – week ago
+        const nextSunday = dayjs().weekday(7) // sunday for closest monday
 
-        const startDate = lastMonday.subtract(weekIndex, 'week')
-        const endDate = sundayForLastMonday.subtract(weekIndex, 'week')
-
-        return [startDate, endDate]
-    }
-
-    function getWeekNum(date: Dayjs): number { // 0 week means is current
-        const lastMonday = dayjs().weekday(-6)
-        const sundayForLastMonday = lastMonday.add(1, 'week') // last monday
-
-        return (sundayForLastMonday.diff(date) % 7 | 0) + 1
-    }
-
-    const KptTable = () => {
-        const weekIndex = currentPage - 1
-        const [startDate, endDate] = getWeekDates(weekIndex)
-
-        const currentStories = storiesByWeek.get(weekIndex) || []
-
-        function getStoryRow(story: IStoryDto) {
-            return (<>
-                <TableRow key={story.id} className="hover:bg-thirdy-color transition duration-300">
-                    <TableCell>{story.date.toString()}</TableCell>
-                    <TableCell>{story.situation}</TableCell>
-                    <TableCell>{story.mind}</TableCell>
-                    <TableCell>{story.emotion}</TableCell>
-                    <TableCell>{story.emotionPower}</TableCell>
-                </TableRow>
-            </>)
-        }
-
-        return (<>
-                <TableContainer component={Paper} className="shadow-md rounded-lg">
-                    <Table>
-                        <TableHead className="bg-primary-color">
-                            <TableRow>
-                                <TableCell className="text-white">Время</TableCell>
-                                <TableCell className="text-white">Ситуация</TableCell>
-                                <TableCell className="text-white">Автоматическая мысль</TableCell>
-                                <TableCell className="text-white">Эмоция</TableCell>
-                                <TableCell className="text-white">Сила эмоции</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {currentStories.map(getStoryRow)}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </>
-        );
+        return (nextSunday.diff(date, 'day') / 7 | 0)
     }
 
     const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -269,8 +200,8 @@ export const PatientBoard = () => {
 
                         <Pagination
                             count={countPages}
-                            page={currentPage}
-                            onChange={(event, value) => setCurrentPage(value)}
+                            page={currentPage + 1}
+                            onChange={(event, value) => setCurrentPage(value - 1)}
                             color="primary"
                             variant="outlined"
                             shape="rounded"
@@ -293,7 +224,10 @@ export const PatientBoard = () => {
                     {CustomMenu()}
                 </div>
 
-                <KptTable/>
+                <KptTable
+                    weekIndex={currentPage}
+                    storiesByWeek={storiesByWeek}
+                />
             </div>
         </>
     );
