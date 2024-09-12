@@ -1,21 +1,21 @@
 // auth
-import {makeGet, makePost} from "../apiCore";
+import {makeGet} from "../apiCore";
 
 
 export const PATIENTS_URL = "api/patient"
 
 export type IPatient = {
-    id:        number
+    id: number
     firstName: string
-    lastName:  string
+    lastName: string
 }
 
 export type IStory = {
-    id:           number
-    date:         number
-    situation:    string
-    mind:         string
-    emotion:      string
+    id: number
+    date: number
+    situation: string
+    mind: string
+    emotion: string
     emotionPower: number
 }
 

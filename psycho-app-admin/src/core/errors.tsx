@@ -13,7 +13,7 @@ export function handleError(error: any, navigate?: NavigateFunction) {
             "Error: data: ", error.response.data,
             "status: ", error.response.status,
             "headers: ", error.response.headers,
-            );
+        );
     }
 
     if (error.response) {
@@ -23,10 +23,10 @@ export function handleError(error: any, navigate?: NavigateFunction) {
             return
         }
         if (error.response.status === 401) {
-            if (!isUserEntered()){
+            if (!isUserEntered()) {
                 goToAuthUser(navigate)
             }
-            if (!getRefreshToken()){
+            if (!getRefreshToken()) {
                 goToAuthUser(navigate)
             }
 
@@ -63,9 +63,6 @@ export function goToAuthUser(navigate: NavigateFunction) {
 function errorToast(error: any) {
     toast.error("Невозможно выполнить запрос: " + error.message)
 }
-
-
-
 
 
 // export function handleError(error: any, navigate?: any, refresh = true) {

@@ -222,7 +222,7 @@ export function Login() {
     return (
         <>
             <div className="w-full h-fit min-h-full py-10 bg-cover bg-background">
-                { isLogin ? LoginPage() : RegisterPage() }
+                {isLogin ? LoginPage() : RegisterPage()}
                 <PredeclaredToastContainer/>
             </div>
         </>

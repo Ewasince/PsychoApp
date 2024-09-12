@@ -37,16 +37,16 @@ refreshRequest.interceptors.request.use((config) => {
     return config;
 })
 
-function addToHeaderToken(config: InternalAxiosRequestConfig<any>, tokenFunc: () => string ){
-    if (!config.headers){
+function addToHeaderToken(config: InternalAxiosRequestConfig<any>, tokenFunc: () => string) {
+    if (!config.headers) {
         return
     }
     const token = tokenFunc()
     config.headers.Authorization = "Bearer " + token || ''
 }
 
-function addToHeaderCors(config: InternalAxiosRequestConfig<any>){
-    if (!config.headers){
+function addToHeaderCors(config: InternalAxiosRequestConfig<any>) {
+    if (!config.headers) {
         return
     }
     // config.headers["Access-Control-Allow-Origin"] = "*"

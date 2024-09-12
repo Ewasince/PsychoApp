@@ -22,7 +22,7 @@ export const PredeclaredToastContainer = () => {
 }
 
 
-export function Heading({heading, backButton} : {heading: string, backButton?: any}) {
+export function Heading({heading, backButton}: { heading: string, backButton?: any }) {
     return (
         <>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end"}}>

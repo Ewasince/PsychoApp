@@ -1,6 +1,6 @@
-import {clearConfig, clearGlobalUser, getConfig, getGlobalUser, setConfig, setGlobalUser} from "../core/storage/config";
+import {clearConfig, clearGlobalUser, getGlobalUser, setConfig, setGlobalUser} from "../core/storage/config";
 import {clearTokens} from "../core/storage/tokens";
-import {getMe, IConfig} from "./endpoints/apiAuth";
+import {getMe} from "./endpoints/apiAuth";
 import {handleError} from "../core/errors";
 
 export function setUser() {
