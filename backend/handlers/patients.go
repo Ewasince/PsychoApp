@@ -19,7 +19,7 @@ func GetPatientsHandler(c *gin.Context) {
 		e.JSONError(c, e.UserNotFound)
 		return
 	}
-	var patientsMap []gin.H
+	var patientsMap = make([]gin.H, 0)
 	for _, patient := range *patients {
 		patientsMap = append(patientsMap, patient.ToMap())
 	}
@@ -97,7 +97,7 @@ func GetPatientStoriesHandler(c *gin.Context) {
 
 	stories, err := storageRepo.GetStories(patient.UserId, dateStart, dateFinish)
 
-	var JSONStories []gin.H
+	var JSONStories = make([]gin.H, 0)
 	for _, story := range *stories {
 		JSONStories = append(JSONStories, story.ToMap())
 	}
