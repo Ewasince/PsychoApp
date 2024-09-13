@@ -7,6 +7,7 @@ import (
 	"os"
 	"reflect"
 	"strconv"
+	"strings"
 	"text/tabwriter"
 )
 
@@ -15,6 +16,7 @@ type environmentVariables struct {
 	DEBUG           bool
 	MIGRATIONS_PATH string
 	DB_PATH         string
+	FRONTEND_PATH   string
 }
 
 var Env = environmentVariables{}
@@ -39,6 +41,9 @@ func init() {
 
 	// DB_PATH
 	Env.DB_PATH = getEnv("DATABASE_PATH", "")
+
+	// FRONTEND_PATH
+	Env.FRONTEND_PATH = strings.Trim(getEnv("FRONTEND_PATH", ""), "/") + "/"
 
 	printEnvVariables()
 }

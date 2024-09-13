@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	environment "EnvironmentModule"
+	. "EnvironmentModule"
 	e "PsychoAppAdmin/errors"
 	. "StorageModule/models"
 	"github.com/gin-gonic/gin"
@@ -15,7 +15,7 @@ func GetMeHandler(c *gin.Context) {
 		return
 	}
 	userStruct := user.(*User).ToMap()
-	userConfig := environment.GetFrontConfig()
+	userConfig := GetFrontConfig()
 
 	c.JSON(200, gin.H{
 		"user":   userStruct,
@@ -30,5 +30,7 @@ func HandleNoRoute() func(c *gin.Context) {
 			e.JSONError(c, e.RouteNotFound)
 			return
 		}
+		// should be frontend endpoint
+		c.File(Env.FRONTEND_PATH + "/index.html")
 	}
 }

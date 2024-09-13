@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	. "EnvironmentModule"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +19,8 @@ func RegisterRoutes(e *gin.Engine) {
 		panic("You must set auth handle!")
 	}
 	e.NoRoute(HandleNoRoute())
+	e.StaticFile("/favicon.ico", Env.FRONTEND_PATH+"/favicon.ico")
+	e.Static("/static", Env.FRONTEND_PATH+"/static")
 
 	api := e.Group(ApiGroupPrefix)
 	registerApi(api)
