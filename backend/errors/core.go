@@ -43,7 +43,7 @@ func JSONError(c *gin.Context, err error) {
 	switch err.(type) {
 	default:
 		c.JSON(int(defaultErrorCode), gin.H{
-			"code":    DEFAULT_CODE,
+			"code":    DefaultCode,
 			"message": fmt.Sprintf("%v", err),
 		})
 

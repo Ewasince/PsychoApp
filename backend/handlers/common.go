@@ -7,6 +7,8 @@ import (
 
 var Handle *jwt.GinJWTMiddleware
 
+var ApiGroupPrefix = "/api"
+
 func SetHandle(h *jwt.GinJWTMiddleware) {
 	Handle = h
 }
@@ -15,9 +17,9 @@ func RegisterRoutes(e *gin.Engine) {
 	if Handle == nil {
 		panic("You must set auth handle!")
 	}
-	e.NoRoute(Handle.MiddlewareFunc(), HandleNoRoute())
+	e.NoRoute(HandleNoRoute())
 
-	api := e.Group("/api")
+	api := e.Group(ApiGroupPrefix)
 	registerApi(api)
 
 	auth := api.Group("/auth")
