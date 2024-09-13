@@ -36,26 +36,13 @@ func main() {
 	engine.Use(handlerMiddleWare(authMiddleware))
 
 	// register route for auth
-	registerRoute(engine, authMiddleware)
+	handlers.SetHandle(authMiddleware)
+	handlers.RegisterRoutes(engine)
 
 	// start http server
 	if err = http.ListenAndServe(":"+Env.PORT, engine); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func registerRoute(r *gin.Engine, handle *jwt.GinJWTMiddleware) {
-	r.NoRoute(handle.MiddlewareFunc(), handlers.HandleNoRoute())
-	r.POST("/login", handle.LoginHandler)
-
-	api := r.Group("/api", handle.MiddlewareFunc())
-	api.GET("/patient", handlers.GetPatientsHandler)
-	api.GET("/patient/:id", handlers.GetPatientHandler)
-	api.GET("/patient/:id/story", handlers.GetPatientStoriesHandler)
-
-	auth := api.Group("/auth")
-	auth.GET("/get_me", handlers.GetMeHandler)
-	auth.GET("/refresh_token", handle.RefreshHandler)
 }
 
 func handlerMiddleWare(authMiddleware *jwt.GinJWTMiddleware) gin.HandlerFunc {

@@ -3,6 +3,7 @@ package handlers
 import (
 	e "PsychoAppAdmin/errors"
 	"net/http"
+	"strings"
 	"time"
 
 	//"PsychoAppAdmin"
@@ -105,5 +106,16 @@ func HandleNoRoute() func(c *gin.Context) {
 		claims := jwt.ExtractClaims(c)
 		log.Printf("NoRoute claims: %#v\n", claims)
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
+	}
+}
+
+func skipLoginAuthentication(authMiddleWare func(c *gin.Context)) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		path := strings.Trim(c.Request.URL.Path, "/")
+		if strings.HasSuffix(path, "login") {
+			c.Next()
+			return
+		}
+		authMiddleWare(c)
 	}
 }

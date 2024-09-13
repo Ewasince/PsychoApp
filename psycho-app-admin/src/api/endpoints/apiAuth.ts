@@ -2,7 +2,7 @@
 import {makeGet, makePost} from "../apiCore";
 
 
-export const LOGIN_URL = "login";
+export const LOGIN_URL = "api/auth/login";
 export const REFRESH_URL = "api/auth/refresh_token";
 export const GET_ME_URL = "api/auth/get_me";
 
