@@ -32,7 +32,8 @@ ARG APP_FOLDER=/opt/psychoapp
 # build front
 WORKDIR $FRONT_TEMP_FOLDER
 COPY $FRONT_LOCAL_FOLDER/package*.json .
-RUN npm install
+RUN npm i -d typescript && \
+    npm install
 
 COPY $FRONT_LOCAL_FOLDER .
 RUN npm run build
