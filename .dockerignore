@@ -29,4 +29,19 @@ go.work.sum
 
 # other
 tmp/*
+**/.idea
+#debian
+readme.md
+.gitignore
 build
+
+# make
+Makefile
+
+# docker
+Dockerfile
+.dockerignore
+
+# front
+psycho-app-admin/build
+psycho-app-admin/node_modules
