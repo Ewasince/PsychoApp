@@ -1,8 +1,9 @@
 import axios, {AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from "axios";
 import {getAccessToken, getRefreshToken} from "../core/storage/tokens";
+import {API_HOST} from "../core/env";
 
 export function makeUrl(endpoint: string) {
-    return `/${endpoint}`
+    return `${API_HOST ? API_HOST : ""}/${endpoint}`
 }
 
 export const credentialsRequest = axios.create({
@@ -60,6 +61,7 @@ function generateUrl(baseUrl: string, urlParams: Array<string>): string {
             url = url + `/${param}`
         })
     }
+    console.log("generateUrl url", url)
     return url
 }
 

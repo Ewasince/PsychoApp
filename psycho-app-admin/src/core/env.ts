@@ -1,4 +1,1 @@
-// const {NODE_ENV} = process.env;
-//
-// export const IS_DEV = NODE_ENV === 'development';
-export const STUB = ""
+export const API_HOST = process.env.REACT_APP_TEST_VAR
