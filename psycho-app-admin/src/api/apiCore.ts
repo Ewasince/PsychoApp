@@ -2,7 +2,7 @@ import axios, {AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} fr
 import {getAccessToken, getRefreshToken} from "../core/storage/tokens";
 
 export function makeUrl(endpoint: string) {
-    return `http://localhost:8181/${endpoint}`
+    return `/${endpoint}`
 }
 
 export const credentialsRequest = axios.create({
