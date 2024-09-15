@@ -17,6 +17,7 @@ type environmentVariables struct {
 	MIGRATIONS_PATH string
 	DB_PATH         string
 	FRONTEND_PATH   string
+	CORS_ORIGINS    []string
 }
 
 var Env = environmentVariables{}
@@ -45,6 +46,9 @@ func init() {
 
 	// FRONTEND_PATH
 	Env.FRONTEND_PATH = strings.Trim(getEnv("FRONTEND_PATH", ""), "/") + "/"
+
+	// FRONTEND_PATH
+	Env.CORS_ORIGINS = strings.Split(getEnv("CORS_ORIGINS", ""), ",")
 
 	printEnvVariables()
 }

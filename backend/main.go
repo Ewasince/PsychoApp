@@ -17,7 +17,7 @@ func main() {
 
 	// add cors middleware
 	engine.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8181"},
+		AllowOrigins:     Env.CORS_ORIGINS,
 		AllowMethods:     []string{"POST", "OPTIONS", "GET", "PUT"},
 		AllowHeaders:     []string{"Content-Type", "Content-Length", "Accept-Encoding", "Cache-Control", "Authorization", "Control-Allow-Origin"},
 		ExposeHeaders:    []string{"Content-Length"},
