@@ -45,6 +45,10 @@ func GetPatientHandler(c *gin.Context) {
 }
 
 func GetPatientStoriesHandler(c *gin.Context) {
+	// user id
+	claims := jwt.ExtractClaims(c)
+	userId := uint(claims[IdentityKey].(float64))
+
 	// patient id
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -56,6 +60,10 @@ func GetPatientStoriesHandler(c *gin.Context) {
 	patient, err := repo.GetPatient(patientId)
 	if err != nil {
 		e.JSONError(c, e.PatientNotFound)
+		return
+	}
+	if patient.UserId != userId {
+		e.JSONError(c, e.AccessForbidden)
 		return
 	}
 
@@ -91,7 +99,7 @@ func GetPatientStoriesHandler(c *gin.Context) {
 	dateStart := time.Unix(int64(dateStartTs), 0)
 	dateFinish := time.Unix(int64(dateFinishTs), 0)
 
-	stories, err := repo.GetStories(patient.UserId, dateStart, dateFinish)
+	stories, err := repo.GetStories(patientId, dateStart, dateFinish)
 
 	var JSONStories = make([]gin.H, 0)
 	for _, story := range *stories {

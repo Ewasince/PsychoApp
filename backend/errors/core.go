@@ -7,10 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NotFoundErrorCode uint16 = 404
-var UnauthorizedErrorCode uint16 = 404
-
-var defaultErrorCode = NotFoundErrorCode
+var defaultErrorCode uint16 = 404
 
 type WebError struct {
 	error
@@ -26,16 +23,16 @@ func (w *WebError) ToMap() gin.H {
 	}
 }
 
-func newError(message string, textCode string, responseCode *uint16) error {
+func newError(message string, textCode string, responseCode uint16) error {
 	err := errors.New(message)
 
-	if responseCode == nil {
-		responseCode = &defaultErrorCode
+	if responseCode == 0 {
+		responseCode = defaultErrorCode
 	}
 	return &WebError{
 		error:        err,
 		textCode:     textCode,
-		responseCode: *responseCode,
+		responseCode: responseCode,
 	}
 }
 
