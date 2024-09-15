@@ -34,3 +34,11 @@ func GetUser(userId uint) (*User, error) {
 
 	return &user, err
 }
+
+func GetUserByUsername(username string) (*User, error) {
+	var user User
+
+	err := DB.First(&user, "username = ?", username).Error
+
+	return &user, err
+}

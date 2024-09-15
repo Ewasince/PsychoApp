@@ -12,6 +12,7 @@ type Patient struct {
 	Username string
 	Password string
 	UserId   uint
+	TgId     int64
 }
 
 // ToMap turn Patient struct into map

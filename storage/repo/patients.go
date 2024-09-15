@@ -13,7 +13,20 @@ func GetPatients(userId uint) (*[]Patient, error) {
 
 func GetPatient(patientId uint) (*Patient, error) {
 	var patient Patient
-	err := DB.Find(&patient, patientId).Error
+	err := DB.First(&patient, patientId).Error
 
 	return &patient, err
+}
+
+func GetPatientByTg(tgId int64) (*Patient, error) {
+	var patient Patient
+	err := DB.First(&patient, "tg_id = ?", tgId).Error
+
+	return &patient, err
+}
+
+func CreatePatient(patient *Patient) error {
+	err := DB.Create(&patient).Error
+
+	return err
 }
