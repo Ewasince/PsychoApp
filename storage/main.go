@@ -16,11 +16,12 @@ import (
 )
 
 func init() {
-	if Env.DEBUG {
-		resetDb()
-	} else {
-		migrateDb()
-	}
+	migrateDb()
+	//if Env.DEBUG {
+	//	//resetDb()
+	//} else {
+	//	migrateDb()
+	//}
 }
 
 func migrateDb() {

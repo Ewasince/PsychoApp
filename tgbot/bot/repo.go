@@ -10,6 +10,6 @@ func IsPatientRegistered(tgId int64) bool {
 	return patientErr == nil
 }
 
-func LoadStory(story *models.Story) {
-
+func LoadStory(story *models.Story) error {
+	return repo.CreateStory(story)
 }

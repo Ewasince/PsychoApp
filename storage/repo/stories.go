@@ -6,7 +6,6 @@ import (
 )
 
 func GetStories(patientId uint, dateStart, dateFinish time.Time) (*[]Story, error) {
-	// STUB: !!!
 	var stories = make([]Story, 0)
 	err := DB.
 		Where("patient_id = ?", patientId).
@@ -28,4 +27,8 @@ func GetStoryMinDate(patientId uint) (time.Time, error) {
 		Error
 
 	return story.Date, err
+}
+
+func CreateStory(story *Story) error {
+	return DB.Create(story).Error
 }

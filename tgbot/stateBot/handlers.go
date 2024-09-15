@@ -24,9 +24,9 @@ func (s *StateHandler) ProcessState(state BotState) {
 func (s *StateHandler) processStateInitial() {
 	if bot.IsPatientRegistered(s.MessageSenderId) {
 		_ = s.setNewStory()
-		s.sendAndSetState(BotStateFillSituation, msg.MsgWhatHappened)
+		s.sendAndSetState(BotStateFillSituation, msg.WhatHappened)
 	} else {
-		s.sendAndSetState(BotStateRegister, msg.MessageGreating, msg.MessageRegister)
+		s.sendAndSetState(BotStateRegister, msg.Greating, msg.Register)
 	}
 }
 func (s *StateHandler) processStateRegister() {
@@ -34,7 +34,7 @@ func (s *StateHandler) processStateRegister() {
 	user, err := repo.GetUserByUsername(s.MessageText)
 
 	if err != nil {
-		_ = s.BotHandler.CreateAndSendMessage(msg.MessageUserNotFound)
+		_ = s.BotHandler.CreateAndSendMessage(msg.UserNotFound)
 		return
 	}
 
@@ -52,37 +52,41 @@ func (s *StateHandler) processStateRegister() {
 	}
 	err = repo.CreatePatient(patient)
 	if err != nil {
-		_ = s.BotHandler.CreateAndSendMessage(msg.MessageCantCreatePatient)
+		_ = s.BotHandler.CreateAndSendMessage(msg.CantCreatePatient)
 		return
 	}
 
 	_ = s.setNewStory()
-	s.sendAndSetState(BotStateFillSituation, msg.MessageRegisterComplete)
+	s.sendAndSetState(BotStateFillSituation, msg.RegisterComplete)
 }
 func (s *StateHandler) processStateFillSituation() {
 	s.Story.Situation = s.MessageText
 
-	s.sendAndSetState(BotStateFillMind, msg.MsgWhatMind)
+	s.sendAndSetState(BotStateFillMind, msg.WhatMind)
 }
 func (s *StateHandler) processStateFillMind() {
 	s.Story.Mind = s.MessageText
 
-	s.sendAndSetState(BotStateFillEmotion, msg.MsgWhatEmotion)
+	s.sendAndSetState(BotStateFillEmotion, msg.WhatEmotion)
 }
 func (s *StateHandler) processStateFillEmotion() {
 	s.Story.Emotion = s.MessageText
 
-	s.sendAndSetState(BotStateFillPower, msg.MsgWhatPower)
+	s.sendAndSetState(BotStateFillPower, msg.WhatPower)
 }
 func (s *StateHandler) processStateFillPower() {
 	power, err := strconv.Atoi(s.MessageText)
 	if err != nil {
-		_ = s.BotHandler.CreateAndSendMessage(msg.MessageDontRecognizeNumber)
+		_ = s.BotHandler.CreateAndSendMessage(msg.DontRecognizeNumber)
 		return
 	}
 	s.Story.Power = uint8(power)
 
-	bot.LoadStory(s.Story)
+	err = bot.LoadStory(s.Story)
+	if err != nil {
+		_ = s.BotHandler.CreateAndSendMessage(msg.CantSaveStory)
+
+	}
 	_ = s.setNewStory()
-	s.sendAndSetState(BotStateFillSituation, msg.MsgWhatEntryDone)
+	s.sendAndSetState(BotStateFillSituation, msg.WhatEntryDone)
 }

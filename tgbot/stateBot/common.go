@@ -84,5 +84,5 @@ func (s *StateHandler) sendAndSetState(state BotState, messages ...string) {
 }
 
 func getDate() time.Time {
-	return time.Now()
+	return time.Now().Truncate(time.Minute)
 }
