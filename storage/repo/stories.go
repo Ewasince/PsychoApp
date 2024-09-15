@@ -1,4 +1,4 @@
-package storageRepo
+package repo
 
 import (
 	. "StorageModule/models"

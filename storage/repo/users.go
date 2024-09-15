@@ -1,8 +1,9 @@
-package storageRepo
+package repo
 
 import (
-	"PsychoAppAdmin/errors"
+	//"PsychoAppAdmin/errors"
 	. "StorageModule/models"
+	"github.com/pkg/errors"
 )
 
 func AuthUser(username, password string) (*User, error) {
@@ -20,7 +21,7 @@ func AuthUser(username, password string) (*User, error) {
 	}
 
 	if user.Password != password {
-		return &User{}, errors.UserNotAuthorized
+		return &User{}, errors.New("User not authenticated")
 	}
 
 	return &user, nil
