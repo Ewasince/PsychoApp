@@ -26,11 +26,10 @@ upload:
 
 
 install:
-	@ssh $(REMOTE_HOST) '\
-		mkdir -p $(REMOTE_INSTALL_LOCATION) && \
+	@ssh -t $(REMOTE_HOST) '\
 		cd $(REMOTE_INSTALL_LOCATION) && \
 		touch env.sh && \
-		screen -S $(REMOTE_SCREEN_SESSION_NAME) -p 0 -X stuff "^C" || screen -dmS $(REMOTE_SCREEN_SESSION_NAME) && \
+		screen -S $(REMOTE_SCREEN_SESSION_NAME) -X quit || echo no screen && \
 		rm -rf $(REMOTE_INSTALL_LOCATION)/$(REMOTE_APP_SUBDIR) && \
 		tar -xvf $(REMOTE_UPLOAD_LOCATION)/$(RESULT_FILE) -C $(REMOTE_INSTALL_LOCATION) && \
-		screen -S $(REMOTE_SCREEN_SESSION_NAME) -p 0 -X stuff "source env.sh && psychoapp/psychoapp\n"'
+		screen -S $(REMOTE_SCREEN_SESSION_NAME) -c .screenrc'
