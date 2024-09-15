@@ -12,12 +12,16 @@ import (
 )
 
 type environmentVariables struct {
-	PORT            string
-	DEBUG           bool
+	DEBUG bool
+
+	PORT         string
+	CORS_ORIGINS []string
+
 	MIGRATIONS_PATH string
 	DB_PATH         string
 	FRONTEND_PATH   string
-	CORS_ORIGINS    []string
+
+	BOT_TOKEN string
 }
 
 var Env = environmentVariables{}
@@ -49,6 +53,9 @@ func init() {
 
 	// FRONTEND_PATH
 	Env.CORS_ORIGINS = strings.Split(getEnv("CORS_ORIGINS", ""), ",")
+
+	// BOT_TOKEN
+	Env.BOT_TOKEN = getEnv("BOT_TOKEN", "")
 
 	printEnvVariables()
 }

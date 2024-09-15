@@ -11,7 +11,7 @@ type Story struct {
 	Situation string
 	Mind      string
 	Emotion   string
-	Power     uint8
+	Power     uint8 // 1 to 10
 	PatientId uint
 }
 
