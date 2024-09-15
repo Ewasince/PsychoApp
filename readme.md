@@ -17,3 +17,7 @@ scp build/psychoapp.tar.gz cloud:~
 ```
 tar -xvf psychoapp.tar.gz
 ```
+
+# TODO
+- [ ] registration
+- [ ] ui for patients
