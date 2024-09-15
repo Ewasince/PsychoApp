@@ -12,7 +12,7 @@ import (
 
 type BotInteract string
 
-func (i BotInteract) isSimilarTo(str string) bool {
+func (i BotInteract) isEqual(str string) bool {
 	return string(i) == str
 }
 func (i BotInteract) toString() string {
@@ -50,6 +50,7 @@ func main() {
 
 		messageCommand := update.Message.Command()
 		messageText := update.Message.Text
+
 		messageSenderId := update.Message.From.ID
 		messageSender := update.Message.From.UserName
 
@@ -62,14 +63,7 @@ func main() {
 			messageText,
 		)
 
-		log.Printf(
-			"[%s, %d] command: %s",
-			messageSender,
-			messageSenderId,
-			messageCommand,
-		)
-
-		if StartCommandButton.isSimilarTo(messageCommand) {
+		if StartCommandButton.isEqual(messageCommand) {
 			msg := tg.NewMessage(messageChatId, botGreating)
 			msg.ReplyMarkup = numericKeyboard
 
@@ -84,7 +78,7 @@ func main() {
 		var botState BotState
 		var responseMessage string = ""
 
-		if NewEntryButton.isSimilarTo(messageText) {
+		if NewEntryButton.isEqual(messageText) {
 			fillingStory = &Story{}
 			stories[messageSenderId] = fillingStory
 		} else {
