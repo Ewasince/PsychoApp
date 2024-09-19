@@ -26,6 +26,7 @@ func init() {
 }
 
 func fillDatabase() {
+	DB.Begin()
 	fmt.Println("fill database!")
 	DB.Exec("DELETE FROM users")
 	DB.Exec("DELETE FROM patients")
@@ -34,6 +35,7 @@ func fillDatabase() {
 	users := createUsers()
 	patients := createPatients(getFirstKey(users))
 	createStories(getFirstKey(patients))
+	DB.Commit()
 }
 
 func createUsers() map[uint]*models.User {
