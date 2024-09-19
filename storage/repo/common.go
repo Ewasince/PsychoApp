@@ -108,8 +108,8 @@ func createStories(patientId uint) map[uint]*models.Story {
 		{
 
 			Date:      truncateToDay(time.Now(), 0),
-			Situation: "Обосрался",
-			Mind:      "Я еблан",
+			Situation: "Уронил мороженое",
+			Mind:      "Вот дурак",
 			Emotion:   "Грусть",
 			Power:     7,
 			PatientId: patientId,
@@ -301,17 +301,6 @@ func createStories(patientId uint) map[uint]*models.Story {
 			Mind:      "Нужен отдых",
 			Emotion:   "Невыразительность",
 			Power:     1,
-			PatientId: patientId,
-			BaseModel: models.BaseModel{
-				Model: gorm.Model{},
-			},
-		},
-		{
-			Date:      truncateToDay(time.Now(), 18),
-			Situation: "В жопе першит",
-			Mind:      "Нужно прочистить дымоход",
-			Emotion:   "Эйфория",
-			Power:     3,
 			PatientId: patientId,
 			BaseModel: models.BaseModel{
 				Model: gorm.Model{},
