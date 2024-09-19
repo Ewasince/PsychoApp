@@ -30,7 +30,7 @@ export const KptTable = (
         weekIndex: number,
         storiesByWeek: Map<number, IStoryDto[]>,
     }) => {
-    const currentStories = storiesByWeek.get(weekIndex) || []
+    const currentStories = storiesByWeek.get(weekIndex)
 
     function getStoryRow(story: IStoryDto) {
         return (<>
@@ -43,6 +43,16 @@ export const KptTable = (
             </TableRow>
         </>)
     }
+
+    const emptyTable = <>
+        <TableRow key={0} className="hover:bg-thirdy-color transition duration-300">
+            <TableCell colSpan={5}>
+                <div className="text-center font-medium">
+                    На выбранной неделе записей нет
+                </div>
+            </TableCell>
+        </TableRow>
+    </>
 
     return (<>
             <TableContainer component={Paper} className="shadow-md rounded-lg">
@@ -57,7 +67,7 @@ export const KptTable = (
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {currentStories.map(getStoryRow)}
+                        {currentStories ? currentStories.map(getStoryRow) : emptyTable}
                     </TableBody>
                 </Table>
             </TableContainer>
