@@ -82,7 +82,9 @@ export const PatientBoard = () => {
         const storiesByWeek = new Map<number, IStoryDto[]>();
         let maxWeekAgo = 0
         for (const story of stories) {
-            const weekNum = getWeekNumFromDate(dayjs.unix(story.date))
+            const storyDate = dayjs.unix(story.date)
+            const weekNum = getWeekNumFromDate(storyDate)
+            console.log(`weekNum=${weekNum} storyDate=${storyDate}`)
             maxWeekAgo = Math.max(maxWeekAgo,weekNum )
             if (!storiesByWeek.has(weekNum)) {
                 storiesByWeek.set(weekNum, [])
@@ -107,9 +109,14 @@ export const PatientBoard = () => {
     const [currentPage, setCurrentPage] = useState(1);
 
     function getWeekNumFromDate(date: Dayjs): number { // 0 week means is current, 1 – week ago
-        const nextSunday = dayjs().weekday(7) // sunday for closest monday
+        const nextMonday = dayjs()
+            .weekday(7)
+            .set("millisecond", 0)
+            .set("seconds", 0)
+            .set("minutes", 0)
+            .set("hours", 3) // shift from UTC to GMT+3
 
-        return (nextSunday.diff(date, 'day') / 7 | 0)
+        return nextMonday.diff(date, 'week')
     }
 
     const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
