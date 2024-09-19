@@ -30,10 +30,6 @@ export const KptTable = (
         weekIndex: number,
         storiesByWeek: Map<number, IStoryDto[]>,
     }) => {
-    // const weekIndex = currentPage - 1
-    // const [startDate, endDate] = getWeekDates(weekIndex)
-    console.log("weekIndex", weekIndex)
-
     const currentStories = storiesByWeek.get(weekIndex) || []
 
     function getStoryRow(story: IStoryDto) {

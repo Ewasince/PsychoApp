@@ -26,8 +26,6 @@ export function setUser() {
 }
 
 export function isUserEntered() {
-    console.log("!!getGlobalUser()", !!getGlobalUser())
-    console.log("!!getGlobalUser()", getGlobalUser())
     return !!getGlobalUser();
 }
 

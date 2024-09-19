@@ -61,7 +61,6 @@ function generateUrl(baseUrl: string, urlParams: Array<string>): string {
             url = url + `/${param}`
         })
     }
-    console.log("generateUrl url", url)
     return url
 }
 
