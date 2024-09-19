@@ -30,3 +30,35 @@ func CreatePatient(patient *Patient) error {
 
 	return err
 }
+
+func GetScheduledPatients() ([]*Patient, error) {
+	var patients []*Patient
+	err := DB.
+		Where("next_schedule IS NOT NULL").
+		Find(&patients).Error
+
+	return patients, err
+}
+
+func UpdateSchedules(patients []*Patient) error {
+	for _, patient := range patients {
+		err := UpdateSchedule(patient)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func UpdateSchedule(patient *Patient) error {
+	err := DB.
+		Model(&Patient{}).
+		Where("id = ?", patient.ID).
+		Updates(Patient{
+			NextSchedule: patient.NextSchedule,
+		}).
+		Error
+
+	return err
+}

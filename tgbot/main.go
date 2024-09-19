@@ -3,6 +3,7 @@ package main
 import (
 	. "EnvironmentModule"
 	"PsychoBot/interacts"
+	"PsychoBot/scheduler"
 	"PsychoBot/stateBot"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
@@ -18,6 +19,8 @@ func main() {
 	u.Timeout = 60
 
 	updates := botAPI.GetUpdatesChan(u)
+
+	go scheduler.Start()
 
 	for update := range updates {
 		if update.Message == nil {
