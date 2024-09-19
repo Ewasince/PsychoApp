@@ -38,10 +38,7 @@ export const PatientBoard = () => {
 
     const [patient, setPatient] = useState<IPatient>();
     const [storiesByWeek, setStoriesByWeek] = useState<Map<number, IStoryDto[]>>(new Map([]));
-    const [minDate, setMinDate] = useState<Dayjs>();
-    const [todayDate, setTodayDate] = useState<Dayjs>();
     const [countPages, setCountPages] = useState<number>(5);
-    const [emptyText, setEmptyText] = useState<string>("Пока у вас нету ни одного пациента");
 
     const navigate = useNavigate()
     const {patientId} = useParams()
@@ -58,15 +55,7 @@ export const PatientBoard = () => {
         getPatientStoriesMinDate({}, patientId as string, "story")
             .then(res => {
                 const minDate = dayjs.unix(res.data.minDate)
-                setMinDate(minDate);
-
                 const todayDate = dayjs()
-                setTodayDate(todayDate)
-
-                const countWeeks = Math.ceil(todayDate.weekday(7).diff(minDate, 'day') / 7) || 1
-                setCountPages(countWeeks)
-                setCurrentPage(0)
-
                 fetchStories(minDate, todayDate)
             })
             .catch(err => {
@@ -82,7 +71,6 @@ export const PatientBoard = () => {
             }
         }, patientId as string, "story")
             .then(res => {
-                console.log("getPatientStories", res.data)
                 processStoriesByWeek(res.data.stories)
             })
             .catch(err => {
@@ -92,8 +80,10 @@ export const PatientBoard = () => {
 
     function processStoriesByWeek(stories: IStory[]) {
         const storiesByWeek = new Map<number, IStoryDto[]>();
+        let maxWeekAgo = 0
         for (const story of stories) {
             const weekNum = getWeekNumFromDate(dayjs.unix(story.date))
+            maxWeekAgo = Math.max(maxWeekAgo,weekNum )
             if (!storiesByWeek.has(weekNum)) {
                 storiesByWeek.set(weekNum, [])
             }
@@ -108,6 +98,10 @@ export const PatientBoard = () => {
             storiesByWeek.get(weekNum)?.push(storyDto)
         }
         setStoriesByWeek(storiesByWeek)
+
+        maxWeekAgo++
+        setCountPages(maxWeekAgo)
+        setCurrentPage(0)
     }
 
     const [currentPage, setCurrentPage] = useState(1);
