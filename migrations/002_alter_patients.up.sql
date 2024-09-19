@@ -4,7 +4,7 @@ CREATE TABLE patients_new
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
     name       TEXT    NOT NULL,
     last_name  TEXT,
-    email      TEXT UNIQUE,
+    email      TEXT,
     username   TEXT    NOT NULL UNIQUE,
     password   TEXT    NOT NULL,
     user_id    INTEGER NOT NULL,
@@ -23,3 +23,5 @@ DROP TABLE patients;
 
 -- 4. Переименовать новую таблицу в старую
 ALTER TABLE patients_new RENAME TO patients;
+
+ALTER TABLE patients ADD COLUMN next_schedule DATE;
