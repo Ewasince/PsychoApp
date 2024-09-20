@@ -3,6 +3,8 @@ package stateBot
 import (
 	"PsychoBot/bot"
 	msg "PsychoBot/messages"
+	"fmt"
+	"time"
 
 	. "StorageModule/models"
 	"StorageModule/repo"
@@ -18,6 +20,9 @@ func (s *StateHandler) ProcessState(state BotState) {
 		BotStateFillMind:      s.processStateFillMind,
 		BotStateFillEmotion:   s.processStateFillEmotion,
 		BotStateFillPower:     s.processStateFillPower,
+		BotStateStartSchedule: s.processStateStartSchedule,
+		BotStateFillSchedule:  s.processStateFillSchedule,
+		BotStateResetSchedule: s.processStateResetSchedule,
 	}
 	stateMap[state]()
 }
@@ -85,8 +90,68 @@ func (s *StateHandler) processStateFillPower() {
 	err = bot.LoadStory(s.Story)
 	if err != nil {
 		_ = s.BotHandler.CreateAndSendMessage(msg.CantSaveStory)
-
+		return
 	}
 	_ = s.setNewStory()
 	s.sendAndSetState(BotStateFillSituation, msg.WhatEntryDone)
+}
+func (s *StateHandler) processStateStartSchedule() {
+	patient, err := repo.GetPatientByTg(s.MessageSenderId)
+	if err != nil {
+		s.botError(err)
+		return
+	}
+
+	var message string
+	if patient.NextSchedule != nil {
+		message = fmt.Sprintf(msg.SetScheduleSet, patient.NextSchedule.Hour())
+	} else {
+		message = msg.SetScheduleNotSet
+	}
+	s.sendAndSetState(BotStateFillSchedule, message)
+}
+func (s *StateHandler) processStateFillSchedule() {
+	scheduleHour, err := strconv.Atoi(s.MessageText)
+	if err != nil {
+		_ = s.BotHandler.CreateAndSendMessage(msg.DontRecognizeHour)
+		return
+	}
+	if !(0 <= scheduleHour && scheduleHour <= 23) {
+		_ = s.BotHandler.CreateAndSendMessage(msg.DontRecognizeHour)
+	}
+	now := time.Now()
+	var nextSchedule time.Time
+	scheduleInHours := scheduleHour - now.Hour()
+	if scheduleInHours < 0 {
+		scheduleInHours = scheduleInHours + 24
+	}
+	nextSchedule = now.Add(time.Hour * time.Duration(scheduleInHours))
+	patient, err := repo.GetPatientByTg(s.MessageSenderId)
+	if err != nil {
+		s.botError(err)
+		return
+	}
+	err = bot.SaveSchedule(&Patient{
+		BaseModel:    BaseModel{Model: gorm.Model{ID: patient.ID}},
+		NextSchedule: &nextSchedule,
+	})
+	if err != nil {
+		s.botError(err)
+		return
+	}
+	message := fmt.Sprintf(msg.SetScheduleSuccess, strconv.Itoa(scheduleHour))
+	s.sendAndSetState(BotStateInitial, message)
+}
+func (s *StateHandler) processStateResetSchedule() {
+	patient, err := repo.GetPatientByTg(s.MessageSenderId)
+	if err != nil {
+		s.botError(err)
+		return
+	}
+	err = bot.SaveSchedule(&Patient{
+		BaseModel:    BaseModel{Model: gorm.Model{ID: patient.ID}},
+		NextSchedule: nil,
+	})
+	patient, err = repo.GetPatientByTg(s.MessageSenderId)
+	s.sendAndSetState(BotStateInitial, msg.ResetScheduleSuccess)
 }

@@ -29,7 +29,7 @@ func main() {
 
 		messageMessage := update.Message
 		messageSender := messageMessage.From
-		messageCommand := messageMessage.Command()
+		messageCommand := interacts.BotInteract(messageMessage.Command())
 
 		stateHandler := stateBot.NewStateHandler(
 			messageMessage,
@@ -45,10 +45,14 @@ func main() {
 
 		switch messageCommand {
 		case interacts.StartCommandButton:
-			stateBot.StatesCache.ResetState(messageSender.ID)
+			stateBot.ResetState(messageSender.ID)
+		case interacts.ScheduleCommandButton:
+			stateBot.SetState(messageSender.ID, stateBot.BotStateStartSchedule)
+		case interacts.ResetScheduleCommandButton:
+			stateBot.SetState(messageSender.ID, stateBot.BotStateResetSchedule)
 		}
 
-		state := stateBot.StatesCache.GetState(messageSender.ID)
+		state := stateBot.GetState(messageSender.ID)
 		stateHandler.ProcessState(state)
 	}
 }

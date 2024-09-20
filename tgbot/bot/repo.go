@@ -13,3 +13,7 @@ func IsPatientRegistered(tgId int64) bool {
 func LoadStory(story *models.Story) error {
 	return repo.CreateStory(story)
 }
+
+func SaveSchedule(patient *models.Patient) error {
+	return repo.UpdateSchedule(patient)
+}

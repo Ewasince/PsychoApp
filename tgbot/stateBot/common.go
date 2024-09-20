@@ -2,10 +2,12 @@ package stateBot
 
 import (
 	"PsychoBot/bot"
+	msg "PsychoBot/messages"
 	"StorageModule/models"
 	"StorageModule/repo"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"gorm.io/gorm"
+	"log"
 	"time"
 )
 
@@ -71,7 +73,7 @@ func (s *StateHandler) setNewStory() error {
 }
 
 func (s *StateHandler) setState(state BotState) {
-	StatesCache[s.MessageSenderId] = state
+	SetState(s.MessageSenderId, state)
 }
 func (s *StateHandler) sendAndSetState(state BotState, messages ...string) {
 	for _, message := range messages {
@@ -81,6 +83,11 @@ func (s *StateHandler) sendAndSetState(state BotState, messages ...string) {
 		}
 	}
 	s.setState(state)
+}
+
+func (s *StateHandler) botError(err error) {
+	_ = s.BotHandler.CreateAndSendMessage(msg.BotError)
+	log.Panic(err)
 }
 
 func getDate() time.Time {

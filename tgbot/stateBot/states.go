@@ -9,4 +9,7 @@ const (
 	BotStateFillMind      BotState = iota
 	BotStateFillEmotion   BotState = iota
 	BotStateFillPower     BotState = iota
+	BotStateStartSchedule BotState = iota
+	BotStateFillSchedule  BotState = iota
+	BotStateResetSchedule BotState = iota
 )
