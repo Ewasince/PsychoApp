@@ -135,7 +135,7 @@ func (s *StateHandler) processStateFillSchedule() {
 		return
 	}
 	message := fmt.Sprintf(msg.SetScheduleSuccess, strconv.Itoa(scheduleHour))
-	s.sendAndSetState(BotStateInitial, message)
+	s.sendAndSetState(BotStateFillSituation, message)
 }
 func (s *StateHandler) processStateResetSchedule() {
 	patient, err := repo.GetPatientByTg(s.MessageSenderId)
@@ -148,5 +148,5 @@ func (s *StateHandler) processStateResetSchedule() {
 		NextSchedule: nil,
 	})
 	patient, err = repo.GetPatientByTg(s.MessageSenderId)
-	s.sendAndSetState(BotStateInitial, msg.ResetScheduleSuccess)
+	s.sendAndSetState(BotStateFillSituation, msg.ResetScheduleSuccess)
 }
