@@ -43,7 +43,8 @@ func main() {
 			update.Message.Text,
 		)
 
-		if interacts.StartCommandButton.IsEqual(messageCommand) {
+		switch messageCommand {
+		case interacts.StartCommandButton:
 			stateBot.StatesCache.ResetState(messageSender.ID)
 		}
 
