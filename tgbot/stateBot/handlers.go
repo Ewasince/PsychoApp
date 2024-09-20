@@ -77,7 +77,7 @@ func (s *StateHandler) processStateFillEmotion() {
 func (s *StateHandler) processStateFillPower() {
 	power, err := strconv.Atoi(s.MessageText)
 	if err != nil {
-		_ = s.BotHandler.CreateAndSendMessage(msg.DontRecognizeNumber)
+		_ = s.BotHandler.CreateAndSendMessage(msg.DontRecognizePower)
 		return
 	}
 	s.Story.Power = uint8(power)
