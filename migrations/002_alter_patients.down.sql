@@ -25,3 +25,4 @@ DROP TABLE patients;
 ALTER TABLE patients_new RENAME TO patients;
 
 ALTER TABLE patients DROP COLUMN next_schedule;
+ALTER TABLE patients DROP COLUMN tg_chat_id;

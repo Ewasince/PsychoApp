@@ -54,6 +54,7 @@ func (s *StateHandler) processStateRegister() {
 		Password: "",
 		UserId:   user.ID,
 		TgId:     s.MessageSenderId,
+		TgChatId: &s.MessageChatId,
 	}
 	err = repo.CreatePatient(patient)
 	if err != nil {

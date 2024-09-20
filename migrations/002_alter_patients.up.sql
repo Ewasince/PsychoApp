@@ -25,3 +25,4 @@ DROP TABLE patients;
 ALTER TABLE patients_new RENAME TO patients;
 
 ALTER TABLE patients ADD COLUMN next_schedule DATE;
+ALTER TABLE patients ADD COLUMN tg_chat_id INTEGER;

@@ -15,6 +15,7 @@ type Patient struct {
 	UserId       uint
 	TgId         int64
 	NextSchedule *time.Time `gorm:"default:null"`
+	TgChatId     *int64     `gorm:"default:null"`
 }
 
 // ToMap turn Patient struct into map
