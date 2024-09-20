@@ -39,7 +39,7 @@ func HandleScheduledNotifications() error {
 		return err
 	}
 	for _, patient := range patients {
-		if now.Before(patient.NextSchedule) {
+		if now.Before(*patient.NextSchedule) {
 			continue
 		}
 		err := sendNotification(patient)
@@ -47,7 +47,7 @@ func HandleScheduledNotifications() error {
 			continue
 		}
 		NextSchedule := patient.NextSchedule.Add(time.Hour * 24)
-		patient.NextSchedule = NextSchedule
+		patient.NextSchedule = &NextSchedule
 		patientsUpdate = append(patientsUpdate, patient)
 	}
 
