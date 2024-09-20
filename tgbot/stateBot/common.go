@@ -93,3 +93,13 @@ func (s *StateHandler) botError(err error) {
 func getDate() time.Time {
 	return time.Now().Truncate(time.Minute)
 }
+
+func getScheduleTime(scheduleHour int) time.Time {
+	now := time.Now().Truncate(time.Hour)
+	scheduleInHours := scheduleHour - now.Hour()
+	if scheduleInHours < 0 {
+		scheduleInHours = scheduleInHours + 24
+	}
+
+	return now.Add(time.Hour * time.Duration(scheduleInHours))
+}

@@ -1,21 +1,29 @@
 package scheduler
 
 import (
+	"PsychoBot/bot"
+	msg "PsychoBot/messages"
 	. "StorageModule/models"
 	"StorageModule/repo"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/madflojo/tasks"
 	"log"
 	"time"
 )
 
-func Start() {
+const CHECK_INTERVAL = time.Hour
+
+var botApi *tgbotapi.BotAPI
+
+func Start(api *tgbotapi.BotAPI) {
+	botApi = api
 	// Start the Scheduler
 	scheduler := tasks.New()
 	defer scheduler.Stop()
 
 	// Add a task
 	_, err := scheduler.Add(&tasks.Task{
-		Interval:   5 * time.Second,
+		Interval:   CHECK_INTERVAL,
 		StartAfter: time.Now().Add(time.Hour).Truncate(time.Minute),
 		TaskFunc:   HandleScheduledNotifications,
 	})
@@ -65,5 +73,9 @@ func HandleScheduledNotifications() error {
 }
 
 func sendNotification(patient *Patient) error {
-	return nil
+	handler := bot.BotHandler{
+		BotApi:        botApi,
+		MessageChatId: *patient.TgChatId,
+	}
+	return handler.CreateAndSendMessage(msg.ScheduleNotification)
 }

@@ -3,11 +3,9 @@ package stateBot
 import (
 	"PsychoBot/bot"
 	msg "PsychoBot/messages"
-	"fmt"
-	"time"
-
 	. "StorageModule/models"
 	"StorageModule/repo"
+	"fmt"
 	"gorm.io/gorm"
 	"strconv"
 )
@@ -117,21 +115,16 @@ func (s *StateHandler) processStateFillSchedule() {
 		_ = s.BotHandler.CreateAndSendMessage(msg.DontRecognizeHour)
 		return
 	}
-	if !(0 <= scheduleHour && scheduleHour <= 23) {
-		_ = s.BotHandler.CreateAndSendMessage(msg.DontRecognizeHour)
-	}
-	now := time.Now()
-	var nextSchedule time.Time
-	scheduleInHours := scheduleHour - now.Hour()
-	if scheduleInHours < 0 {
-		scheduleInHours = scheduleInHours + 24
-	}
-	nextSchedule = now.Add(time.Hour * time.Duration(scheduleInHours))
 	patient, err := repo.GetPatientByTg(s.MessageSenderId)
 	if err != nil {
 		s.botError(err)
 		return
 	}
+	if !(0 <= scheduleHour && scheduleHour <= 23) {
+		_ = s.BotHandler.CreateAndSendMessage(msg.DontRecognizeHour)
+		return
+	}
+	nextSchedule := getScheduleTime(scheduleHour)
 	err = bot.SaveSchedule(&Patient{
 		BaseModel:    BaseModel{Model: gorm.Model{ID: patient.ID}},
 		NextSchedule: &nextSchedule,

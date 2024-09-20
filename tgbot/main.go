@@ -20,7 +20,7 @@ func main() {
 
 	updates := botAPI.GetUpdatesChan(u)
 
-	go scheduler.Start()
+	go scheduler.Start(botAPI)
 
 	for update := range updates {
 		if update.Message == nil {
