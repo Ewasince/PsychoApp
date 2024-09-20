@@ -55,7 +55,8 @@ func UpdateSchedule(patient *Patient) error {
 	err := DB.
 		Model(&Patient{}).
 		Where("id = ?", patient.ID).
-		Updates(Patient{
+		Select("next_schedule").
+		Updates(&Patient{
 			NextSchedule: patient.NextSchedule,
 		}).
 		Error
