@@ -128,6 +128,7 @@ func (s *StateHandler) processStateFillSchedule() {
 	err = bot.SaveSchedule(&Patient{
 		BaseModel:    BaseModel{Model: gorm.Model{ID: patient.ID}},
 		NextSchedule: &nextSchedule,
+		TgChatId:     &s.MessageChatId,
 	})
 	if err != nil {
 		s.botError(err)
