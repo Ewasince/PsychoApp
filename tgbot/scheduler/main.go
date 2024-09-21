@@ -69,7 +69,7 @@ func HandleScheduledNotifications() error {
 	err = repo.UpdateSchedules(patientsUpdate)
 	if err != nil {
 		log.Fatal("Cant update scheduled users: " + err.Error())
-		return err
+		return nil
 	}
 	return nil
 }
