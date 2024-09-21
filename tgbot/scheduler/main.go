@@ -21,17 +21,19 @@ func Start(api *tgbotapi.BotAPI) {
 	scheduler := tasks.New()
 	defer scheduler.Stop()
 
+	startAfter := time.Now().Add(time.Hour).Truncate(time.Hour)
+
 	// Add a task
 	_, err := scheduler.Add(&tasks.Task{
 		Interval:   CHECK_INTERVAL,
-		StartAfter: time.Now().Add(time.Hour).Truncate(time.Minute),
+		StartAfter: startAfter,
 		TaskFunc:   HandleScheduledNotifications,
 	})
 	if err != nil {
 		log.Println("Cant start scheduler ", err)
 		panic(err)
 	}
-	log.Println("Scheduler started..")
+	log.Printf("Scheduler will start after %s\n", startAfter)
 	select {} // Блокирует выполнение, позволяя задаче продолжать работу
 }
 
