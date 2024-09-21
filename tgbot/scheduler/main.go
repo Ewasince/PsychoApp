@@ -14,6 +14,7 @@ import (
 const CHECK_INTERVAL = time.Hour
 
 var botApi *tgbotapi.BotAPI
+var location *time.Location
 
 func Start(api *tgbotapi.BotAPI) {
 	botApi = api
@@ -21,13 +22,19 @@ func Start(api *tgbotapi.BotAPI) {
 	scheduler := tasks.New()
 	defer scheduler.Stop()
 
+	var err error
+	location, err = time.LoadLocation("Europe/Moscow")
+	if err != nil {
+		panic(err)
+	}
+
 	startAfter := time.Now().Add(time.Hour).Truncate(time.Hour)
 
 	// Add a task
-	_, err := scheduler.Add(&tasks.Task{
-		Interval:   CHECK_INTERVAL,
-		StartAfter: startAfter,
-		TaskFunc:   HandleScheduledNotifications,
+	_, err = scheduler.Add(&tasks.Task{
+		Interval: CHECK_INTERVAL,
+		//StartAfter: startAfter,
+		TaskFunc: HandleScheduledNotifications,
 	})
 	if err != nil {
 		log.Println("Cant start scheduler ", err)
@@ -38,7 +45,7 @@ func Start(api *tgbotapi.BotAPI) {
 }
 
 func HandleScheduledNotifications() error {
-	now := time.Now().Truncate(time.Millisecond)
+	now := time.Now().Truncate(time.Millisecond).In(location)
 	log.Printf("Scheduler started at %s\n", now)
 
 	patients, err := repo.GetScheduledPatients()
@@ -49,7 +56,7 @@ func HandleScheduledNotifications() error {
 		return err
 	}
 	for _, patient := range patients {
-		if now.Before(*patient.NextSchedule) {
+		if now.Before(patient.NextSchedule.In(location)) {
 			continue
 		}
 		err := sendNotification(patient)
