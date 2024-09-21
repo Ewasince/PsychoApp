@@ -21,6 +21,8 @@ func Start(api *tgbotapi.BotAPI) {
 	scheduler := tasks.New()
 	defer scheduler.Stop()
 
+	log.Printf("Local zone = %s\n", time.Local)
+
 	startAfter := time.Now().Add(time.Hour).Truncate(time.Hour)
 
 	// Add a task
@@ -50,6 +52,7 @@ func HandleScheduledNotifications() error {
 	}
 	for _, patient := range patients {
 		if now.Before(*patient.NextSchedule) {
+			log.Printf("skip with time %s\n", *patient.NextSchedule)
 			continue
 		}
 		err := sendNotification(patient)
