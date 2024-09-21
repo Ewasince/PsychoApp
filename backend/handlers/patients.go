@@ -9,6 +9,17 @@ import (
 	"time"
 )
 
+var loc *time.Location
+
+func init() {
+	// Загрузка временной зоны (например, Europe/Moscow)
+	var err error
+	loc, err = time.LoadLocation("Europe/Moscow")
+	if err != nil {
+		panic(err)
+	}
+}
+
 func GetPatientsHandler(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 
@@ -96,8 +107,8 @@ func GetPatientStoriesHandler(c *gin.Context) {
 		return
 	}
 
-	dateStart := time.Unix(int64(dateStartTs), 0)
-	dateFinish := time.Unix(int64(dateFinishTs), 0)
+	dateStart := time.Unix(int64(dateStartTs), 0).In(loc)
+	dateFinish := time.Unix(int64(dateFinishTs), 0).In(loc)
 
 	stories, err := repo.GetStories(patientId, dateStart, dateFinish)
 
