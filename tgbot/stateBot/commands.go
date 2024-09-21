@@ -46,6 +46,5 @@ func (s *StateHandler) processResetSchedule() {
 		BaseModel:    BaseModel{Model: gorm.Model{ID: patient.ID}},
 		NextSchedule: nil,
 	})
-	patient, err = repo.GetPatientByTg(s.MessageSenderId)
 	s.setState(BotStateFillSituation, msg.ResetScheduleSuccess)
 }
