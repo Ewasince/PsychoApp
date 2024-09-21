@@ -3,14 +3,19 @@ package bot
 import (
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
+	"sync"
 )
 
-type BotHandler struct {
+type Handler struct {
 	BotApi        *tg.BotAPI
 	MessageChatId int64
+	BotApiMutex   sync.Mutex
 }
 
-func (b *BotHandler) SendMessage(msg tg.Chattable) error {
+func (b *Handler) SendMessage(msg tg.Chattable) error {
+	b.BotApiMutex.Lock()
+	defer b.BotApiMutex.Unlock()
+
 	if _, err := b.BotApi.Send(msg); err != nil {
 		log.Panic(err)
 		return err
@@ -18,10 +23,10 @@ func (b *BotHandler) SendMessage(msg tg.Chattable) error {
 	return nil
 }
 
-func (b *BotHandler) CreateMessage(text string) tg.MessageConfig {
+func (b *Handler) CreateMessage(text string) tg.MessageConfig {
 	return tg.NewMessage(b.MessageChatId, text)
 }
 
-func (b *BotHandler) CreateAndSendMessage(text string) error {
+func (b *Handler) CreateAndSendMessage(text string) error {
 	return b.SendMessage(b.CreateMessage(text))
 }

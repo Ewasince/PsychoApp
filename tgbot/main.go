@@ -2,7 +2,6 @@ package main
 
 import (
 	. "EnvironmentModule"
-	"PsychoBot/interacts"
 	"PsychoBot/scheduler"
 	"PsychoBot/stateBot"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -20,6 +19,7 @@ func main() {
 
 	updates := botAPI.GetUpdatesChan(u)
 
+	// start scheduler
 	go scheduler.Start(botAPI)
 
 	for update := range updates {
@@ -29,7 +29,6 @@ func main() {
 
 		messageMessage := update.Message
 		messageSender := messageMessage.From
-		messageCommand := interacts.BotInteract(messageMessage.Command())
 
 		stateHandler := stateBot.NewStateHandler(
 			messageMessage,
@@ -43,16 +42,9 @@ func main() {
 			update.Message.Text,
 		)
 
-		switch messageCommand {
-		case interacts.StartCommandButton:
-			stateBot.ResetState(messageSender.ID)
-		case interacts.ScheduleCommandButton:
-			stateBot.SetState(messageSender.ID, stateBot.BotStateStartSchedule)
-		case interacts.ResetScheduleCommandButton:
-			stateBot.SetState(messageSender.ID, stateBot.BotStateResetSchedule)
+		if stateHandler.ProcessCommand() {
+			continue
 		}
-
-		state := stateBot.GetState(messageSender.ID)
-		stateHandler.ProcessState(state)
+		stateHandler.ProcessState()
 	}
 }

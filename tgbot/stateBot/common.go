@@ -18,7 +18,7 @@ type StateHandler struct {
 	MessageSenderId       int64
 	MessageSenderUserName string
 	MessageChatId         int64
-	BotHandler            bot.BotHandler
+	BotHandler            bot.Handler
 	Story                 *models.Story
 }
 
@@ -40,7 +40,7 @@ func NewStateHandler(
 		MessageSenderId:       messageSenderId,
 		MessageSenderUserName: messageSenderUserName,
 		MessageChatId:         messageChatId,
-		BotHandler: bot.BotHandler{
+		BotHandler: bot.Handler{
 			BotApi:        botAPI,
 			MessageChatId: messageChatId,
 		},
@@ -72,17 +72,25 @@ func (s *StateHandler) setNewStory() error {
 	return nil
 }
 
-func (s *StateHandler) setState(state BotState) {
-	SetState(s.MessageSenderId, state)
-}
-func (s *StateHandler) sendAndSetState(state BotState, messages ...string) {
+func (s *StateHandler) setState(state BotState, messages ...string) {
+	messagesBeforeNewState, err := s.getMessageBeforeState(state)
+	if err != nil {
+		s.botError(err)
+		return
+	}
+
+	if messagesBeforeNewState != nil {
+		messages = append(messages, *messagesBeforeNewState...)
+	}
+
 	for _, message := range messages {
 		err := s.BotHandler.CreateAndSendMessage(message)
 		if err != nil {
 			return
 		}
 	}
-	s.setState(state)
+
+	setCacheState(s.MessageSenderId, state)
 }
 
 func (s *StateHandler) botError(err error) {

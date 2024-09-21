@@ -10,7 +10,8 @@ import (
 	"strconv"
 )
 
-func (s *StateHandler) ProcessState(state BotState) {
+func (s *StateHandler) ProcessState() {
+	state := getCacheState(s.MessageSenderId)
 	stateMap := map[BotState]func(){
 		BotStateInitial:       s.processStateInitial,
 		BotStateRegister:      s.processStateRegister,
@@ -18,18 +19,18 @@ func (s *StateHandler) ProcessState(state BotState) {
 		BotStateFillMind:      s.processStateFillMind,
 		BotStateFillEmotion:   s.processStateFillEmotion,
 		BotStateFillPower:     s.processStateFillPower,
-		BotStateStartSchedule: s.processStateStartSchedule,
 		BotStateFillSchedule:  s.processStateFillSchedule,
-		BotStateResetSchedule: s.processStateResetSchedule,
 	}
 	stateMap[state]()
 }
+
 func (s *StateHandler) processStateInitial() {
+	// abstract handler that servers as proxy to other handlers
 	if bot.IsPatientRegistered(s.MessageSenderId) {
 		_ = s.setNewStory()
-		s.sendAndSetState(BotStateFillSituation, msg.WhatHappened)
+		s.processStateFillSituation()
 	} else {
-		s.sendAndSetState(BotStateRegister, msg.Greating, msg.Register)
+		s.processStateRegister()
 	}
 }
 func (s *StateHandler) processStateRegister() {
@@ -60,23 +61,24 @@ func (s *StateHandler) processStateRegister() {
 		return
 	}
 
+	err = s.BotHandler.CreateAndSendMessage(msg.RegisterComplete)
+	if err != nil {
+		return
+	}
 	_ = s.setNewStory()
-	s.sendAndSetState(BotStateFillSituation, msg.RegisterComplete)
+	s.setState(BotStateFillSituation)
 }
 func (s *StateHandler) processStateFillSituation() {
 	s.Story.Situation = s.MessageText
-
-	s.sendAndSetState(BotStateFillMind, msg.WhatMind)
+	s.setState(BotStateFillMind)
 }
 func (s *StateHandler) processStateFillMind() {
 	s.Story.Mind = s.MessageText
-
-	s.sendAndSetState(BotStateFillEmotion, msg.WhatEmotion)
+	s.setState(BotStateFillEmotion)
 }
 func (s *StateHandler) processStateFillEmotion() {
 	s.Story.Emotion = s.MessageText
-
-	s.sendAndSetState(BotStateFillPower, msg.WhatPower)
+	s.setState(BotStateFillPower)
 }
 func (s *StateHandler) processStateFillPower() {
 	power, err := strconv.Atoi(s.MessageText)
@@ -91,23 +93,9 @@ func (s *StateHandler) processStateFillPower() {
 		_ = s.BotHandler.CreateAndSendMessage(msg.CantSaveStory)
 		return
 	}
-	_ = s.setNewStory()
-	s.sendAndSetState(BotStateFillSituation, msg.WhatEntryDone)
-}
-func (s *StateHandler) processStateStartSchedule() {
-	patient, err := repo.GetPatientByTg(s.MessageSenderId)
-	if err != nil {
-		s.botError(err)
-		return
-	}
 
-	var message string
-	if patient.NextSchedule != nil {
-		message = fmt.Sprintf(msg.SetScheduleSet, patient.NextSchedule.Hour())
-	} else {
-		message = msg.SetScheduleNotSet
-	}
-	s.sendAndSetState(BotStateFillSchedule, message)
+	_ = s.setNewStory()
+	s.setState(BotStateFillSituation, msg.WhatEntryDone)
 }
 func (s *StateHandler) processStateFillSchedule() {
 	scheduleHour, err := strconv.Atoi(s.MessageText)
@@ -135,18 +123,5 @@ func (s *StateHandler) processStateFillSchedule() {
 		return
 	}
 	message := fmt.Sprintf(msg.SetScheduleSuccess, strconv.Itoa(scheduleHour))
-	s.sendAndSetState(BotStateFillSituation, message)
-}
-func (s *StateHandler) processStateResetSchedule() {
-	patient, err := repo.GetPatientByTg(s.MessageSenderId)
-	if err != nil {
-		s.botError(err)
-		return
-	}
-	err = bot.SaveSchedule(&Patient{
-		BaseModel:    BaseModel{Model: gorm.Model{ID: patient.ID}},
-		NextSchedule: nil,
-	})
-	patient, err = repo.GetPatientByTg(s.MessageSenderId)
-	s.sendAndSetState(BotStateFillSituation, msg.ResetScheduleSuccess)
+	s.setState(BotStateFillSituation, message)
 }

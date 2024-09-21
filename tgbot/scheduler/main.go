@@ -75,7 +75,7 @@ func HandleScheduledNotifications() error {
 }
 
 func sendNotification(patient *Patient) error {
-	handler := bot.BotHandler{
+	handler := bot.Handler{
 		BotApi:        botApi,
 		MessageChatId: *patient.TgChatId,
 	}
