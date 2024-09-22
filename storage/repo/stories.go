@@ -22,7 +22,7 @@ func GetStoryMinDate(patientId uint) (time.Time, error) {
 
 	err := DB.
 		Where("patient_id = ?", patientId).
-		Order("date asc").
+		Order("date desc").
 		First(&story).
 		Error
 
