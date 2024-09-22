@@ -18,7 +18,7 @@ func RegisterRoutes(e *gin.Engine) {
 	if Handle == nil {
 		panic("You must set auth handle!")
 	}
-	e.NoRoute(HandleNoRoute())
+	e.NoRoute(HandleFrontendRoute())
 	e.StaticFile("/favicon.ico", Env.FRONTEND_PATH+"/favicon.ico")
 	e.Static("/static", Env.FRONTEND_PATH+"/static")
 
