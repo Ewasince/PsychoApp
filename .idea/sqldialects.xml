@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/migrations/001_init.down.sql" dialect="SQLite" />
     <file url="file://$PROJECT_DIR$/migrations/001_init.up.sql" dialect="SQLite" />
     <file url="file://$PROJECT_DIR$/migrations/002_alter_patients.up.sql" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/migrations/003_add_hash.up.sql" dialect="SQLite" />
     <file url="file://$PROJECT_DIR$/storage/repo/common.go" dialect="SQLite" />
     <file url="PROJECT" dialect="SQLite" />
   </component>
