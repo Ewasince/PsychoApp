@@ -20,6 +20,7 @@ func init() {
 	}
 }
 
+// GetPatientsHandler return patients list for user, which request
 func GetPatientsHandler(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 
@@ -37,6 +38,7 @@ func GetPatientsHandler(c *gin.Context) {
 	c.JSON(200, patientsMap)
 }
 
+// GetPatientHandler return data about selected patient, which belongs to user
 func GetPatientHandler(c *gin.Context) {
 	// patient id
 	id, err := strconv.Atoi(c.Param("id"))
@@ -52,9 +54,18 @@ func GetPatientHandler(c *gin.Context) {
 		return
 	}
 
+	// check access to patient
+	claims := jwt.ExtractClaims(c)
+	userId := uint(claims[IdentityKey].(float64))
+	if patient.UserId != userId {
+		e.JSONError(c, e.AccessForbidden)
+		return
+	}
+
 	c.JSON(200, patient.ToMap())
 }
 
+// GetPatientStoriesHandler return stories of selected patient, which belongs to user
 func GetPatientStoriesHandler(c *gin.Context) {
 	// user id
 	claims := jwt.ExtractClaims(c)
