@@ -39,5 +39,5 @@ func registerApi(api *gin.RouterGroup) {
 func registerAuth(auth *gin.RouterGroup) {
 	auth.POST("/login", Handle.LoginHandler)
 	auth.GET("/get_me", GetMeHandler)
-	auth.GET("/refresh_token", Handle.RefreshHandler)
+	auth.POST("/refresh_token", Handle.RefreshHandler)
 }
