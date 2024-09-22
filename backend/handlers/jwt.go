@@ -14,7 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var (
+const (
 	IdentityKey = "id"
 	UsernameKey = "username"
 )
@@ -52,7 +52,7 @@ func IdentityHandler() func(c *gin.Context) interface{} {
 	}
 }
 
-func Authenticator() func(c *gin.Context) (interface{}, error) {
+func Authenticator() func(c *gin.Context) (any, error) {
 	return func(c *gin.Context) (interface{}, error) {
 		var loginVals login
 		if err := c.ShouldBind(&loginVals); err != nil {
