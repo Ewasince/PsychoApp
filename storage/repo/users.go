@@ -1,15 +1,26 @@
 package repo
 
 import (
-	//"PsychoAppAdmin/errors"
 	. "StorageModule/models"
+	"crypto/rand"
+	"fmt"
 	"github.com/pkg/errors"
+	"golang.org/x/crypto/bcrypt"
+	"math/big"
+)
+
+const (
+	SaltLength        = 8
+	MaxPasswordLength = 72 - SaltLength
+	charset           = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 )
 
 func AuthUser(username, password string) (*User, error) {
-	// STUB: !!!
-
 	var user User
+
+	if len(password) > MaxPasswordLength {
+		return nil, errors.New("Password too long")
+	}
 
 	err := DB.
 		Where("username = ?", username).
@@ -19,9 +30,8 @@ func AuthUser(username, password string) (*User, error) {
 	if err != nil {
 		return &user, err
 	}
-
-	if user.Password != password {
-		return &User{}, errors.New("User not authenticated")
+	if !CheckPassword(password, user.Salt, user.Password) {
+		return nil, errors.New("User not authenticated")
 	}
 
 	return &user, nil
@@ -41,4 +51,38 @@ func GetUserByUsername(username string) (*User, error) {
 	err := DB.First(&user, "username = ?", username).Error
 
 	return &user, err
+}
+func CheckPassword(password, salt, hashedPassword string) bool {
+	// Сравниваем хеш с введенным паролем
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password+salt))
+	return err == nil
+}
+
+func getPasswordHash(password, salt string) (string, error) {
+	bytesForHash := []byte(password + salt)
+	fmt.Println(bytesForHash)
+	hashedPassword, err := bcrypt.GenerateFromPassword(bytesForHash, bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hashedPassword), err
+}
+
+func getSalt() (string, error) {
+	return randomString(SaltLength)
+}
+
+func randomString(length int) (string, error) {
+	result := make([]byte, length)
+	charsetLength := big.NewInt(int64(len(charset)))
+
+	for i := 0; i < length; i++ {
+		index, err := rand.Int(rand.Reader, charsetLength)
+		if err != nil {
+			return "", err
+		}
+		result[i] = charset[index.Int64()]
+	}
+
+	return string(result), nil
 }
