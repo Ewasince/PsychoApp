@@ -17,6 +17,9 @@ type environmentVariables struct {
 	PORT         string
 	CORS_ORIGINS []string
 
+	JWT_SECRET string
+	JWT_REALM  string
+
 	MIGRATIONS_PATH string
 	DB_PATH         string
 	FRONTEND_PATH   string
@@ -56,6 +59,12 @@ func init() {
 
 	// BOT_TOKEN
 	Env.BOT_TOKEN = getEnv("BOT_TOKEN", "")
+
+	// JWT_SECRET
+	Env.JWT_SECRET = getEnv("JWT_SECRET", "")
+
+	// JWT_REALM
+	Env.JWT_REALM = getEnv("JWT_REALM", "default zone")
 
 	printEnvVariables()
 }

@@ -57,10 +57,10 @@ func handlerMiddleWare(authMiddleware *jwt.GinJWTMiddleware) gin.HandlerFunc {
 func initParams() *jwt.GinJWTMiddleware {
 
 	return &jwt.GinJWTMiddleware{
-		Realm:       "test zone",
-		Key:         []byte("secret key"),
+		Realm:       Env.JWT_REALM,
+		Key:         []byte(Env.JWT_SECRET),
 		Timeout:     time.Hour,
-		MaxRefresh:  time.Hour,
+		MaxRefresh:  time.Hour * 24,
 		IdentityKey: handlers.IdentityKey,
 		PayloadFunc: handlers.PayloadFunc(),
 
