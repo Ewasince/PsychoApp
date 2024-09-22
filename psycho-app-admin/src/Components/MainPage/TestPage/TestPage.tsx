@@ -3,6 +3,7 @@ import account from "../../../images/account.png";
 import * as React from "react";
 import {setUser} from "../../../api/userControl";
 import {getPatient, getPatients, getPatientStories} from "../../../api/endpoints/apiPatients";
+import {refreshToken} from "../../../api/apiRefreshToken";
 
 export const TestPage = () => {
 
@@ -114,6 +115,18 @@ export const TestPage = () => {
         >
             <img src={account} alt={"test"} className="w-[15px] sm:w-[19px]"/>
             <p className="hidden sm:block">Patient stories empty</p>
+        </button>
+
+        <button
+            className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
+            onClick={() => {
+                refreshToken((data) => {
+                    console.log("refresh token callback! data=" , data)
+                })
+            }}
+        >
+            <img src={account} alt={"test"} className="w-[15px] sm:w-[19px]"/>
+            <p className="hidden sm:block">RefreshToken</p>
         </button>
 
     </>
