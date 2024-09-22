@@ -64,7 +64,6 @@ func (s *StateHandler) setNewStory() error {
 		BaseModel: models.BaseModel{
 			Model: gorm.Model{},
 		},
-		Date:      getDate(),
 		PatientId: patient.ID,
 	}
 	bot.StoriesCache[s.MessageSenderId] = story
@@ -96,10 +95,6 @@ func (s *StateHandler) setState(state BotState, messages ...string) {
 func (s *StateHandler) botError(err error) {
 	_ = s.BotHandler.CreateAndSendMessage(msg.BotError)
 	log.Panic(err)
-}
-
-func getDate() time.Time {
-	return time.Now().Truncate(time.Minute)
 }
 
 func getScheduleTime(scheduleHour int) time.Time {
