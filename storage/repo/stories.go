@@ -11,6 +11,7 @@ func GetStories(patientId uint, dateStart, dateFinish time.Time) (*[]Story, erro
 		Where("patient_id = ?", patientId).
 		Where("date >= ?", dateStart).
 		Where("date < ?", dateFinish).
+		Order("date desc").
 		Find(&stories).
 		Error
 
