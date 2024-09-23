@@ -1,6 +1,4 @@
-// auth
-import {makeGet, makePost, refreshRequest, noCredsRequest, credentialsRequest} from "../apiCore";
-import {AxiosResponse} from "axios";
+import {credentialsEmptyRequest, refreshRequest} from "../requestAuth";
 
 
 export const LOGIN_URL = "api/auth/login";
@@ -60,28 +58,29 @@ export type ILogin = {
 }
 
 export const postSingUpStudent = async (regForm: IReg) => {
-    return await noCredsRequest.post<IAuthResponse>(
+    return await credentialsEmptyRequest.post<IAuthResponse>(
         SIGN_UP_STUDENT_URL,
         regForm,
     )
 }
 
 export const postSingUpTutor = async (regForm: IReg) => {
-    return await noCredsRequest.post<IAuthResponse>(
+    return await credentialsEmptyRequest.post<IAuthResponse>(
         SIGN_UP_TUTOR_URL,
         regForm,
     )
 }
 
 export const postLogin = async (regForm: ILogin) => {
-    return await noCredsRequest.post<IAuthResponse>(
+    return await credentialsEmptyRequest.post<IAuthResponse>(
         LOGIN_URL,
         regForm,
     )
 }
 
-export const getMe = async () => {
-    return await credentialsRequest.get<IMeResponse>(
-        GET_ME_URL,
+
+export const postRefresh = async () => {
+    return await refreshRequest.post<IAuthResponse>(
+        REFRESH_URL
     )
 }

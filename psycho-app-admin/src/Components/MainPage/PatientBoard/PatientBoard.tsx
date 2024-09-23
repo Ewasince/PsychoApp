@@ -45,14 +45,17 @@ export const PatientBoard = () => {
 
 
     useEffect(() => {
-        getPatient({}, patientId as string)
+        if (typeof patientId != "string") {
+            handleError(new Error("no patientId param"), navigate)
+        }
+        getPatient(patientId as string)
             .then(res => {
                 setPatient(res.data);
             })
             .catch(err => {
                 handleError(err, navigate)
             })
-        getPatientStoriesMinDate({}, patientId as string, "story")
+        getPatientStoriesMinDate(patientId as string)
             .then(res => {
                 const minDate = dayjs.unix(res.data.minDate)
                 const todayDate = dayjs()
@@ -64,12 +67,13 @@ export const PatientBoard = () => {
     }, [])
 
     function fetchStories(dateStart: Dayjs, dateFinish: Dayjs) {
-        getPatientStories({
-            params: {
+        getPatientStories(
+            patientId as string,
+            {
                 dateStart: dateStart.unix(),
                 dateFinish: dateFinish.unix(),
-            }
-        }, patientId as string, "story")
+            },
+        )
             .then(res => {
                 processStoriesByWeek(res.data.stories)
             })
@@ -85,7 +89,7 @@ export const PatientBoard = () => {
             const storyDate = dayjs.unix(story.date)
             const weekNum = getWeekNumFromDate(storyDate)
             console.log(`weekNum=${weekNum} storyDate=${storyDate}`)
-            maxWeekAgo = Math.max(maxWeekAgo,weekNum )
+            maxWeekAgo = Math.max(maxWeekAgo, weekNum)
             if (!storiesByWeek.has(weekNum)) {
                 storiesByWeek.set(weekNum, [])
             }

@@ -4,9 +4,10 @@ import {handleError} from "../../core/errors";
 import {setTokenData} from "../../core/storage/tokens";
 import {toast} from "react-toastify";
 
-import {getMe, IAuthResponse, postLogin, postSingUpStudent, postSingUpTutor} from "../../api/endpoints/apiAuth";
-import {setUser} from "../../api/userControl";
+import {IAuthResponse, postLogin, postSingUpStudent, postSingUpTutor} from "../../api/endpoints/apiAuth";
 import {PredeclaredToastContainer} from "../componetsCore"
+import {getMe} from "../../api/endpoints/apiUser";
+import {setUser} from "../../api/auth/common";
 
 //
 // type ILog = {

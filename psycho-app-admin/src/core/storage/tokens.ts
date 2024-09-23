@@ -28,7 +28,7 @@ export function getAccessToken(): string {
 
 export function isAccessTokenExpired(): boolean {
     const expire_date_string = localStorage.getItem(EXPIRE_TOKEN_KEY)
-    const expire_date =  expire_date_string ? dayjs(expire_date_string) : dayjs(0)
+    const expire_date = expire_date_string ? dayjs(expire_date_string) : dayjs(0)
     return expire_date.isBefore(dayjs())
 }
 

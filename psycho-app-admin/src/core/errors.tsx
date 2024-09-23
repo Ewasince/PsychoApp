@@ -1,7 +1,7 @@
 import {NavigateFunction} from "react-router-dom";
-import {getAccessToken, } from "./storage/tokens";
-import {isUserEntered} from "../api/userControl";
+import {getAccessToken,} from "./storage/tokens";
 import {toast} from "react-toastify";
+import {isUserEntered} from "../api/auth/common";
 
 let LOCATION_WHEN_NOT_VALID_TOKEN = "/login"
 

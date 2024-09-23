@@ -3,13 +3,13 @@ import {useEffect, useState} from 'react';
 import {Link, Outlet, useLocation, useNavigate} from "react-router-dom";
 import {goToAuthUser} from "../../core/errors";
 
-import {exitUser, isUserEntered} from "../../api/userControl";
 import {PredeclaredToastContainer} from "../componetsCore";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import {getConfig} from "../../core/storage/config";
+import {exitUser, isUserEntered} from "../../api/auth/common";
 
 const DEFAULT_PATH = "/dashboard"
 

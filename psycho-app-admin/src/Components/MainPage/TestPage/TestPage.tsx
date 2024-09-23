@@ -1,9 +1,8 @@
 import {toast} from "react-toastify";
 import account from "../../../images/account.png";
 import * as React from "react";
-import {setUser} from "../../../api/userControl";
 import {getPatient, getPatients, getPatientStories} from "../../../api/endpoints/apiPatients";
-import {refreshToken} from "../../../api/apiCore";
+import {setUser} from "../../../api/auth/common";
 
 export const TestPage = () => {
 
@@ -27,16 +26,15 @@ export const TestPage = () => {
 
         <button
             className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
-            onClick={() => {
-                getPatients()
-                    .then(res => {
-                        let patients = res.data
-                        console.log(patients)
-                        toast.info("patients were received")
-                    })
-                    .catch(err => {
-                        toast.error("patients weren't received ((")
-                    })
+            onClick={async () => {
+                try {
+                    const res = await getPatients()
+                    let patients = res.data
+                    console.log(patients)
+                    toast.info("patients were received")
+                } catch (error) {
+                    toast.error("patients weren't received ((")
+                }
             }}
         >
             <img src={account} alt={"test"} className="w-[15px] sm:w-[19px]"/>
@@ -46,7 +44,7 @@ export const TestPage = () => {
         <button
             className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
             onClick={() => {
-                getPatient({}, "20")
+                getPatient("20")
                     .then(res => {
                         let patient = res.data
                         console.log(patient)
@@ -65,16 +63,15 @@ export const TestPage = () => {
             className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
             onClick={() => {
                 const date = new Date();
-                const todayStr = date.toISOString()
+                const todayStr = date.valueOf()
                 date.setDate(date.getDate() - 2)
-                const twoDaysAgoStr = date.toISOString()
+                const twoDaysAgoStr = date.valueOf()
                 console.log(todayStr)
-                getPatientStories({
-                    params: {
-                        dateStart: todayStr,
-                        dateFinish: twoDaysAgoStr,
-                    }
-                }, "20", "story")
+                getPatientStories("20", {
+                    dateStart: todayStr,
+                    dateFinish: twoDaysAgoStr,
+
+                })
                     .then(res => {
                         let stories = res.data
                         console.log(stories)
@@ -97,12 +94,7 @@ export const TestPage = () => {
                 date.setDate(date.getDate() - 2)
                 const twoDaysAgoStr = date.toISOString()
                 console.log(todayStr)
-                getPatientStories({
-                    params: {
-                        // dateStart: todayStr,
-                        // dateFinish: twoDaysAgoStr,
-                    }
-                }, "20", "story")
+                getPatientStories("20")
                     .then(res => {
                         let stories = res.data
                         console.log(stories)
@@ -117,15 +109,15 @@ export const TestPage = () => {
             <p className="hidden sm:block">Patient stories empty</p>
         </button>
 
-        <button
-            className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}
-            onClick={() => {
-                refreshToken()
-            }}
-        >
-            <img src={account} alt={"test"} className="w-[15px] sm:w-[19px]"/>
-            <p className="hidden sm:block">RefreshToken</p>
-        </button>
+        {/*<button*/}
+        {/*    className={`px-2 sm:px-4 py-2 w-full ${"opacity-70"} rounded-lg flex gap-3 items-center`}*/}
+        {/*    onClick={() => {*/}
+        {/*        refreshToken()*/}
+        {/*    }}*/}
+        {/*>*/}
+        {/*    <img src={account} alt={"test"} className="w-[15px] sm:w-[19px]"/>*/}
+        {/*    <p className="hidden sm:block">RefreshToken</p>*/}
+        {/*</button>*/}
 
     </>
 };
