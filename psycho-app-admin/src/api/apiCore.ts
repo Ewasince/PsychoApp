@@ -98,3 +98,17 @@ export function makeGet<RES>(endpoint: string, withoutCreds?: boolean) {
         )
     }
 }
+
+
+export async function postRefresh() {
+    return await refreshRequest.post<IAuthResponse>(
+        REFRESH_URL
+    )
+}
+
+export async function refreshToken() {
+    const res = await postRefresh()
+    const tokenData = res.data;
+    setTokenData(tokenData)
+    setUser();
+}

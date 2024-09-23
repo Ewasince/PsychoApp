@@ -74,9 +74,3 @@ export const postLogin = makePost<ILogin, IAuthResponse>(
 export const getMe = makeGet<IMeResponse>(
     GET_ME_URL,
 )
-
-export const postRefresh = makePost<null, IAuthResponse>(
-    REFRESH_URL,
-    false,
-    true,
-)
