@@ -30,10 +30,10 @@ export function Login() {
 
     useEffect(() => {
         getMe()
-            .then(() => {
+            .then(res => {
                 navigateToDashboard()
             })
-            .catch(e => {
+            .catch(err => {
             })
     }, []);
 
@@ -51,49 +51,48 @@ export function Login() {
     }
 
 
-    const onSubmitLogin = (e: any) => {
+    const onSubmitLogin = async (e: any) => {
         e.preventDefault();
-        postLogin({
-            username: email,
-            password: password,
-        })
-            .then(res => {
-                const tokenData: IAuthResponse = res.data;
-                setTokenData(tokenData)
-                setUser()
-                    .then(navigateToDashboard)
+        try {
+            const res = await postLogin({
+                username: email,
+                password: password,
             })
-            .catch(err => {
-                if (err?.response?.status === 401) {
-                    // wrong login and pass!!!
-                    toast.error("Неправильный логин и/или пароль!")
-                    return
-                }
-                handleError(err, navigate)
-            })
+            const tokenData: IAuthResponse = res.data;
+            setTokenData(tokenData)
+            await setUser()
+            navigateToDashboard()
+        } catch (error: any) {
+            if (error?.response?.status === 401) {
+                // wrong login and pass!!!
+                toast.error("Неправильный логин и/или пароль!")
+                return
+            }
+            handleError(error, navigate)
+        }
     }
 
-    const onSubmitRegister = (e: any) => {
+    const onSubmitRegister = async (e: any) => {
         e.preventDefault();
         const signUp = isTutor ? postSingUpTutor : postSingUpStudent
-        signUp({
-            username: username,
-            password: password,
-            fio: fio,
-        })
-            .then(res => {
-                if (!res) {
-                    return
-                }
-                const keys: IAuthResponse = res.data;
-                setTokenData(keys)
-                setUser()
+        try {
+            const res = await signUp({
+                username: username,
+                password: password,
+                fio: fio,
+            })
 
-                navigate("/dashboard")
-            })
-            .catch(err => {
-                handleError(err, navigate)
-            })
+            if (!res) {
+                return
+            }
+            const keys: IAuthResponse = res.data;
+            setTokenData(keys)
+            await setUser()
+
+            navigate("/dashboard")
+        } catch (error) {
+            handleError(error, navigate)
+        }
     }
 
     function LoginPage() {

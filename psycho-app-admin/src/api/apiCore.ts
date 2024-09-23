@@ -8,7 +8,7 @@ export const credentialsRequest = axios.create({
     baseURL: API_HOST,
     withCredentials: true,
 })
-export const regularRequest = axios.create({
+export const noCredsRequest = axios.create({
     baseURL: API_HOST,
     withCredentials: true,
 })
@@ -33,7 +33,7 @@ credentialsRequest.interceptors.request.use(async (config) => {
     return config;
 })
 
-regularRequest.interceptors.request.use((config) => {
+noCredsRequest.interceptors.request.use((config) => {
     addToHeaderCors(config)
     return config;
 })
@@ -73,7 +73,7 @@ function generateUrl(baseUrl: string, urlParams: Array<string>): string {
 
 export function makePost<REQ, RES>(endpoint: string, withoutCreds?: boolean, refresh?: boolean) {
     return function (data?: REQ, config?: AxiosRequestConfig<REQ>, ...urlParams: string[]) {
-        const baseRequest = withoutCreds ? regularRequest : !refresh ? credentialsRequest : refreshRequest
+        const baseRequest = withoutCreds ? noCredsRequest : !refresh ? credentialsRequest : refreshRequest
         return baseRequest.post<RES, AxiosResponse<RES>, REQ>(
             generateUrl(endpoint, urlParams),
             data,
@@ -85,7 +85,7 @@ export function makePost<REQ, RES>(endpoint: string, withoutCreds?: boolean, ref
 
 export function makePatch<REQ, RES>(endpoint: string, withoutCreds?: boolean) {
     return function (data?: REQ, config?: AxiosRequestConfig<REQ>, ...urlParams: string[]) {
-        const baseRequest = withoutCreds ? regularRequest : credentialsRequest
+        const baseRequest = withoutCreds ? noCredsRequest : credentialsRequest
         return baseRequest.patch<RES, AxiosResponse<RES>, REQ>(
             generateUrl(endpoint, urlParams),
             data,
@@ -97,7 +97,7 @@ export function makePatch<REQ, RES>(endpoint: string, withoutCreds?: boolean) {
 
 export function makeGet<RES>(endpoint: string, withoutCreds?: boolean) {
     return function (config?: AxiosRequestConfig, ...urlParams: string[]) {
-        const baseRequest = withoutCreds ? regularRequest : credentialsRequest
+        const baseRequest = withoutCreds ? noCredsRequest : credentialsRequest
 
         return baseRequest.get<RES>(
             generateUrl(endpoint, urlParams),
