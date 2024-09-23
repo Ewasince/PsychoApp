@@ -1,1 +1,1 @@
-export const API_HOST = process.env.REACT_APP_TEST_VAR || ""
+export const API_HOST = process.env.REACT_APP_TEST_VAR || "/"
