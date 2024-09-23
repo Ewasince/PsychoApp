@@ -13,6 +13,7 @@ import (
 
 type environmentVariables struct {
 	DEBUG bool
+	DEV   bool
 
 	PORT         string
 	CORS_ORIGINS []string
@@ -42,6 +43,11 @@ func init() {
 
 	// DEBUG
 	if Env.DEBUG, err = strconv.ParseBool(getEnv("DEBUG", "false")); err != nil {
+		panic(err)
+	}
+
+	// DEV
+	if Env.DEV, err = strconv.ParseBool(getEnv("DEV", "false")); err != nil {
 		panic(err)
 	}
 
