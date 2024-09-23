@@ -35,7 +35,7 @@ export const KptTable = (
     function getStoryRow(story: IStoryDto) {
         return (<>
             <TableRow key={story.id} className="hover:bg-thirdy-color transition duration-300">
-                <TableCell>{story.date.toString()}</TableCell>
+                <TableCell>{story.date.format('DD.MM.YYYY')}</TableCell>
                 <TableCell>{story.situation}</TableCell>
                 <TableCell>{story.mind}</TableCell>
                 <TableCell>{story.emotion}</TableCell>
