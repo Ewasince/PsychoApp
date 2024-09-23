@@ -1,22 +1,21 @@
 import axios, {AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from "axios";
 import {getAccessToken, getRefreshToken} from "../core/storage/tokens";
 import {API_HOST} from "../core/env";
-
-export function makeUrl(endpoint: string) {
-    return `${API_HOST ? API_HOST : ""}/${endpoint}`
-}
+import {IAuthResponse, REFRESH_URL} from "./endpoints/apiAuth";
+import {setUser} from "./userControl";
+import dayjs from "dayjs";
 
 export const credentialsRequest = axios.create({
-    baseURL: makeUrl(""),
+    baseURL: API_HOST,
     withCredentials: true,
 })
 export const regularRequest = axios.create({
-    baseURL: makeUrl(""),
+    baseURL: API_HOST,
     withCredentials: true,
 })
 
 export const refreshRequest = axios.create({
-    baseURL: makeUrl(""),
+    baseURL: API_HOST,
     withCredentials: true,
 })
 
@@ -68,9 +67,8 @@ function generateUrl(baseUrl: string, urlParams: Array<string>): string {
 export function makePost<REQ, RES>(endpoint: string, withoutCreds?: boolean, refresh?: boolean) {
     return function (data?: REQ, config?: AxiosRequestConfig<REQ>, ...urlParams: string[]) {
         const baseRequest = withoutCreds ? regularRequest : !refresh ? credentialsRequest : refreshRequest
-        const baseUrl = makeUrl(endpoint)
         return baseRequest.post<RES, AxiosResponse<RES>, REQ>(
-            generateUrl(baseUrl, urlParams),
+            generateUrl(endpoint, urlParams),
             data,
             config,
         )
@@ -81,9 +79,8 @@ export function makePost<REQ, RES>(endpoint: string, withoutCreds?: boolean, ref
 export function makePatch<REQ, RES>(endpoint: string, withoutCreds?: boolean) {
     return function (data?: REQ, config?: AxiosRequestConfig<REQ>, ...urlParams: string[]) {
         const baseRequest = withoutCreds ? regularRequest : credentialsRequest
-        const baseUrl = makeUrl(endpoint)
         return baseRequest.patch<RES, AxiosResponse<RES>, REQ>(
-            generateUrl(baseUrl, urlParams),
+            generateUrl(endpoint, urlParams),
             data,
             config,
         )
@@ -94,10 +91,9 @@ export function makePatch<REQ, RES>(endpoint: string, withoutCreds?: boolean) {
 export function makeGet<RES>(endpoint: string, withoutCreds?: boolean) {
     return function (config?: AxiosRequestConfig, ...urlParams: string[]) {
         const baseRequest = withoutCreds ? regularRequest : credentialsRequest
-        const baseUrl = makeUrl(endpoint)
 
         return baseRequest.get<RES>(
-            generateUrl(baseUrl, urlParams),
+            generateUrl(endpoint, urlParams),
             config,
         )
     }
