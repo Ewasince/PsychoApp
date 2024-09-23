@@ -26,9 +26,10 @@ export function getAccessToken(): string {
     return token || ''
 }
 
-export function getAccessTokenExpire(): Date | undefined {
-    const expire_date = localStorage.getItem(EXPIRE_TOKEN_KEY)
-    return expire_date ? new Date(expire_date) : undefined
+export function isAccessTokenExpired(): boolean {
+    const expire_date_string = localStorage.getItem(EXPIRE_TOKEN_KEY)
+    const expire_date =  expire_date_string ? dayjs(expire_date_string) : dayjs(0)
+    return expire_date.isBefore(dayjs())
 }
 
 export function clearTokens() {

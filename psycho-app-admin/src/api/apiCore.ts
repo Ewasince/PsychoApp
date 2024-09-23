@@ -1,9 +1,8 @@
 import axios, {AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from "axios";
-import {getAccessToken, getRefreshToken} from "../core/storage/tokens";
+import {getAccessToken, isAccessTokenExpired, setTokenData} from "../core/storage/tokens";
 import {API_HOST} from "../core/env";
 import {IAuthResponse, REFRESH_URL} from "./endpoints/apiAuth";
 import {setUser} from "./userControl";
-import dayjs from "dayjs";
 
 export const credentialsRequest = axios.create({
     baseURL: API_HOST,
@@ -20,7 +19,15 @@ export const refreshRequest = axios.create({
 })
 
 
-credentialsRequest.interceptors.request.use((config) => {
+credentialsRequest.interceptors.request.use(async (config) => {
+    try {
+        if (isAccessTokenExpired()) {
+            await refreshToken()
+        }
+    } catch (error) {
+        return Promise.reject(error);
+    }
+
     addToHeaderCors(config)
     addToHeaderToken(config, getAccessToken)
     return config;
