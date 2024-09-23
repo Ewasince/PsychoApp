@@ -1,4 +1,5 @@
 import {IAuthResponse} from "../../api/endpoints/apiAuth";
+import dayjs from "dayjs";
 
 let ACCESS_TOKEN_KEY = "access_token"
 // let REFRESH_TOKEN_KEY = "refresh_token"
@@ -22,11 +23,6 @@ export function setAccessTokenExpire(expire: number) {
 
 export function getAccessToken(): string {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY)
-    return token || ''
-}
-
-export function getRefreshToken(): string {
-    const token = localStorage.getItem(REFRESH_TOKEN_KEY)
     return token || ''
 }
 

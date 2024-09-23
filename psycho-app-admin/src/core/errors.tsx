@@ -1,6 +1,5 @@
-// import {refreshToken} from "../api/apiToken";
 import {NavigateFunction} from "react-router-dom";
-import {getRefreshToken} from "./storage/tokens";
+import {getAccessToken, } from "./storage/tokens";
 import {isUserEntered} from "../api/userControl";
 import {toast} from "react-toastify";
 
@@ -25,7 +24,7 @@ export function handleError(error: any, navigate?: NavigateFunction) {
             if (!isUserEntered()) {
                 goToAuthUser(navigate)
             }
-            if (!getRefreshToken()) {
+            if (!getAccessToken()) {
                 goToAuthUser(navigate)
             }
             return

@@ -33,7 +33,7 @@ regularRequest.interceptors.request.use((config) => {
 
 refreshRequest.interceptors.request.use((config) => {
     addToHeaderCors(config)
-    addToHeaderToken(config, getRefreshToken)
+    addToHeaderToken(config, getAccessToken)
     return config;
 })
 
