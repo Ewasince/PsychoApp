@@ -14,31 +14,26 @@ var DB *gorm.DB
 func init() {
 	DB = st.GetSQLiteDB().Session(&gorm.Session{CreateBatchSize: 1000})
 
-	if Env.DEBUG {
-		var count int64
-
-		DB.Find(&models.User{}).Count(&count)
-		if count == 0 {
-			fillDatabase()
-		}
+	if Env.DEV {
+		fillDatabase()
 	}
 
 }
 
 func fillDatabase() {
-	DB.Begin()
+	tx := DB.Begin()
 	fmt.Println("fill database!")
-	DB.Exec("DELETE FROM users")
-	DB.Exec("DELETE FROM patients")
-	DB.Exec("DELETE FROM stories")
+	tx.Exec("DELETE FROM users")
+	tx.Exec("DELETE FROM patients")
+	tx.Exec("DELETE FROM stories")
 
-	users := createUsers()
-	patients := createPatients(getFirstKey(users))
-	createStories(getFirstKey(patients))
-	DB.Commit()
+	users := createUsers(tx)
+	patients := createPatients(tx, getFirstKey(users))
+	createStories(tx, getFirstKey(patients))
+	tx.Commit()
 }
 
-func createUsers() map[uint]*models.User {
+func createUsers(tx *gorm.DB) map[uint]*models.User {
 	var usersByIds = make(map[uint]*models.User)
 
 	var users = []*models.User{
@@ -46,7 +41,8 @@ func createUsers() map[uint]*models.User {
 			Name:     "admin",
 			Email:    "admin@example.com",
 			Username: "admin",
-			Password: "admin",
+			Password: "$2a$10$x4ukaIiCuP9APhvBGmxBxOWr3yIdCENyH4/e3Ny0cuBR1X2/ID7x.",
+			Salt:     "Iv398Js9",
 			BaseModel: models.BaseModel{
 				Model: gorm.Model{},
 			},
@@ -55,13 +51,14 @@ func createUsers() map[uint]*models.User {
 			Name:     "qwer",
 			Email:    "qwer@example.com",
 			Username: "qwer",
-			Password: "qwer",
+			Password: "$2a$10$x4ukaIiCuP9APhvBGmxBxOWr3yIdCENyH4/e3Ny0cuBR1X2/ID7x.",
+			Salt:     "Iv398Js9",
 			BaseModel: models.BaseModel{
 				Model: gorm.Model{},
 			},
 		},
 	}
-	DB.Create(&users)
+	tx.Create(&users)
 
 	for _, user := range users {
 		usersByIds[user.ID] = user
@@ -70,7 +67,7 @@ func createUsers() map[uint]*models.User {
 	return usersByIds
 }
 
-func createPatients(userId uint) map[uint]*models.Patient {
+func createPatients(tx *gorm.DB, userId uint) map[uint]*models.Patient {
 	var patientsByIds = make(map[uint]*models.Patient)
 
 	var patients = []*models.Patient{
@@ -95,7 +92,7 @@ func createPatients(userId uint) map[uint]*models.Patient {
 			},
 		},
 	}
-	DB.Create(&patients)
+	tx.Create(&patients)
 
 	for _, patient := range patients {
 		patientsByIds[patient.ID] = patient
@@ -103,7 +100,7 @@ func createPatients(userId uint) map[uint]*models.Patient {
 	}
 	return patientsByIds
 }
-func createStories(patientId uint) map[uint]*models.Story {
+func createStories(tx *gorm.DB, patientId uint) map[uint]*models.Story {
 	var storiesByIds = make(map[uint]*models.Story)
 
 	var stories = []*models.Story{
@@ -309,7 +306,7 @@ func createStories(patientId uint) map[uint]*models.Story {
 			},
 		},
 	}
-	DB.Create(&stories)
+	tx.Create(&stories)
 
 	for _, patient := range stories {
 		storiesByIds[patient.ID] = patient
