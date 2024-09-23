@@ -60,7 +60,7 @@ func initParams() *jwt.GinJWTMiddleware {
 		Realm:       Env.JWT_REALM,
 		Key:         []byte(Env.JWT_SECRET),
 		Timeout:     time.Hour,
-		MaxRefresh:  time.Hour * 24,
+		MaxRefresh:  time.Hour * 24 * 4,
 		IdentityKey: handlers.IdentityKey,
 		PayloadFunc: handlers.PayloadFunc(),
 
