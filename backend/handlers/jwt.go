@@ -2,6 +2,8 @@ package handlers
 
 import (
 	e "PsychoAppAdmin/errors"
+	"errors"
+	"gorm.io/gorm"
 	"net/http"
 	"strings"
 	"time"
@@ -63,8 +65,11 @@ func Authenticator() func(c *gin.Context) (any, error) {
 
 		user, err := repo.AuthUser(username, password)
 
-		if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return User{}, e.UserNotAuthorized
+		}
+		if err != nil {
+			panic(err)
 		}
 
 		return user, nil
