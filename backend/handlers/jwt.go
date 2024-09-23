@@ -103,7 +103,9 @@ func LoginResponse() func(c *gin.Context, code int, token string, expire time.Ti
 func skipLoginAuthentication(authMiddleWare func(c *gin.Context)) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		path := strings.Trim(c.Request.URL.Path, "/")
-		if strings.HasSuffix(path, "login") {
+		isLogin := strings.HasSuffix(path, "login")
+		isRefresh := strings.HasSuffix(path, "refresh_token")
+		if isLogin || isRefresh {
 			c.Next()
 			return
 		}
