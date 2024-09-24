@@ -24,8 +24,8 @@ func (s *StateHandler) ProcessState() {
 	stateMap[state]()
 }
 
+// processStateInitial is abstract handler that servers as proxy to other handlers
 func (s *StateHandler) processStateInitial() {
-	// abstract handler that servers as proxy to other handlers
 	if bot.IsPatientRegistered(s.MessageSenderId) {
 		_ = s.setNewStory()
 		s.processStateFillSituation()
