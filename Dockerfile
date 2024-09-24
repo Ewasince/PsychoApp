@@ -6,23 +6,27 @@ FROM golang:1.22-bookworm AS go_builder
 ARG GO_BACKEND_EXECUTABLE
 ARG GO_BOT_EXECUTABLE
 
-WORKDIR /tmp
+ENV GOPATH=/root/go
+
+WORKDIR /root
 
 COPY environment environment
 COPY storage storage
 COPY backend backend
 COPY tgbot tgbot
 
-RUN cd /tmp/environment && \
-    go mod tidy && \
-    cd /tmp/storage && \
-    go mod tidy && \
-    cd /tmp/backend && \
-    go mod tidy && \
+RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build --mount=type=cache,mode=0755,target=/root/go \
+    cd /root/environment && \
+    go mod download && \
+    cd /root/storage && \
+    go mod download && \
+    cd /root/backend && \
+    go mod download && \
     go build -o /tmp/$GO_BACKEND_EXECUTABLE main.go
 
-RUN cd /tmp/tgbot && \
-    go mod tidy && \
+RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build --mount=type=cache,mode=0755,target=/root/go \
+    cd /root/tgbot && \
+    go mod download && \
     go build -o /tmp/$GO_BOT_EXECUTABLE main.go
 
 FROM node:14-bullseye-slim
