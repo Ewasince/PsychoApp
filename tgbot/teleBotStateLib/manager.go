@@ -35,9 +35,8 @@ func NewBotStatesManager(
 
 func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 	var err error
-	var isNewState bool
+	var handlerResponse HandlerResponse
 	var isCommandProcess bool
-	var newStateId BotStateId
 
 	currentStateId := m.StateManger.GetState(c.GetMessage().From.ID)
 	currentState, exists := m.BotStates[currentStateId]
@@ -45,16 +44,19 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 		return StateNotFound
 	}
 
-	newStateId, isNewState, isCommandProcess, err = m.processCommand(c)
+	handlerResponse, isCommandProcess, err = m.processCommand(c)
 	if err != nil {
 		return err
 	}
 	if !isCommandProcess {
-		newStateId, isNewState, err = m.defineNewState(c, currentState)
+		handlerResponse, err = m.defineNewState(c, currentState)
+	}
+	if err != nil {
+		return err
 	}
 
-	if isNewState {
-		newState, exists := m.BotStates[newStateId]
+	if handlerResponse.IsNewState {
+		newState, exists := m.BotStates[handlerResponse.NextStateId]
 		if !exists {
 			return StateNotFound
 		}
@@ -68,27 +70,26 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 }
 
 // defineNewState returns new bot state id, new state availability flag and error
-func (m *BotStatesManager) defineNewState(c BotContext, currentState BotState) (BotStateId, bool, error) {
-	var newStateId BotStateId
-	var isNewState = false
-	var buttonPressed = false
+func (m *BotStatesManager) defineNewState(c BotContext, currentState BotState) (HandlerResponse, error) {
+	var handlerResponse HandlerResponse
+	var buttonPressed bool
 	var err error
 
 	if currentState.Keyboard != nil {
-		newStateId, isNewState, buttonPressed, err = currentState.Keyboard.ProcessMessage(c)
+		handlerResponse, buttonPressed, err = currentState.Keyboard.ProcessMessage(c)
 		if err != nil {
-			return newStateId, isNewState, err
+			return HandlerResponse{}, err
 		}
 		if buttonPressed {
-			return newStateId, isNewState, nil
+			return handlerResponse, nil
 		}
 	}
 
-	newStateId, isNewState, err = currentState.Handler(c)
+	handlerResponse, err = currentState.Handler(c)
 	if err != nil {
-		return newStateId, isNewState, err
+		return HandlerResponse{}, err
 	}
-	return newStateId, isNewState, nil
+	return handlerResponse, nil
 }
 
 func (m *BotStatesManager) transactToNewState(
@@ -143,12 +144,12 @@ func (m *BotStatesManager) transactToNewState(
 }
 
 // processCommand returns new state, new state flag, command processed flag and err
-func (m *BotStatesManager) processCommand(c BotContext) (BotStateId, bool, bool, error) {
+func (m *BotStatesManager) processCommand(c BotContext) (HandlerResponse, bool, error) {
 	message := c.GetMessage()
 	botCommand, exists := m.BotCommands[message.Command()]
 	if !exists {
-		return 0, false, false, nil
+		return HandlerResponse{}, false, nil
 	}
-	newState, isNewState, err := botCommand.CommandHandler(c)
-	return newState, isNewState, true, err
+	handlerResponse, err := botCommand.CommandHandler(c)
+	return handlerResponse, true, err
 }
