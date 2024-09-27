@@ -4,11 +4,11 @@ type BotStateId int
 
 type BotMessage []string
 
-func (b BotMessage) ToStringArray(c *BotContext) ([]string, error) { return b, nil }
+func (b BotMessage) ToStringArray(c BotContext) ([]string, error) { return b, nil }
 
-type BotMessageHandler func(c *BotContext) ([]string, error)
+type BotMessageHandler func(c BotContext) ([]string, error)
 
-func (b BotMessageHandler) ToStringArray(c *BotContext) ([]string, error) { return b(c) }
+func (b BotMessageHandler) ToStringArray(c BotContext) ([]string, error) { return b(c) }
 
 type BotState struct {
 	BotStateId   BotStateId

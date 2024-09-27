@@ -33,13 +33,13 @@ func NewBotStatesManager(
 	}
 }
 
-func (m *BotStatesManager) ProcessMessage(c *BotContext) error {
+func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 	var err error
 	var isNewState bool
 	var isCommandProcess bool
 	var newStateId BotStateId
 
-	currentStateId := m.StateManger.GetState((*c).GetMessage().From.ID)
+	currentStateId := m.StateManger.GetState(c.GetMessage().From.ID)
 	currentState, exists := m.BotStates[currentStateId]
 	if !exists {
 		return StateNotFound
@@ -68,7 +68,7 @@ func (m *BotStatesManager) ProcessMessage(c *BotContext) error {
 }
 
 // defineNewState returns new bot state id, new state availability flag and error
-func (m *BotStatesManager) defineNewState(c *BotContext, currentState BotState) (BotStateId, bool, error) {
+func (m *BotStatesManager) defineNewState(c BotContext, currentState BotState) (BotStateId, bool, error) {
 	var newStateId BotStateId
 	var isNewState = false
 	var buttonPressed = false
@@ -92,7 +92,7 @@ func (m *BotStatesManager) defineNewState(c *BotContext, currentState BotState) 
 }
 
 func (m *BotStatesManager) transactToNewState(
-	c *BotContext,
+	c BotContext,
 	currentState BotState,
 	newState BotState,
 ) error {
@@ -116,7 +116,7 @@ func (m *BotStatesManager) transactToNewState(
 	}
 
 	if len(messages) > 0 {
-		var messagesForSend = (*c).CreateMessages(messages...)
+		var messagesForSend = c.CreateMessages(messages...)
 		if newState.Keyboard != nil {
 			lastMessageForSend := messagesForSend[len(messagesForSend)-1]
 			lastMessageForSend.ReplyMarkup = newState.Keyboard.GetKeyBoard()
@@ -126,7 +126,7 @@ func (m *BotStatesManager) transactToNewState(
 		for _, msg := range messagesForSend {
 			chattableMessages = append(chattableMessages, msg)
 		}
-		err = (*c).SendMessages(chattableMessages...)
+		err = c.SendMessages(chattableMessages...)
 		if err != nil {
 			return err
 		}
@@ -134,7 +134,7 @@ func (m *BotStatesManager) transactToNewState(
 		log.Panicf("in state %s defined keyboard without enter message!", newState.BotStateId)
 	}
 
-	err = m.StateManger.SetState((*c).GetMessage().From.ID, newState.BotStateId)
+	err = m.StateManger.SetState(c.GetMessage().From.ID, newState.BotStateId)
 	if err != nil {
 		return err
 	}
@@ -143,10 +143,8 @@ func (m *BotStatesManager) transactToNewState(
 }
 
 // processCommand returns new state, new state flag, command processed flag and err
-func (m *BotStatesManager) processCommand(
-	c *BotContext,
-) (BotStateId, bool, bool, error) {
-	message := (*c).GetMessage()
+func (m *BotStatesManager) processCommand(c BotContext) (BotStateId, bool, bool, error) {
+	message := c.GetMessage()
 	botCommand, exists := m.BotCommands[message.Command()]
 	if !exists {
 		return 0, false, false, nil
