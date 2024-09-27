@@ -1,14 +1,10 @@
-package interacts
+package teleBotStateLib
 
 import tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 
-// commands
-type BotCommand string
-
-// keyboard
 type BotButton struct {
 	ButtonTitle   string
-	ButtonHandler func() error
+	ButtonHandler ContextHandler
 }
 
 type ButtonsRow []BotButton
@@ -34,13 +30,16 @@ func (b *BotKeyboard) GetKeyBoard() tg.ReplyKeyboardMarkup {
 	}
 	return keyboard
 }
-func (b *BotKeyboard) ProcessMessage(message string) error {
+
+// ProcessMessage return bot state id, is new state, is button pressed and error
+func (b *BotKeyboard) ProcessMessage(c *BotContext) (BotStateId, bool, bool, error) {
 	for _, row := range b.Keyboard {
 		for _, button := range row {
-			if button.ButtonTitle == message {
-				return button.ButtonHandler()
+			if button.ButtonTitle == (*c).GetMessage().Text {
+				botState, isNewState, err := button.ButtonHandler(c)
+				return botState, isNewState, true, err
 			}
 		}
 	}
-	return nil
+	return 0, false, false, nil
 }

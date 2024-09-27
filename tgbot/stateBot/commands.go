@@ -10,9 +10,9 @@ import (
 )
 
 func (s *StateHandler) ProcessCommand() bool {
-	command := BotInteract(s.MessageCommand)
+	command := BotCommand(s.MessageCommand)
 
-	commandMap := map[BotInteract]func(){
+	commandMap := map[BotCommand]func(){
 		StartCommandButton: func() {
 			_ = s.setNewStory()
 			s.setState(BotStateFillSituation)
