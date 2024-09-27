@@ -6,8 +6,7 @@ type StringifyArray interface {
 
 type HandlerResponse struct {
 	NextStateId    BotStateId // which state should go next
-	IsNewState     bool       // if set program process new state
-	IsInPlaceState bool       // set state pass control to it without wait next message
+	TransitionType StateTransitionType
 }
 
 // ContextHandler returns new state id, is new state flag and error

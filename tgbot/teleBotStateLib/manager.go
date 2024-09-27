@@ -63,7 +63,8 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 		return err
 	}
 
-	if handlerResponse.IsNewState {
+	switch handlerResponse.TransitionType {
+	case GoState:
 		newState, exists := m.BotStates[handlerResponse.NextStateId]
 		if !exists {
 			return StateNotFound
@@ -72,13 +73,13 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 		if err != nil {
 			return err
 		}
-	}
-	if handlerResponse.IsInPlaceState {
+	case GoStateInPlace:
 		err = m.StateManger.SetState(c.GetMessage().From.ID, handlerResponse.NextStateId)
 		if err != nil {
 			return err
 		}
 		return m.ProcessMessage(c)
+	default:
 	}
 
 	return nil
