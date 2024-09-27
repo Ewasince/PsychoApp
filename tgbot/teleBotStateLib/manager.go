@@ -5,6 +5,10 @@ import (
 	"log"
 )
 
+const (
+	MaxCallCount = 10
+)
+
 type BotStatesManager struct {
 	BotStates   map[BotStateId]BotState
 	BotCommands map[string]BotCommand
@@ -38,6 +42,10 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 	var handlerResponse HandlerResponse
 	var isCommandProcess bool
 
+	if c.incCallCount() > MaxCallCount {
+		return ToManyCalls
+	}
+
 	currentStateId := m.StateManger.GetState(c.GetMessage().From.ID)
 	currentState, exists := m.BotStates[currentStateId]
 	if !exists {
@@ -64,6 +72,13 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 		if err != nil {
 			return err
 		}
+	}
+	if handlerResponse.IsInPlaceState {
+		err = m.StateManger.SetState(c.GetMessage().From.ID, handlerResponse.NextStateId)
+		if err != nil {
+			return err
+		}
+		return m.ProcessMessage(c)
 	}
 
 	return nil

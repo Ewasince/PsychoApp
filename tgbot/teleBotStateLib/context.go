@@ -14,11 +14,13 @@ type BotContext interface {
 	CreateAndSendMessage(string) error
 
 	botError(error)
+	incCallCount() int
 }
 
 type BaseBotContext struct {
 	Message    *tg.Message
 	BotHandler apiUtils.SenderHandler
+	CallCount  uint
 }
 
 func NewContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHandler) *BaseBotContext {
@@ -62,4 +64,9 @@ func (b *BaseBotContext) CreateAndSendMessage(message string) error {
 func (b *BaseBotContext) botError(err error) {
 	_ = b.CreateAndSendMessage(err.Error())
 	log.Panic(err)
+}
+
+func (b *BaseBotContext) incCallCount() uint {
+	b.CallCount++
+	return b.CallCount
 }
