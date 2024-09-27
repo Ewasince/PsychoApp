@@ -14,7 +14,7 @@ type BotContext interface {
 	CreateAndSendMessage(string) error
 
 	botError(error)
-	incCallCount() int
+	incCallCount() uint
 }
 
 type BaseBotContext struct {
