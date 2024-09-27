@@ -1,51 +1,65 @@
 package teleBotStateLib
 
 import (
-	"PsychoBot/bot"
-	"StorageModule/models"
+	"PsychoBot/teleBotStateLib/apiUtils"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"log"
 )
 
-//type BotContext struct {
-//	MessageCommand        string
-//	MessageText           string
-//	MessageSender         *tg.User
-//	MessageSenderId       int64
-//	MessageSenderUserName string
-//	MessageChatId         int64
-//	BotHandler            bot.Handler
-//	Story                 *models.Story
-//}
-//
-//
-//func (b *BotContext) SendMessage(msg tg.Chattable) error {
-//	b.BotApiMutex.Lock()
-//	defer b.BotApiMutex.Unlock()
-//
-//	if _, err := b.BotApi.Send(msg); err != nil {
-//		log.Panic(err)
-//		return err
-//	}
-//	return nil
-//}
-//
-//func (b *BotContext) CreateMessage(text string) tg.MessageConfig {
-//	return tg.NewMessage(b.MessageChatId, text)
-//}
-//
-//func (b *BotContext) CreateAndSendMessage(text string) error {
-//	return b.SendMessage(b.CreateMessage(text))
-//}
-
 type BotContext interface {
-	GetMessage() tg.Message
+	GetMessage() *tg.Message
 	SendMessages(...tg.Chattable) error
 	CreateMessages(...string) []tg.MessageConfig
 
 	CreateAndSendMessage(string) error
 
-	SetState(BotStateId) error
-	GetState() BotStateId
-
 	botError(error)
+}
+
+type BaseBotContext struct {
+	Message    *tg.Message
+	BotHandler apiUtils.SenderHandler
+}
+
+func NewContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHandler) *BaseBotContext {
+	return &BaseBotContext{
+		Message:    message,
+		BotHandler: senderHandler,
+	}
+}
+
+func (b *BaseBotContext) GetMessage() *tg.Message {
+	return b.Message
+}
+
+func (b *BaseBotContext) SendMessages(chattables ...tg.Chattable) error {
+	for _, msg := range chattables {
+		if err := b.BotHandler.SendMessage(msg); err != nil {
+			log.Panic(err)
+			return err
+		}
+	}
+	return nil
+}
+
+func (b *BaseBotContext) CreateMessages(messages ...string) []tg.MessageConfig {
+	var chattableMessages []tg.MessageConfig
+	for _, msg := range messages {
+		chattableMessages = append(chattableMessages, tg.NewMessage(b.Message.Chat.ID, msg))
+	}
+	return chattableMessages
+}
+
+func (b *BaseBotContext) CreateAndSendMessage(message string) error {
+	messageConfigs := b.CreateMessages(message)
+	var chattableMessages []tg.Chattable
+	for _, msg := range messageConfigs {
+		chattableMessages = append(chattableMessages, msg)
+	}
+	return b.SendMessages(chattableMessages...)
+}
+
+func (b *BaseBotContext) botError(err error) {
+	_ = b.CreateAndSendMessage(err.Error())
+	log.Panic(err)
 }

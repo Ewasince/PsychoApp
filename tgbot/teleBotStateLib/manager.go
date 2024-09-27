@@ -8,11 +8,13 @@ import (
 type BotStatesManager struct {
 	BotStates   map[BotStateId]BotState
 	BotCommands map[string]BotCommand
+	StateManger StateCacheManager
 }
 
 func NewBotStatesManager(
 	botStates []BotState,
 	botCommands []BotCommand,
+	stateManager StateCacheManager,
 ) *BotStatesManager {
 	botStatesMap := make(map[BotStateId]BotState, len(botStates))
 	for _, botState := range botStates {
@@ -27,6 +29,7 @@ func NewBotStatesManager(
 	return &BotStatesManager{
 		BotStates:   botStatesMap,
 		BotCommands: botCommandsMap,
+		StateManger: stateManager,
 	}
 }
 
@@ -36,7 +39,7 @@ func (m *BotStatesManager) ProcessMessage(c *BotContext) error {
 	var isCommandProcess bool
 	var newStateId BotStateId
 
-	currentStateId := (*c).GetState()
+	currentStateId := m.StateManger.GetState((*c).GetMessage().From.ID)
 	currentState, exists := m.BotStates[currentStateId]
 	if !exists {
 		return StateNotFound
@@ -63,16 +66,6 @@ func (m *BotStatesManager) ProcessMessage(c *BotContext) error {
 
 	return nil
 }
-
-//// getBotState returns bot state and exists
-//func (m *BotStatesManager) getBotState(stateId BotStateId) (BotState, bool) {
-//	for _, botState := range m.BotStates {
-//		if botState.BotStateId == stateId {
-//			return botState, true
-//		}
-//	}
-//	return BotState{}, false
-//}
 
 // defineNewState returns new bot state id, new state availability flag and error
 func (m *BotStatesManager) defineNewState(c *BotContext, currentState BotState) (BotStateId, bool, error) {
@@ -105,10 +98,6 @@ func (m *BotStatesManager) transactToNewState(
 ) error {
 	var messages []string
 	var err error
-	//if newState.BotStateId != currentState.BotStateId {
-	//} else {
-	//	return nil
-	//}
 
 	if currentState.MessageExit != nil {
 		exitMessages, err := (*currentState.MessageExit).ToStringArray(c)
@@ -145,7 +134,7 @@ func (m *BotStatesManager) transactToNewState(
 		log.Panicf("in state %s defined keyboard without enter message!", newState.BotStateId)
 	}
 
-	err = (*c).SetState(newState.BotStateId)
+	err = m.StateManger.SetState((*c).GetMessage().From.ID, newState.BotStateId)
 	if err != nil {
 		return err
 	}
