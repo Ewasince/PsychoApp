@@ -1,6 +1,7 @@
 package tryStates
 
 import (
+	msg "PsychoBot/messages"
 	tl "PsychoBot/teleBotStateLib"
 	"PsychoBot/teleBotStateLib/apiUtils"
 	"PsychoBot/tryStates/commands"
@@ -34,6 +35,7 @@ func GetProcessFunc(sender *apiUtils.BaseSenderHandler) func(*tg.Message) {
 		}
 		err = manager.ProcessMessage(ctx)
 		if err != nil {
+			_ = ctx.CreateAndSendMessage(msg.BotError)
 			log.Panic(err)
 			return
 		}
