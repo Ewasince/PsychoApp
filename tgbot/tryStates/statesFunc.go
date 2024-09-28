@@ -3,17 +3,19 @@ package tryStates
 import (
 	tl "PsychoBot/teleBotStateLib"
 	"PsychoBot/teleBotStateLib/apiUtils"
+	"PsychoBot/tryStates/commands"
+	"PsychoBot/tryStates/states"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
 )
 
 func GetProcessFunc(sender *apiUtils.BaseSenderHandler) func(*tg.Message) {
-	cache := tl.NewBaseStateCacheManager(&InitState)
+	cache := tl.NewBaseStateCacheManager(&states.InitState)
 	manager := tl.NewBotStatesManager(
 		[]tl.BotState{
-			InitState,
-			RegisterState,
-			FillStoryState,
+			states.InitState,
+			states.RegisterState,
+			states.FillStoryState,
 		},
 		[]tl.BotCommand{
 			startCommand,

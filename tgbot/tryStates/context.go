@@ -13,10 +13,9 @@ import (
 
 type MyBotContext struct {
 	*tl.BaseBotContext
-	Patient             *models.Patient
-	IsPatientRegistered bool
-	MessageText         string
-	PatientTgId         int64
+	Patient     *models.Patient
+	MessageText string
+	PatientTgId int64
 }
 
 func NewMyBotContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHandler) (*MyBotContext, error) {
@@ -30,10 +29,9 @@ func NewMyBotContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHand
 			Message:    message,
 			BotHandler: senderHandler,
 		},
-		Patient:             currentPatient,
-		IsPatientRegistered: !errors.Is(err, gorm.ErrRecordNotFound),
-		MessageText:         message.Text,
-		PatientTgId:         patientTgId,
+		Patient:     currentPatient,
+		MessageText: message.Text,
+		PatientTgId: patientTgId,
 	}, nil
 }
 
