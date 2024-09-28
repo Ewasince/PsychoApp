@@ -6,7 +6,7 @@ import (
 	tl "PsychoBot/teleBotStateLib"
 )
 
-func InteractScheduleHandler(c tl.BotContext) (tl.HandlerResponse, error) {
+func CommandScheduleHandler(c tl.BotContext) (tl.HandlerResponse, error) {
 	ctx := *c.(*context.MyBotContext)
 	if !ctx.IsPatientRegistered() {
 		return tl.HandlerResponse{

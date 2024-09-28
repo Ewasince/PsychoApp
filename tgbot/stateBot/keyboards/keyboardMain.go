@@ -7,15 +7,15 @@ import (
 
 var ButtonStart = tl.BotButton{
 	ButtonTitle:   "Новая запись",
-	ButtonHandler: interacts.InteractStartHandler,
+	ButtonHandler: interacts.CommandStartHandler,
 }
 var ButtonSchedule = tl.BotButton{
 	ButtonTitle:   "Напоминание",
-	ButtonHandler: interacts.InteractScheduleHandler,
+	ButtonHandler: interacts.CommandScheduleHandler,
 }
 var ButtonNoSchedule = tl.BotButton{
 	ButtonTitle:   "Убрать напоминание",
-	ButtonHandler: interacts.InteractNoScheduleHandler,
+	ButtonHandler: interacts.CommandNoScheduleHandler,
 }
 
 var MainKeyboard = &tl.BotKeyboard{

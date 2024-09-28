@@ -7,5 +7,5 @@ import (
 
 var NoScheduleCommand = BotCommand{
 	CommandMessage: "no_schedule",
-	CommandHandler: interacts.InteractNoScheduleHandler,
+	CommandHandler: interacts.CommandNoScheduleHandler,
 }

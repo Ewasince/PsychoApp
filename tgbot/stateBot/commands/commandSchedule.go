@@ -7,5 +7,5 @@ import (
 
 var ScheduleCommand = BotCommand{
 	CommandMessage: "schedule",
-	CommandHandler: interacts.InteractScheduleHandler,
+	CommandHandler: interacts.CommandScheduleHandler,
 }

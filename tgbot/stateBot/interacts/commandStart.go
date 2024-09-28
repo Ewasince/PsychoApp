@@ -6,7 +6,7 @@ import (
 	tl "PsychoBot/teleBotStateLib"
 )
 
-func InteractStartHandler(c tl.BotContext) (tl.HandlerResponse, error) {
+func CommandStartHandler(c tl.BotContext) (tl.HandlerResponse, error) {
 	ctx := *c.(*context.MyBotContext)
 
 	if !ctx.IsPatientRegistered() {

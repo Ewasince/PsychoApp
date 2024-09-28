@@ -7,5 +7,5 @@ import (
 
 var StartCommand = BotCommand{
 	CommandMessage: "start",
-	CommandHandler: interacts.InteractStartHandler,
+	CommandHandler: interacts.CommandStartHandler,
 }
