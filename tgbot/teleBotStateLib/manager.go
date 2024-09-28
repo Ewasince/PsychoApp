@@ -65,6 +65,11 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 		if err != nil {
 			return err
 		}
+	case ReloadState:
+		err = m.transactToNewState(c, currentState, currentState)
+		if err != nil {
+			return err
+		}
 	case GoStateInPlace:
 		err = m.StateManger.SetState(c.GetMessage().From.ID, handlerResponse.NextState)
 		if err != nil {
