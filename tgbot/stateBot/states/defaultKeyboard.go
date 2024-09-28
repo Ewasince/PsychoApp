@@ -1,3 +1,3 @@
-package keyboards
+package states
 
 var DefaultKeyboard = MainKeyboard

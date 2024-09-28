@@ -1,11 +1,11 @@
 package commands
 
 import (
-	"PsychoBot/stateBot/interacts"
+	"PsychoBot/stateBot/states"
 	. "PsychoBot/teleBotStateLib"
 )
 
 var ScheduleCommand = BotCommand{
 	CommandMessage: "schedule",
-	CommandHandler: interacts.CommandScheduleHandler,
+	CommandHandler: states.CommandScheduleHandler,
 }

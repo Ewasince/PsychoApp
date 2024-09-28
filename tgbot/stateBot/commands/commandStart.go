@@ -1,11 +1,11 @@
 package commands
 
 import (
-	"PsychoBot/stateBot/interacts"
+	"PsychoBot/stateBot/states"
 	. "PsychoBot/teleBotStateLib"
 )
 
 var StartCommand = BotCommand{
 	CommandMessage: "start",
-	CommandHandler: interacts.CommandStartHandler,
+	CommandHandler: states.CommandStartHandler,
 }

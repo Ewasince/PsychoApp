@@ -1,10 +1,8 @@
-package keyboards
+package states
 
 import (
 	msg "PsychoBot/messages"
 	"PsychoBot/stateBot/context"
-	"PsychoBot/stateBot/interacts"
-	"PsychoBot/stateBot/states"
 	. "PsychoBot/teleBotStateLib"
 	"fmt"
 	"strconv"
@@ -40,7 +38,7 @@ func init() {
 		},
 		BotButton{
 			ButtonTitle:   "Сбросить напоминание",
-			ButtonHandler: interacts.CommandNoScheduleHandler,
+			ButtonHandler: CommandNoScheduleHandler,
 		},
 	})
 	ScheduleKeyboard = &BotKeyboard{Keyboard: rows}
@@ -58,11 +56,5 @@ func keyboardHourButtonHandler(c BotContext) (HandlerResponse, error) {
 		_ = ctx.CreateAndSendMessage(msg.DontRecognizeHour)
 		return HandlerResponse{}, nil
 	}
-	return states.FillSchedule(c, hour)
-}
-func keyboardBackButtonHandler(c BotContext) (HandlerResponse, error) {
-	return HandlerResponse{
-		NextState:      states.DefaultState,
-		TransitionType: GoStateForce,
-	}, nil
+	return FillSchedule(c, hour)
 }
