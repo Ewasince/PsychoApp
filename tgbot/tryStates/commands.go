@@ -8,12 +8,12 @@ var startCommand = BotCommand{
 		ctx := *c.(*MyBotContext)
 		if ctx.IsPatientRegistered {
 			return HandlerResponse{
-				NextStateId:    BotStateFillStory,
+				NextState:      &FillStoryState,
 				TransitionType: GoState,
 			}, nil
 		} else {
 			return HandlerResponse{
-				NextStateId:    BotStateRegister,
+				NextState:      &RegisterState,
 				TransitionType: GoState,
 			}, nil
 		}

@@ -7,18 +7,14 @@ import (
 	"StorageModule/repo"
 	"errors"
 	"gorm.io/gorm"
-	//"log"
+	"strconv"
+	"time"
 )
 
-const (
-	BotStateInit      BotStateId = iota
-	BotStateRegister  BotStateId = iota
-	BotStateFillStory BotStateId = iota
-	BotStateSchedule  BotStateId = iota
-)
+var statesList []BotState
 
-var InitState = NewBotState(
-	BotStateInit,
+var InitState = newBotStateWrapper(
+	"Init state",
 	nil,
 	nil,
 	nil,
@@ -26,20 +22,20 @@ var InitState = NewBotState(
 		ctx := *c.(*MyBotContext)
 		if ctx.IsPatientRegistered {
 			return HandlerResponse{
-				NextStateId:    BotStateFillStory,
+				NextState:      &FillStoryState,
 				TransitionType: GoStateInPlace,
 			}, nil
 		} else {
 			return HandlerResponse{
-				NextStateId:    BotStateRegister,
+				NextState:      &RegisterState,
 				TransitionType: GoStateInPlace,
 			}, nil
 		}
 
 	},
 )
-var RegisterState = NewBotState(
-	BotStateRegister,
+var RegisterState = newBotStateWrapper(
+	"Register state",
 	&BotMessages{msg.Greeting, msg.Register},
 	nil,
 	nil,
@@ -67,7 +63,7 @@ var RegisterState = NewBotState(
 			Username: ctx.Message.From.UserName,
 			Password: "",
 			UserId:   user.ID,
-			TgId:     ctx.Message.From.ID,
+			TgId:     ctx.PatientTgId,
 			TgChatId: &ctx.Message.Chat.ID,
 		}
 		err = repo.CreatePatient(patient)
@@ -82,17 +78,17 @@ var RegisterState = NewBotState(
 		}
 
 		return HandlerResponse{
-			NextStateId:    BotStateFillStory,
+			NextState:      &FillStoryState,
 			TransitionType: GoState,
 		}, nil
 	},
 )
 
-var FillStoryState = NewBotState(
-	BotStateFillStory,
+var FillStoryState = newBotStateWrapper(
+	"Fill story state",
 	BotMessageHandler(func(c BotContext) ([]string, error) {
 		ctx := *c.(*MyBotContext)
-		ctx.ResetStory()
+		ctx.NewStory()
 		return []string{msg.WhatHappened}, nil
 	}),
 	nil,
@@ -100,44 +96,68 @@ var FillStoryState = NewBotState(
 	func(c BotContext) (HandlerResponse, error) {
 		ctx := *c.(*MyBotContext)
 
-		var user *User
-		user, err := repo.GetUserByUsername(ctx.MessageText)
+		story := ctx.GetStory()
 
-		if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-			_ = ctx.CreateAndSendMessage(msg.UserNotFound)
+		if story.Situation == "" {
+			story.Situation = ctx.MessageText
+			_ = ctx.CreateAndSendMessage(msg.WhatMind)
+			return HandlerResponse{}, nil
+		} else if story.Mind == "" {
+			story.Mind = ctx.MessageText
+			_ = ctx.CreateAndSendMessage(msg.WhatEmotion)
+			return HandlerResponse{}, nil
+		} else if story.Emotion == "" {
+			story.Emotion = ctx.MessageText
+			_ = ctx.CreateAndSendMessage(msg.WhatPower)
+			return HandlerResponse{}, nil
+		} else if story.Power == 0 {
+			power, err := strconv.Atoi(ctx.MessageText)
+			if err != nil {
+				_ = ctx.CreateAndSendMessage(msg.DontRecognizePower)
+				return HandlerResponse{}, nil
+			}
+			if power < 1 || power > 10 {
+				_ = ctx.CreateAndSendMessage(msg.DontRecognizePower)
+				return HandlerResponse{}, nil
+			}
+			story.Power = uint8(power)
+		}
+
+		story.Date = getDate()
+		err := repo.CreateStory(story)
+
+		if err != nil {
+			_ = ctx.CreateAndSendMessage(msg.CantSaveStory)
 			return HandlerResponse{}, nil
 		}
-		if err != nil {
-			return HandlerResponse{}, err
-		}
-
-		patient := &Patient{
-			BaseModel: BaseModel{
-				Model: gorm.Model{},
-			},
-			Name:     ctx.Message.From.FirstName,
-			LastName: ctx.Message.From.LastName,
-			Email:    "",
-			Username: ctx.Message.From.UserName,
-			Password: "",
-			UserId:   user.ID,
-			TgId:     ctx.Message.From.ID,
-			TgChatId: &ctx.Message.Chat.ID,
-		}
-		err = repo.CreatePatient(patient)
-		if err != nil {
-			_ = ctx.CreateAndSendMessage(msg.CantCreatePatient)
-			return HandlerResponse{}, nil
-		}
-
-		err = ctx.CreateAndSendMessage(msg.RegisterComplete)
-		if err != nil {
-			return HandlerResponse{}, nil
-		}
-
+		_ = ctx.CreateAndSendMessage(msg.WhatEntryDone)
+		_ = ctx.NewStory()
 		return HandlerResponse{
-			NextStateId:    BotStateFillStory,
-			TransitionType: GoState,
+			NextState:      nil,
+			TransitionType: ReloadState,
 		}, nil
 	},
 )
+
+func newBotStateWrapper(
+	BotStateName string,
+	MessageEnter StringifyArray,
+	MessageExit StringifyArray,
+	Keyboard *BotKeyboard,
+	Handler ContextHandler,
+) BotState {
+	newState := NewBotState(
+		//BotStateId,
+		BotStateName,
+		MessageEnter,
+		MessageExit,
+		Keyboard,
+		Handler,
+	)
+	statesList = append(statesList, newState)
+	return newState
+}
+
+func getDate() time.Time {
+	return time.Now().Truncate(time.Minute)
+}

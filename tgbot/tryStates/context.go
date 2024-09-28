@@ -16,10 +16,12 @@ type MyBotContext struct {
 	Patient             *models.Patient
 	IsPatientRegistered bool
 	MessageText         string
+	PatientTgId         int64
 }
 
 func NewMyBotContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHandler) (*MyBotContext, error) {
-	currentPatient, err := repo.GetPatientByTg(message.From.ID)
+	patientTgId := message.From.ID
+	currentPatient, err := repo.GetPatientByTg(patientTgId)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
@@ -31,12 +33,19 @@ func NewMyBotContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHand
 		Patient:             currentPatient,
 		IsPatientRegistered: !errors.Is(err, gorm.ErrRecordNotFound),
 		MessageText:         message.Text,
+		PatientTgId:         patientTgId,
 	}, nil
 }
 
 func (c *MyBotContext) GetStory() *models.Story {
-	return cache.GetStory(c.Message.From.ID)
+	story := cache.GetStory(c.Message.From.ID)
+	if story == nil {
+		return c.NewStory()
+	}
+	return story
 }
-func (c *MyBotContext) ResetStory() *models.Story {
-	return cache.ResetStory(c.Message.From.ID)
+func (c *MyBotContext) NewStory() *models.Story {
+	newStory := cache.ResetStory(c.PatientTgId)
+	newStory.PatientId = c.Patient.ID
+	return newStory
 }

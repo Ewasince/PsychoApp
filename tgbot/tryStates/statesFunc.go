@@ -8,7 +8,7 @@ import (
 )
 
 func GetProcessFunc(sender *apiUtils.BaseSenderHandler) func(*tg.Message) {
-	cache := tl.NewBaseStateCacheManager()
+	cache := tl.NewBaseStateCacheManager(&InitState)
 	manager := tl.NewBotStatesManager(
 		[]tl.BotState{
 			InitState,
