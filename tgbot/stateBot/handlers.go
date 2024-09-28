@@ -24,79 +24,85 @@ func (s *StateHandler) ProcessState() {
 	stateMap[state]()
 }
 
-// processStateInitial is abstract handler that servers as proxy to other handlers
-func (s *StateHandler) processStateInitial() {
-	if bot.IsPatientRegistered(s.MessageSenderId) {
-		_ = s.setNewStory()
-		s.processStateFillSituation()
-	} else {
-		s.processStateRegister()
-	}
-}
-func (s *StateHandler) processStateRegister() {
-	var user *User
-	user, err := repo.GetUserByUsername(s.MessageText)
-
-	if err != nil {
-		_ = s.BotHandler.CreateAndSendMessage(msg.UserNotFound)
-		return
-	}
-
-	patient := &Patient{
-		BaseModel: BaseModel{
-			Model: gorm.Model{},
-		},
-		Name:     s.MessageSender.FirstName,
-		LastName: s.MessageSender.LastName,
-		Email:    "",
-		Username: s.MessageSender.UserName,
-		Password: "",
-		UserId:   user.ID,
-		TgId:     s.MessageSenderId,
-		TgChatId: &s.MessageChatId,
-	}
-	err = repo.CreatePatient(patient)
-	if err != nil {
-		_ = s.BotHandler.CreateAndSendMessage(msg.CantCreatePatient)
-		return
-	}
-
-	err = s.BotHandler.CreateAndSendMessage(msg.RegisterComplete)
-	if err != nil {
-		return
-	}
-	_ = s.setNewStory()
-	s.setState(BotStateFillSituation)
-}
-func (s *StateHandler) processStateFillSituation() {
-	s.Story.Situation = s.MessageText
-	s.setState(BotStateFillMind)
-}
-func (s *StateHandler) processStateFillMind() {
-	s.Story.Mind = s.MessageText
-	s.setState(BotStateFillEmotion)
-}
-func (s *StateHandler) processStateFillEmotion() {
-	s.Story.Emotion = s.MessageText
-	s.setState(BotStateFillPower)
-}
-func (s *StateHandler) processStateFillPower() {
-	power, err := strconv.Atoi(s.MessageText)
-	if err != nil {
-		_ = s.BotHandler.CreateAndSendMessage(msg.DontRecognizePower)
-		return
-	}
-	s.Story.Power = uint8(power)
-
-	err = bot.LoadStory(s.Story)
-	if err != nil {
-		_ = s.BotHandler.CreateAndSendMessage(msg.CantSaveStory)
-		return
-	}
-
-	_ = s.setNewStory()
-	s.setState(BotStateFillSituation, msg.WhatEntryDone)
-}
+// // processStateInitial is abstract handler that servers as proxy to other handlers
+//
+//	func (s *StateHandler) processStateInitial() {
+//		if bot.IsPatientRegistered(s.MessageSenderId) {
+//			_ = s.setNewStory()
+//			s.processStateFillSituation()
+//		} else {
+//			s.processStateRegister()
+//		}
+//	}
+//
+//	func (s *StateHandler) processStateRegister() {
+//		var user *User
+//		user, err := repo.GetUserByUsername(s.MessageText)
+//
+//		if err != nil {
+//			_ = s.BotHandler.CreateAndSendMessage(msg.UserNotFound)
+//			return
+//		}
+//
+//		patient := &Patient{
+//			BaseModel: BaseModel{
+//				Model: gorm.Model{},
+//			},
+//			Name:     s.MessageSender.FirstName,
+//			LastName: s.MessageSender.LastName,
+//			Email:    "",
+//			Username: s.MessageSender.UserName,
+//			Password: "",
+//			UserId:   user.ID,
+//			TgId:     s.MessageSenderId,
+//			TgChatId: &s.MessageChatId,
+//		}
+//		err = repo.CreatePatient(patient)
+//		if err != nil {
+//			_ = s.BotHandler.CreateAndSendMessage(msg.CantCreatePatient)
+//			return
+//		}
+//
+//		err = s.BotHandler.CreateAndSendMessage(msg.RegisterComplete)
+//		if err != nil {
+//			return
+//		}
+//		_ = s.setNewStory()
+//		s.setState(BotStateFillSituation)
+//	}
+//
+//	func (s *StateHandler) processStateFillSituation() {
+//		s.Story.Situation = s.MessageText
+//		s.setState(BotStateFillMind)
+//	}
+//
+//	func (s *StateHandler) processStateFillMind() {
+//		s.Story.Mind = s.MessageText
+//		s.setState(BotStateFillEmotion)
+//	}
+//
+//	func (s *StateHandler) processStateFillEmotion() {
+//		s.Story.Emotion = s.MessageText
+//		s.setState(BotStateFillPower)
+//	}
+//
+//	func (s *StateHandler) processStateFillPower() {
+//		power, err := strconv.Atoi(s.MessageText)
+//		if err != nil {
+//			_ = s.BotHandler.CreateAndSendMessage(msg.DontRecognizePower)
+//			return
+//		}
+//		s.Story.Power = uint8(power)
+//
+//		err = bot.LoadStory(s.Story)
+//		if err != nil {
+//			_ = s.BotHandler.CreateAndSendMessage(msg.CantSaveStory)
+//			return
+//		}
+//
+//		_ = s.setNewStory()
+//		s.setState(BotStateFillSituation, msg.WhatEntryDone)
+//	}
 func (s *StateHandler) processStateFillSchedule() {
 	scheduleHour, err := strconv.Atoi(s.MessageText)
 	if err != nil {
