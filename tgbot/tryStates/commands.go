@@ -4,7 +4,18 @@ import . "PsychoBot/teleBotStateLib"
 
 var startCommand = BotCommand{
 	CommandMessage: "start",
-	CommandHandler: func(c *BotContext) (BotStateId, bool, error) {
-		return 0, false, (*c).CreateAndSendMessage("Start command")
+	CommandHandler: func(c BotContext) (HandlerResponse, error) {
+		ctx := *c.(*MyBotContext)
+		if ctx.IsPatientRegistered {
+			return HandlerResponse{
+				NextStateId:    BotStateFillStory,
+				TransitionType: GoState,
+			}, nil
+		} else {
+			return HandlerResponse{
+				NextStateId:    BotStateRegister,
+				TransitionType: GoState,
+			}, nil
+		}
 	},
 }

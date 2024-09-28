@@ -2,10 +2,11 @@ package main
 
 import (
 	. "EnvironmentModule"
-	"PsychoBot/scheduler"
-	"PsychoBot/stateBot"
+	"PsychoBot/teleBotStateLib/apiUtils"
+	"PsychoBot/tryStates"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
+	"sync"
 	"time"
 )
 
@@ -22,13 +23,20 @@ func main() {
 		log.Fatal(err)
 	}
 
+	senderHandler := &apiUtils.BaseSenderHandler{
+		BotApi:   botAPI,
+		BotMutex: sync.Mutex{},
+	}
+
 	u := tg.NewUpdate(0)
 	u.Timeout = 60
 
 	updates := botAPI.GetUpdatesChan(u)
 
-	// start scheduler
-	go scheduler.Start(botAPI)
+	//// start scheduler
+	//go scheduler.Start(botAPI)
+
+	processMessage := tryStates.GetProcessFunc(senderHandler)
 
 	for update := range updates {
 		if update.Message == nil {
@@ -38,10 +46,10 @@ func main() {
 		messageMessage := update.Message
 		messageSender := messageMessage.From
 
-		stateHandler := stateBot.NewStateHandler(
-			messageMessage,
-			botAPI,
-		)
+		//stateHandler := stateBot.NewStateHandler(
+		//	messageMessage,
+		//	botAPI,
+		//)
 
 		log.Printf(
 			"[%s, %d] %s",
@@ -50,9 +58,11 @@ func main() {
 			update.Message.Text,
 		)
 
-		if stateHandler.ProcessCommand() {
-			continue
-		}
-		stateHandler.ProcessState()
+		processMessage(update.Message)
+
+		//if stateHandler.ProcessCommand() {
+		//	continue
+		//}
+		//stateHandler.ProcessState()
 	}
 }

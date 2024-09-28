@@ -12,6 +12,8 @@ func GetProcessFunc(sender *apiUtils.BaseSenderHandler) func(*tg.Message) {
 	manager := tl.NewBotStatesManager(
 		[]tl.BotState{
 			InitState,
+			RegisterState,
+			FillStoryState,
 		},
 		[]tl.BotCommand{
 			startCommand,
@@ -20,10 +22,15 @@ func GetProcessFunc(sender *apiUtils.BaseSenderHandler) func(*tg.Message) {
 	)
 
 	return func(message *tg.Message) {
-		var ctx tl.BotContext = tl.NewContext(message, sender)
-		err := manager.ProcessMessage(&ctx)
+		ctx, err := NewMyBotContext(message, sender)
 		if err != nil {
 			log.Panic(err)
+			return
+		}
+		err = manager.ProcessMessage(ctx)
+		if err != nil {
+			log.Panic(err)
+			return
 		}
 	}
 }
