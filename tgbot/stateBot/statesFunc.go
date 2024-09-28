@@ -4,6 +4,7 @@ import (
 	msg "PsychoBot/messages"
 	"PsychoBot/stateBot/commands"
 	"PsychoBot/stateBot/context"
+	"PsychoBot/stateBot/keyboards"
 	"PsychoBot/stateBot/states"
 	tl "PsychoBot/teleBotStateLib"
 	"PsychoBot/teleBotStateLib/apiUtils"
@@ -12,13 +13,10 @@ import (
 )
 
 func GetProcessFunc(sender *apiUtils.BaseSenderHandler) func(*tg.Message) {
-	cache := tl.NewBaseStateCacheManager(&states.InitState)
+	states.FillStoryState.Keyboard = keyboards.DefaultKeyboard
+
+	cache := tl.NewBaseStateCacheManager(states.InitState)
 	manager := tl.NewBotStatesManager(
-		[]tl.BotState{
-			states.InitState,
-			states.RegisterState,
-			states.FillStoryState,
-		},
 		[]tl.BotCommand{
 			commands.StartCommand,
 			commands.ScheduleCommand,

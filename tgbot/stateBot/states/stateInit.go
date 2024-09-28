@@ -14,12 +14,12 @@ var InitState = newBotStateWrapper(
 		ctx := *c.(*context.MyBotContext)
 		if ctx.IsPatientRegistered() {
 			return HandlerResponse{
-				NextState:      &FillStoryState,
+				NextState:      FillStoryState,
 				TransitionType: GoStateInPlace,
 			}, nil
 		} else {
 			return HandlerResponse{
-				NextState:      &RegisterState,
+				NextState:      RegisterState,
 				TransitionType: GoStateInPlace,
 			}, nil
 		}

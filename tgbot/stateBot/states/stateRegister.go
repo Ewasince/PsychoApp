@@ -61,7 +61,7 @@ func messageHandlerRegisterState(c BotContext) (HandlerResponse, error) {
 	}
 	ctx.Patient = patient
 	return HandlerResponse{
-		NextState:      &DefaultState,
+		NextState:      DefaultState,
 		TransitionType: GoState,
 	}, nil
 }

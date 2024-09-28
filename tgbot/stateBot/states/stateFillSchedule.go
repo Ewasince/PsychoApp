@@ -60,7 +60,7 @@ func messageHandlerFillScheduleState(c BotContext) (HandlerResponse, error) {
 	}
 
 	return HandlerResponse{
-		NextState:      &DefaultState,
+		NextState:      DefaultState,
 		TransitionType: GoState,
 	}, nil
 }

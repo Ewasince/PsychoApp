@@ -4,7 +4,7 @@ import (
 	. "PsychoBot/teleBotStateLib"
 )
 
-var statesList []BotState
+var statesList []*BotState
 
 func newBotStateWrapper(
 	BotStateName string,
@@ -12,7 +12,7 @@ func newBotStateWrapper(
 	MessageExit StringifyArray,
 	Keyboard *BotKeyboard,
 	Handler ContextHandler,
-) BotState {
+) *BotState {
 	newState := NewBotState(
 		BotStateName,
 		MessageEnter,
@@ -20,6 +20,6 @@ func newBotStateWrapper(
 		Keyboard,
 		Handler,
 	)
-	statesList = append(statesList, newState)
-	return newState
+	statesList = append(statesList, &newState)
+	return &newState
 }

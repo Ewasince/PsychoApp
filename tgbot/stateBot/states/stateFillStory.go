@@ -10,9 +10,9 @@ import (
 )
 
 var FillStoryState = newBotStateWrapper(
-	"Fill Schedule state",
+	"Fill Story state",
 	BotMessageHandler(enterMessageHandlerFillStoryState),
-	nil,
+	BotMessages{msg.WhatEntryDone},
 	nil,
 	messageHandlerFillStoryState,
 )
@@ -59,7 +59,6 @@ func messageHandlerFillStoryState(c BotContext) (HandlerResponse, error) {
 		_ = ctx.CreateAndSendMessage(msg.CantSaveStory)
 		return HandlerResponse{}, nil
 	}
-	_ = ctx.CreateAndSendMessage(msg.WhatEntryDone)
 	_ = ctx.NewStory()
 	return HandlerResponse{
 		NextState:      nil,
