@@ -61,12 +61,12 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 	switch handlerResponse.TransitionType {
 	case GoState:
 		newState := handlerResponse.NextState
-		err = m.transactToNewState(c, currentState, newState)
+		err = m.transactToNewState(c, currentState, newState, isCommandProcess)
 		if err != nil {
 			return err
 		}
 	case ReloadState:
-		err = m.transactToNewState(c, currentState, currentState)
+		err = m.transactToNewState(c, currentState, currentState, isCommandProcess)
 		if err != nil {
 			return err
 		}
@@ -83,7 +83,10 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 }
 
 // defineNewState returns new bot state id, new state availability flag and error
-func (m *BotStatesManager) defineNewState(c BotContext, currentState *BotState) (HandlerResponse, error) {
+func (m *BotStatesManager) defineNewState(
+	c BotContext,
+	currentState *BotState,
+) (HandlerResponse, error) {
 	var handlerResponse HandlerResponse
 	var buttonPressed bool
 	var err error
@@ -109,11 +112,12 @@ func (m *BotStatesManager) transactToNewState(
 	c BotContext,
 	currentState *BotState,
 	newState *BotState,
+	forceTransition bool,
 ) error {
 	var messages []string
 	var err error
 
-	if currentState.MessageExit != nil {
+	if !forceTransition && currentState.MessageExit != nil {
 		exitMessages, err := currentState.MessageExit.ToStringArray(c)
 		if err != nil {
 			return err
