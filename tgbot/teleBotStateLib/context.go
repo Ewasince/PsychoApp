@@ -7,7 +7,10 @@ import (
 )
 
 type BotContext interface {
-	GetMessage() *tg.Message
+	GetMessageCommand() string
+	GetMessageText() string
+	GetMessageSenderId() int64
+
 	SendMessages(...tg.Chattable) error
 	CreateMessages(...string) []tg.MessageConfig
 
@@ -18,20 +21,32 @@ type BotContext interface {
 }
 
 type BaseBotContext struct {
-	Message    *tg.Message
-	BotHandler apiUtils.SenderHandler
-	CallCount  uint
+	MessageText     string
+	MessageCommand  string
+	MessageSenderId int64
+	MessageChatId   int64
+	BotHandler      apiUtils.SenderHandler
+	CallCount       uint
 }
 
 func NewContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHandler) *BaseBotContext {
 	return &BaseBotContext{
-		Message:    message,
-		BotHandler: senderHandler,
+		MessageText:     message.Text,
+		MessageCommand:  message.Command(),
+		MessageSenderId: message.From.ID,
+		MessageChatId:   message.Chat.ID,
+		BotHandler:      senderHandler,
 	}
 }
 
-func (b *BaseBotContext) GetMessage() *tg.Message {
-	return b.Message
+func (b *BaseBotContext) GetMessageCommand() string {
+	return b.MessageText
+}
+func (b *BaseBotContext) GetMessageText() string {
+	return b.MessageCommand
+}
+func (b *BaseBotContext) GetMessageSenderId() int64 {
+	return b.MessageSenderId
 }
 
 func (b *BaseBotContext) SendMessages(chattables ...tg.Chattable) error {
@@ -47,7 +62,7 @@ func (b *BaseBotContext) SendMessages(chattables ...tg.Chattable) error {
 func (b *BaseBotContext) CreateMessages(messages ...string) []tg.MessageConfig {
 	var chattableMessages []tg.MessageConfig
 	for _, msg := range messages {
-		chattableMessages = append(chattableMessages, tg.NewMessage(b.Message.Chat.ID, msg))
+		chattableMessages = append(chattableMessages, tg.NewMessage(b.MessageChatId, msg))
 	}
 	return chattableMessages
 }

@@ -35,7 +35,7 @@ func (b *BotKeyboard) GetKeyBoard() tg.ReplyKeyboardMarkup {
 func (b *BotKeyboard) ProcessMessage(c BotContext) (HandlerResponse, bool, error) {
 	for _, row := range b.Keyboard {
 		for _, button := range row {
-			if button.ButtonTitle == c.GetMessage().Text {
+			if button.ButtonTitle == c.GetMessageText() {
 				handlerResponse, err := button.ButtonHandler(c)
 				return handlerResponse, true, err
 			}

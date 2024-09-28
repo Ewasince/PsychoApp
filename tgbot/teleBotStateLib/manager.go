@@ -38,7 +38,7 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 		return ToManyCalls
 	}
 
-	currentState := m.StateManger.GetState(c.GetMessage().From.ID)
+	currentState := m.StateManger.GetState(c.GetMessageSenderId())
 
 	handlerResponse, isCommandProcess, err = m.processCommand(c)
 	if err != nil {
@@ -70,7 +70,7 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 			return err
 		}
 	case GoStateInPlace:
-		err = m.StateManger.SetState(c.GetMessage().From.ID, handlerResponse.NextState)
+		err = m.StateManger.SetState(c.GetMessageSenderId(), handlerResponse.NextState)
 		if err != nil {
 			return err
 		}
@@ -153,7 +153,7 @@ func (m *BotStatesManager) transactToNewState(
 		log.Panicf("in state %s defined keyboard without enter message!", newState.BotStateName)
 	}
 
-	err = m.StateManger.SetState(c.GetMessage().From.ID, newState)
+	err = m.StateManger.SetState(c.GetMessageSenderId(), newState)
 	if err != nil {
 		return err
 	}
@@ -163,8 +163,7 @@ func (m *BotStatesManager) transactToNewState(
 
 // processCommand returns new state, new state flag, command processed flag and err
 func (m *BotStatesManager) processCommand(c BotContext) (HandlerResponse, bool, error) {
-	message := c.GetMessage()
-	botCommand, exists := m.BotCommands[message.Command()]
+	botCommand, exists := m.BotCommands[c.GetMessageCommand()]
 	if !exists {
 		return HandlerResponse{}, false, nil
 	}
