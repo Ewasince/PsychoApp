@@ -16,6 +16,8 @@ type BotContext interface {
 
 	CreateAndSendMessage(string) error
 
+	SetKeyboard(*BotKeyboard)
+
 	botError(error)
 	incCallCount() uint
 }
@@ -25,6 +27,7 @@ type BaseBotContext struct {
 	MessageCommand  string
 	MessageSenderId int64
 	MessageChatId   int64
+	DefaultKeyboard *BotKeyboard
 	BotHandler      apiUtils.SenderHandler
 	CallCount       uint
 }
@@ -62,7 +65,11 @@ func (b *BaseBotContext) SendMessages(chattables ...tg.Chattable) error {
 func (b *BaseBotContext) CreateMessages(messages ...string) []tg.MessageConfig {
 	var chattableMessages []tg.MessageConfig
 	for _, msg := range messages {
-		chattableMessages = append(chattableMessages, tg.NewMessage(b.MessageChatId, msg))
+		message := tg.NewMessage(b.MessageChatId, msg)
+		if b.DefaultKeyboard != nil {
+			message.ReplyMarkup = b.DefaultKeyboard.GetKeyBoard()
+		}
+		chattableMessages = append(chattableMessages, message)
 	}
 	return chattableMessages
 }
@@ -74,6 +81,10 @@ func (b *BaseBotContext) CreateAndSendMessage(message string) error {
 		chattableMessages = append(chattableMessages, msg)
 	}
 	return b.SendMessages(chattableMessages...)
+}
+
+func (b *BaseBotContext) SetKeyboard(keyboard *BotKeyboard) {
+	b.DefaultKeyboard = keyboard
 }
 
 func (b *BaseBotContext) botError(err error) {

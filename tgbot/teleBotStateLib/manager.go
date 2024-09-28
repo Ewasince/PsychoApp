@@ -39,6 +39,7 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 	}
 
 	currentState := m.StateManger.GetState(c.GetMessageSenderId())
+	c.SetKeyboard(currentState.Keyboard)
 
 	handlerResponse, isCommandProcess, err = m.processCommand(c)
 	if err != nil {
