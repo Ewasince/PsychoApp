@@ -1,12 +1,12 @@
-package tryStates
+package stateBot
 
 import (
 	msg "PsychoBot/messages"
+	"PsychoBot/stateBot/commands"
+	"PsychoBot/stateBot/context"
+	"PsychoBot/stateBot/states"
 	tl "PsychoBot/teleBotStateLib"
 	"PsychoBot/teleBotStateLib/apiUtils"
-	"PsychoBot/tryStates/commands"
-	"PsychoBot/tryStates/context"
-	"PsychoBot/tryStates/states"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
 )

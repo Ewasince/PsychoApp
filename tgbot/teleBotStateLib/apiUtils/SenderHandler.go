@@ -12,7 +12,7 @@ type SenderHandler interface {
 
 type BaseSenderHandler struct {
 	BotApi   *tg.BotAPI
-	BotMutex sync.Mutex
+	BotMutex *sync.Mutex
 }
 
 func (b *BaseSenderHandler) SendMessage(msg tg.Chattable) error {

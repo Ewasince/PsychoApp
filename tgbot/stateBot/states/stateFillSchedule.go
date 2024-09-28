@@ -2,9 +2,9 @@ package states
 
 import (
 	msg "PsychoBot/messages"
+	"PsychoBot/stateBot/context"
+	"PsychoBot/stateBot/helpers"
 	. "PsychoBot/teleBotStateLib"
-	"PsychoBot/tryStates/context"
-	"PsychoBot/tryStates/helpers"
 	"StorageModule/repo"
 	"errors"
 	"fmt"

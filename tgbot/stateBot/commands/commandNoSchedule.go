@@ -2,9 +2,9 @@ package commands
 
 import (
 	msg "PsychoBot/messages"
+	"PsychoBot/stateBot/context"
+	"PsychoBot/stateBot/states"
 	. "PsychoBot/teleBotStateLib"
-	"PsychoBot/tryStates/context"
-	"PsychoBot/tryStates/states"
 	"StorageModule/repo"
 	"errors"
 )

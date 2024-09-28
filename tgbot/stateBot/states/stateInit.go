@@ -1,8 +1,8 @@
 package states
 
 import (
+	"PsychoBot/stateBot/context"
 	. "PsychoBot/teleBotStateLib"
-	"PsychoBot/tryStates/context"
 )
 
 var InitState = newBotStateWrapper(
