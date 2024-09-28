@@ -14,7 +14,6 @@ import (
 type MyBotContext struct {
 	*tl.BaseBotContext
 	Patient       *models.Patient
-	MessageText   string
 	PatientTgId   int64
 	MessageSender *tg.User
 }
