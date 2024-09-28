@@ -45,14 +45,14 @@ func messageHandlerRegisterState(c BotContext) (HandlerResponse, error) {
 		BaseModel: BaseModel{
 			Model: gorm.Model{},
 		},
-		Name:     ctx.Message.From.FirstName,
-		LastName: ctx.Message.From.LastName,
+		Name:     ctx.MessageSender.FirstName,
+		LastName: ctx.MessageSender.LastName,
 		Email:    "",
-		Username: ctx.Message.From.UserName,
+		Username: ctx.MessageSender.UserName,
 		Password: "",
 		UserId:   user.ID,
 		TgId:     ctx.PatientTgId,
-		TgChatId: &ctx.Message.Chat.ID,
+		TgChatId: &ctx.MessageChatId,
 	}
 	err = repo.CreatePatient(patient)
 	if err != nil {

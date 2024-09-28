@@ -60,7 +60,7 @@ func FillSchedule(c BotContext, scheduleHour int) (HandlerResponse, error) {
 
 	nextSchedule := helpers.GetScheduleTime(scheduleHour)
 	ctx.Patient.NextSchedule = &nextSchedule
-	ctx.Patient.TgChatId = &ctx.Message.Chat.ID
+	ctx.Patient.TgChatId = &ctx.MessageChatId
 	err := repo.UpdateSchedule(ctx.Patient)
 	if err != nil {
 		return HandlerResponse{}, err

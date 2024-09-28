@@ -13,9 +13,10 @@ import (
 
 type MyBotContext struct {
 	*tl.BaseBotContext
-	Patient     *models.Patient
-	MessageText string
-	PatientTgId int64
+	Patient       *models.Patient
+	MessageText   string
+	PatientTgId   int64
+	MessageSender *tg.User
 }
 
 func NewMyBotContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHandler) (*MyBotContext, error) {
@@ -26,17 +27,20 @@ func NewMyBotContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHand
 	}
 	return &MyBotContext{
 		BaseBotContext: &tl.BaseBotContext{
-			Message:    message,
-			BotHandler: senderHandler,
+			MessageText:     message.Text,
+			MessageCommand:  message.Command(),
+			MessageSenderId: message.From.ID,
+			MessageChatId:   message.Chat.ID,
+			BotHandler:      senderHandler,
 		},
-		Patient:     currentPatient,
-		MessageText: message.Text,
-		PatientTgId: patientTgId,
+		Patient:       currentPatient,
+		PatientTgId:   patientTgId,
+		MessageSender: message.From,
 	}, nil
 }
 
 func (c *MyBotContext) GetStory() *models.Story {
-	story := cache.GetStory(c.Message.From.ID)
+	story := cache.GetStory(c.MessageSenderId)
 	if story == nil {
 		return c.NewStory()
 	}
