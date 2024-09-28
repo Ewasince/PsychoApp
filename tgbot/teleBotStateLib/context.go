@@ -68,6 +68,8 @@ func (b *BaseBotContext) CreateMessages(messages ...string) []tg.MessageConfig {
 		message := tg.NewMessage(b.MessageChatId, msg)
 		if b.DefaultKeyboard != nil {
 			message.ReplyMarkup = b.DefaultKeyboard.GetKeyBoard()
+		} else {
+			message.ReplyMarkup = tg.NewRemoveKeyboard(true)
 		}
 		chattableMessages = append(chattableMessages, message)
 	}
