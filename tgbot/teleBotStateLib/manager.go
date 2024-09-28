@@ -10,27 +10,20 @@ const (
 )
 
 type BotStatesManager struct {
-	BotStates   []BotState
 	BotCommands map[string]BotCommand
 	StateManger StateCacheManager
 }
 
 func NewBotStatesManager(
-	botStates []BotState,
 	botCommands []BotCommand,
 	stateManager StateCacheManager,
 ) *BotStatesManager {
-	if len(botStates) == 0 {
-		panic("No botStates")
-	}
-
 	botCommandsMap := make(map[string]BotCommand, len(botCommands))
 	for _, botCommand := range botCommands {
 		botCommandsMap[botCommand.CommandMessage] = botCommand
 	}
 
 	return &BotStatesManager{
-		BotStates:   botStates,
 		BotCommands: botCommandsMap,
 		StateManger: stateManager,
 	}
