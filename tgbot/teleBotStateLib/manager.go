@@ -69,7 +69,7 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 		if !exists {
 			return StateNotFound
 		}
-		err = m.transactToNewState(c, newState, currentState)
+		err = m.transactToNewState(c, currentState, newState)
 		if err != nil {
 			return err
 		}
@@ -117,7 +117,7 @@ func (m *BotStatesManager) transactToNewState(
 	var err error
 
 	if currentState.MessageExit != nil {
-		exitMessages, err := (*currentState.MessageExit).ToStringArray(c)
+		exitMessages, err := currentState.MessageExit.ToStringArray(c)
 		if err != nil {
 			return err
 		}
@@ -125,7 +125,7 @@ func (m *BotStatesManager) transactToNewState(
 	}
 
 	if newState.MessageEnter != nil {
-		enterMessages, err := (*newState.MessageEnter).ToStringArray(c)
+		enterMessages, err := newState.MessageEnter.ToStringArray(c)
 		if err != nil {
 			return err
 		}
