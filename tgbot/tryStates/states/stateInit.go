@@ -2,7 +2,7 @@ package states
 
 import (
 	. "PsychoBot/teleBotStateLib"
-	"PsychoBot/tryStates"
+	"PsychoBot/tryStates/context"
 )
 
 var InitState = newBotStateWrapper(
@@ -11,7 +11,7 @@ var InitState = newBotStateWrapper(
 	nil,
 	nil,
 	func(c BotContext) (HandlerResponse, error) {
-		ctx := *c.(*tryStates.MyBotContext)
+		ctx := *c.(*context.MyBotContext)
 		if ctx.IsPatientRegistered() {
 			return HandlerResponse{
 				NextState:      &FillStoryState,

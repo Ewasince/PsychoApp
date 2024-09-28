@@ -3,7 +3,7 @@ package states
 import (
 	msg "PsychoBot/messages"
 	. "PsychoBot/teleBotStateLib"
-	"PsychoBot/tryStates"
+	"PsychoBot/tryStates/context"
 	"PsychoBot/tryStates/helpers"
 	"StorageModule/repo"
 	"strconv"
@@ -18,12 +18,12 @@ var FillStoryState = newBotStateWrapper(
 )
 
 func enterMessageHandlerFillStoryState(c BotContext) ([]string, error) {
-	ctx := *c.(*tryStates.MyBotContext)
+	ctx := *c.(*context.MyBotContext)
 	ctx.NewStory()
 	return []string{msg.WhatHappened}, nil
 }
 func messageHandlerFillStoryState(c BotContext) (HandlerResponse, error) {
-	ctx := *c.(*tryStates.MyBotContext)
+	ctx := *c.(*context.MyBotContext)
 
 	story := ctx.GetStory()
 

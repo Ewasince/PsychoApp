@@ -1,11 +1,11 @@
 package states
 
 import (
-	"PsychoBot/bot"
 	msg "PsychoBot/messages"
 	. "PsychoBot/teleBotStateLib"
-	"PsychoBot/tryStates"
+	"PsychoBot/tryStates/context"
 	"PsychoBot/tryStates/helpers"
+	"StorageModule/repo"
 	"errors"
 	"fmt"
 	"strconv"
@@ -20,7 +20,7 @@ var FillScheduleState = newBotStateWrapper(
 )
 
 func enterMessageHandlerFillScheduleState(c BotContext) ([]string, error) {
-	ctx := *c.(*tryStates.MyBotContext)
+	ctx := *c.(*context.MyBotContext)
 	var message string
 	if ctx.Patient.NextSchedule != nil {
 		message = fmt.Sprintf(msg.SetScheduleSet, ctx.Patient.NextSchedule.Hour())
@@ -31,13 +31,13 @@ func enterMessageHandlerFillScheduleState(c BotContext) ([]string, error) {
 }
 
 func exitMessageHandlerFillScheduleState(c BotContext) ([]string, error) {
-	ctx := *c.(*tryStates.MyBotContext)
+	ctx := *c.(*context.MyBotContext)
 	scheduleHour := ctx.Patient.NextSchedule.Hour()
 	message := fmt.Sprintf(msg.SetScheduleSuccess, strconv.Itoa(scheduleHour))
 	return []string{message}, nil
 }
 func messageHandlerFillScheduleState(c BotContext) (HandlerResponse, error) {
-	ctx := *c.(*tryStates.MyBotContext)
+	ctx := *c.(*context.MyBotContext)
 
 	scheduleHour, err := strconv.Atoi(ctx.MessageText)
 	if err != nil {
@@ -54,13 +54,13 @@ func messageHandlerFillScheduleState(c BotContext) (HandlerResponse, error) {
 	nextSchedule := helpers.GetScheduleTime(scheduleHour)
 	ctx.Patient.NextSchedule = &nextSchedule
 	ctx.Patient.TgChatId = &ctx.Message.Chat.ID
-	err = bot.SaveSchedule(ctx.Patient)
+	err = repo.UpdateSchedule(ctx.Patient)
 	if err != nil {
 		return HandlerResponse{}, err
 	}
 
 	return HandlerResponse{
-		NextState:      &FillStoryState,
+		NextState:      &DefaultState,
 		TransitionType: GoState,
 	}, nil
 }

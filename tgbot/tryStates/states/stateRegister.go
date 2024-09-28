@@ -3,7 +3,7 @@ package states
 import (
 	msg "PsychoBot/messages"
 	. "PsychoBot/teleBotStateLib"
-	"PsychoBot/tryStates"
+	"PsychoBot/tryStates/context"
 	. "StorageModule/models"
 	"StorageModule/repo"
 	"errors"
@@ -19,7 +19,7 @@ var RegisterState = newBotStateWrapper(
 )
 
 func exitMessageHandlerRegisterState(c BotContext) ([]string, error) {
-	ctx := *c.(*tryStates.MyBotContext)
+	ctx := *c.(*context.MyBotContext)
 	if ctx.IsPatientRegistered() {
 		_ = ctx.CreateAndSendMessage(msg.CantCreatePatient)
 		return []string{}, errors.New("patient was complete register, but wasn't registered ")
@@ -28,7 +28,7 @@ func exitMessageHandlerRegisterState(c BotContext) ([]string, error) {
 }
 
 func messageHandlerRegisterState(c BotContext) (HandlerResponse, error) {
-	ctx := *c.(*tryStates.MyBotContext)
+	ctx := *c.(*context.MyBotContext)
 
 	var user *User
 	user, err := repo.GetUserByUsername(ctx.MessageText)
@@ -61,7 +61,7 @@ func messageHandlerRegisterState(c BotContext) (HandlerResponse, error) {
 	}
 	ctx.Patient = patient
 	return HandlerResponse{
-		NextState:      &FillStoryState,
+		NextState:      &DefaultState,
 		TransitionType: GoState,
 	}, nil
 }

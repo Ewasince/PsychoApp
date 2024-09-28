@@ -1,4 +1,4 @@
-package tryStates
+package context
 
 import (
 	"PsychoBot/cache"
@@ -46,4 +46,7 @@ func (c *MyBotContext) NewStory() *models.Story {
 	newStory := cache.ResetStory(c.PatientTgId)
 	newStory.PatientId = c.Patient.ID
 	return newStory
+}
+func (c *MyBotContext) IsPatientRegistered() bool {
+	return c.Patient.ID != 0
 }
