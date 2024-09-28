@@ -54,12 +54,18 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 	switch handlerResponse.TransitionType {
 	case GoState:
 		newState := handlerResponse.NextState
-		err = m.transactToNewState(c, currentState, newState, isCommandProcess)
+		err = m.transactToNewState(c, currentState, newState, false)
 		if err != nil {
 			return err
 		}
 	case ReloadState:
-		err = m.transactToNewState(c, currentState, currentState, isCommandProcess)
+		err = m.transactToNewState(c, currentState, currentState, false)
+		if err != nil {
+			return err
+		}
+	case GoStateForce:
+		newState := handlerResponse.NextState
+		err = m.transactToNewState(c, currentState, newState, true)
 		if err != nil {
 			return err
 		}
@@ -128,9 +134,11 @@ func (m *BotStatesManager) transactToNewState(
 
 	if len(messages) > 0 {
 		var messagesForSend = c.CreateMessages(messages...)
+		lastMessageForSend := &messagesForSend[len(messagesForSend)-1]
 		if newState.Keyboard != nil {
-			lastMessageForSend := messagesForSend[len(messagesForSend)-1]
 			lastMessageForSend.ReplyMarkup = newState.Keyboard.GetKeyBoard()
+		} else {
+			lastMessageForSend.ReplyMarkup = tg.NewRemoveKeyboard(true)
 		}
 
 		var chattableMessages []tg.Chattable
