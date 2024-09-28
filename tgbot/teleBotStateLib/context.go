@@ -40,10 +40,10 @@ func NewContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHandler) 
 }
 
 func (b *BaseBotContext) GetMessageCommand() string {
-	return b.MessageText
+	return b.MessageCommand
 }
 func (b *BaseBotContext) GetMessageText() string {
-	return b.MessageCommand
+	return b.MessageText
 }
 func (b *BaseBotContext) GetMessageSenderId() int64 {
 	return b.MessageSenderId
