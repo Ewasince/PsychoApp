@@ -21,6 +21,9 @@ func AuthUser(username, password string) (*User, error) {
 	if len(password) > MaxPasswordLength {
 		return nil, errors.New("Password too long")
 	}
+	if len(password) == 0 {
+		return nil, errors.New("User not authenticated")
+	}
 
 	err := DB.
 		Where("username = ?", username).
