@@ -3,8 +3,12 @@ package teleBotStateLib
 type StateTransitionType uint
 
 const (
-	DontGoState    StateTransitionType = iota
-	GoState        StateTransitionType = iota
-	GoStateInPlace StateTransitionType = iota
-	ReloadState    StateTransitionType = iota
+	// DontGoState is default value. dont do any transition
+	DontGoState StateTransitionType = iota
+	// GoState set new state and wait new update
+	GoState StateTransitionType = iota
+	// GoStateInPlace set new state and immediately pass control to his handler
+	GoStateInPlace StateTransitionType = iota //
+	// ReloadState acts like where is transition from another state to current
+	ReloadState StateTransitionType = iota
 )
