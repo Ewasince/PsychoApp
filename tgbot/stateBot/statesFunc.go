@@ -14,6 +14,7 @@ import (
 
 func GetProcessFunc(sender *apiUtils.BaseSenderHandler) func(*tg.Message) {
 	states.FillStoryState.Keyboard = keyboards.DefaultKeyboard
+	states.FillScheduleState.Keyboard = keyboards.ScheduleKeyboard
 
 	cache := tl.NewBaseStateCacheManager(states.InitState)
 	manager := tl.NewBotStatesManager(

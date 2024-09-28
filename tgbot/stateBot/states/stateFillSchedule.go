@@ -51,10 +51,17 @@ func messageHandlerFillScheduleState(c BotContext) (HandlerResponse, error) {
 		_ = ctx.CreateAndSendMessage(msg.DontRecognizeHour)
 		return HandlerResponse{}, nil
 	}
+
+	return FillSchedule(c, scheduleHour)
+}
+
+func FillSchedule(c BotContext, scheduleHour int) (HandlerResponse, error) {
+	ctx := *c.(*context.MyBotContext)
+
 	nextSchedule := helpers.GetScheduleTime(scheduleHour)
 	ctx.Patient.NextSchedule = &nextSchedule
 	ctx.Patient.TgChatId = &ctx.Message.Chat.ID
-	err = repo.UpdateSchedule(ctx.Patient)
+	err := repo.UpdateSchedule(ctx.Patient)
 	if err != nil {
 		return HandlerResponse{}, err
 	}
