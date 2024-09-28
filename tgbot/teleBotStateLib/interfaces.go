@@ -5,7 +5,7 @@ type StringifyArray interface {
 }
 
 type HandlerResponse struct {
-	NextStateId    BotStateId // which state should go next
+	NextState      *BotState // which state should go next
 	TransitionType StateTransitionType
 }
 

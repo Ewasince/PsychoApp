@@ -10,7 +10,7 @@ const (
 )
 
 type BotStatesManager struct {
-	BotStates   map[BotStateId]BotState
+	BotStates   []BotState
 	BotCommands map[string]BotCommand
 	StateManger StateCacheManager
 }
@@ -20,9 +20,8 @@ func NewBotStatesManager(
 	botCommands []BotCommand,
 	stateManager StateCacheManager,
 ) *BotStatesManager {
-	botStatesMap := make(map[BotStateId]BotState, len(botStates))
-	for _, botState := range botStates {
-		botStatesMap[botState.BotStateId] = botState
+	if len(botStates) == 0 {
+		panic("No botStates")
 	}
 
 	botCommandsMap := make(map[string]BotCommand, len(botCommands))
@@ -31,7 +30,7 @@ func NewBotStatesManager(
 	}
 
 	return &BotStatesManager{
-		BotStates:   botStatesMap,
+		BotStates:   botStates,
 		BotCommands: botCommandsMap,
 		StateManger: stateManager,
 	}
@@ -46,11 +45,7 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 		return ToManyCalls
 	}
 
-	currentStateId := m.StateManger.GetState(c.GetMessage().From.ID)
-	currentState, exists := m.BotStates[currentStateId]
-	if !exists {
-		return StateNotFound
-	}
+	currentState := m.StateManger.GetState(c.GetMessage().From.ID)
 
 	handlerResponse, isCommandProcess, err = m.processCommand(c)
 	if err != nil {
@@ -65,16 +60,13 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 
 	switch handlerResponse.TransitionType {
 	case GoState:
-		newState, exists := m.BotStates[handlerResponse.NextStateId]
-		if !exists {
-			return StateNotFound
-		}
+		newState := handlerResponse.NextState
 		err = m.transactToNewState(c, currentState, newState)
 		if err != nil {
 			return err
 		}
 	case GoStateInPlace:
-		err = m.StateManger.SetState(c.GetMessage().From.ID, handlerResponse.NextStateId)
+		err = m.StateManger.SetState(c.GetMessage().From.ID, handlerResponse.NextState)
 		if err != nil {
 			return err
 		}
@@ -86,7 +78,7 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 }
 
 // defineNewState returns new bot state id, new state availability flag and error
-func (m *BotStatesManager) defineNewState(c BotContext, currentState BotState) (HandlerResponse, error) {
+func (m *BotStatesManager) defineNewState(c BotContext, currentState *BotState) (HandlerResponse, error) {
 	var handlerResponse HandlerResponse
 	var buttonPressed bool
 	var err error
@@ -110,8 +102,8 @@ func (m *BotStatesManager) defineNewState(c BotContext, currentState BotState) (
 
 func (m *BotStatesManager) transactToNewState(
 	c BotContext,
-	currentState BotState,
-	newState BotState,
+	currentState *BotState,
+	newState *BotState,
 ) error {
 	var messages []string
 	var err error
@@ -148,10 +140,10 @@ func (m *BotStatesManager) transactToNewState(
 			return err
 		}
 	} else if newState.Keyboard != nil {
-		log.Panicf("in state %s defined keyboard without enter message!", newState.BotStateId)
+		log.Panicf("in state %s defined keyboard without enter message!", newState.BotStateName)
 	}
 
-	err = m.StateManger.SetState(c.GetMessage().From.ID, newState.BotStateId)
+	err = m.StateManger.SetState(c.GetMessage().From.ID, newState)
 	if err != nil {
 		return err
 	}

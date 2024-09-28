@@ -1,7 +1,5 @@
 package teleBotStateLib
 
-type BotStateId int
-
 type BotMessages []string
 
 func (b BotMessages) ToStringArray(c BotContext) ([]string, error) { return b, nil }
@@ -11,7 +9,7 @@ type BotMessageHandler func(c BotContext) ([]string, error)
 func (b BotMessageHandler) ToStringArray(c BotContext) ([]string, error) { return b(c) }
 
 type BotState struct {
-	BotStateId   BotStateId
+	BotStateName string
 	MessageEnter StringifyArray
 	MessageExit  StringifyArray
 	Keyboard     *BotKeyboard
@@ -19,7 +17,7 @@ type BotState struct {
 }
 
 func NewBotState(
-	BotStateId BotStateId,
+	BotStateName string,
 	MessageEnter StringifyArray,
 	MessageExit StringifyArray,
 	Keyboard *BotKeyboard,
@@ -29,7 +27,7 @@ func NewBotState(
 		panic(KeyboardAndEnterMessage)
 	}
 	return BotState{
-		BotStateId,
+		BotStateName,
 		MessageEnter,
 		MessageExit,
 		Keyboard,
