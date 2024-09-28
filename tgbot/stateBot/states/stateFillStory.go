@@ -23,7 +23,7 @@ func enterMessageHandlerFillStoryState(c BotContext) ([]string, error) {
 	return []string{msg.WhatHappened}, nil
 }
 func messageHandlerFillStoryState(c BotContext) (HandlerResponse, error) {
-	ctx := *c.(*context.MyBotContext)
+	ctx := c.(*context.MyBotContext)
 
 	story := ctx.GetStory()
 
@@ -33,13 +33,23 @@ func messageHandlerFillStoryState(c BotContext) (HandlerResponse, error) {
 		return HandlerResponse{}, nil
 	} else if story.Mind == "" {
 		story.Mind = ctx.MessageText
+		ctx.SetKeyboard(MoodKeyboard)
 		_ = ctx.CreateAndSendMessage(msg.WhatEmotion)
 		return HandlerResponse{}, nil
 	} else if story.Emotion == "" {
+		handlerResponse, shouldRerun, err := processKeyboard(ctx, MoodKeyboard)
+		if shouldRerun {
+			return handlerResponse, err
+		}
 		story.Emotion = ctx.MessageText
+		ctx.SetKeyboard(PowerKeyboard)
 		_ = ctx.CreateAndSendMessage(msg.WhatPower)
 		return HandlerResponse{}, nil
 	} else if story.Power == 0 {
+		handlerResponse, shouldRerun, err := processKeyboard(ctx, PowerKeyboard)
+		if shouldRerun {
+			return handlerResponse, err
+		}
 		power, err := strconv.Atoi(ctx.MessageText)
 		if err != nil {
 			_ = ctx.CreateAndSendMessage(msg.DontRecognizePower)
@@ -64,4 +74,20 @@ func messageHandlerFillStoryState(c BotContext) (HandlerResponse, error) {
 		NextState:      nil,
 		TransitionType: ReloadState,
 	}, nil
+}
+
+func processKeyboard(ctx *context.MyBotContext, kb *BotKeyboard) (HandlerResponse, bool, error) {
+	handlerResponse, isButtonPressed, err := kb.ProcessMessage(ctx)
+	if err != nil {
+		return HandlerResponse{}, true, err
+	}
+	if !isButtonPressed {
+		ctx.SetKeyboard(MoodKeyboard)
+		err = ctx.CreateAndSendMessage(msg.WhatEmotionError)
+		return HandlerResponse{}, true, err
+	}
+	if handlerResponse.TransitionType == GoStateForce {
+		return handlerResponse, true, nil
+	}
+	return HandlerResponse{}, false, err
 }
