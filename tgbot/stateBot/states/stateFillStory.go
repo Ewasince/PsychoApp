@@ -33,20 +33,20 @@ func messageHandlerFillStoryState(c BotContext) (HandlerResponse, error) {
 		return HandlerResponse{}, nil
 	} else if story.Mind == "" {
 		story.Mind = ctx.MessageText
-		ctx.SetKeyboard(MoodKeyboard)
+		ctx.SetKeyboard(&EmotionsKeyboard)
 		_ = ctx.CreateAndSendMessage(msg.WhatEmotion)
 		return HandlerResponse{}, nil
 	} else if story.Emotion == "" {
-		handlerResponse, shouldRerun, err := processKeyboard(ctx, MoodKeyboard)
+		handlerResponse, shouldRerun, err := processKeyboard(ctx, &EmotionsKeyboard)
 		if shouldRerun {
 			return handlerResponse, err
 		}
 		story.Emotion = ctx.MessageText
-		ctx.SetKeyboard(PowerKeyboard)
+		ctx.SetKeyboard(&PowerKeyboard)
 		_ = ctx.CreateAndSendMessage(msg.WhatPower)
 		return HandlerResponse{}, nil
 	} else if story.Power == 0 {
-		handlerResponse, shouldRerun, err := processKeyboard(ctx, PowerKeyboard)
+		handlerResponse, shouldRerun, err := processKeyboard(ctx, &PowerKeyboard)
 		if shouldRerun {
 			return handlerResponse, err
 		}
@@ -82,7 +82,7 @@ func processKeyboard(ctx *context.MyBotContext, kb *BotKeyboard) (HandlerRespons
 		return HandlerResponse{}, true, err
 	}
 	if !isButtonPressed {
-		ctx.SetKeyboard(MoodKeyboard)
+		ctx.SetKeyboard(&EmotionsKeyboard)
 		err = ctx.CreateAndSendMessage(msg.WhatEmotionError)
 		return HandlerResponse{}, true, err
 	}

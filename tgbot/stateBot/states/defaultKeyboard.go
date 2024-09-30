@@ -1,3 +1,3 @@
 package states
 
-var DefaultKeyboard = MainKeyboard
+var DefaultKeyboard = &MainKeyboard
