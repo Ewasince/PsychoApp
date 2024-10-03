@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var RegisterState = newBotStateWrapper(
+var RegisterState = NewBotState(
 	"Register state",
 	&BotMessages{msg.Greeting, msg.Register},
 	BotMessageHandler(exitMessageHandlerRegisterState),

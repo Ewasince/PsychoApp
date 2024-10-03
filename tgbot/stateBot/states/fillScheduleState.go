@@ -11,7 +11,7 @@ import (
 	"strconv"
 )
 
-var FillScheduleState = newBotStateWrapper(
+var FillScheduleState = NewBotState(
 	"Fill Schedule state",
 	BotMessageHandler(enterMessageHandlerFillScheduleState),
 	BotMessageHandler(exitMessageHandlerFillScheduleState),

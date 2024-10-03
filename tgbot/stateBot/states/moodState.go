@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-var SetMoodState = newBotStateWrapper(
+var SetMoodState = NewBotState(
 	"Set mood state",
 	BotMessageHandler(enterMessageHandlerSetMoodState),
 	BotMessages{msg.SetMoodSuccess},

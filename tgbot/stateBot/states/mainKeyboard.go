@@ -45,13 +45,13 @@ func CommandStartHandler(c tl.BotContext) (tl.HandlerResponse, error) {
 
 	if !ctx.IsPatientRegistered() {
 		return tl.HandlerResponse{
-			NextState:      RegisterState,
+			NextState:      &RegisterState,
 			TransitionType: tl.GoStateForce,
 		}, nil
 	}
 
 	return tl.HandlerResponse{
-		NextState:      FillStoryState,
+		NextState:      &FillStoryState,
 		TransitionType: tl.GoStateForce,
 	}, nil
 }
@@ -60,12 +60,12 @@ func CommandScheduleHandler(c tl.BotContext) (tl.HandlerResponse, error) {
 	ctx := *c.(*context.MyBotContext)
 	if !ctx.IsPatientRegistered() {
 		return tl.HandlerResponse{
-			NextState:      RegisterState,
+			NextState:      &RegisterState,
 			TransitionType: tl.GoStateForce,
 		}, nil
 	}
 	return tl.HandlerResponse{
-		NextState:      FillScheduleState,
+		NextState:      &FillScheduleState,
 		TransitionType: tl.GoStateForce,
 	}, nil
 }
@@ -74,12 +74,12 @@ func CommandSetMoodHandler(c tl.BotContext) (tl.HandlerResponse, error) {
 	ctx := *c.(*context.MyBotContext)
 	if !ctx.IsPatientRegistered() {
 		return tl.HandlerResponse{
-			NextState:      RegisterState,
+			NextState:      &RegisterState,
 			TransitionType: tl.GoStateForce,
 		}, nil
 	}
 	return tl.HandlerResponse{
-		NextState:      SetMoodState,
+		NextState:      &SetMoodState,
 		TransitionType: tl.GoStateForce,
 	}, nil
 }
@@ -88,7 +88,7 @@ func CommandNoScheduleHandler(c tl.BotContext) (tl.HandlerResponse, error) {
 	ctx := *c.(*context.MyBotContext)
 	if !ctx.IsPatientRegistered() {
 		return tl.HandlerResponse{
-			NextState:      RegisterState,
+			NextState:      &RegisterState,
 			TransitionType: tl.GoStateForce,
 		}, nil
 	}

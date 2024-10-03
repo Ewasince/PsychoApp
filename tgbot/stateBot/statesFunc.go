@@ -15,7 +15,7 @@ func GetProcessFunc(sender *apiUtils.BaseSenderHandler) func(*tg.Message) {
 	states.FillStoryState.Keyboard = states.DefaultKeyboard
 	states.FillScheduleState.Keyboard = states.ScheduleKeyboard
 
-	cache := tl.NewBaseStateCacheManager(states.InitState)
+	cache := tl.NewBaseStateCacheManager(&states.InitState)
 	manager := tl.NewBotStatesManager(
 		[]tl.BotCommand{
 			commands.StartCommand,

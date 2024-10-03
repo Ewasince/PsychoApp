@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-var FillStoryState = newBotStateWrapper(
+var FillStoryState = NewBotState(
 	"Fill Story state",
 	BotMessageHandler(enterMessageHandlerFillStoryState),
 	BotMessages{msg.WhatEntryDone},
