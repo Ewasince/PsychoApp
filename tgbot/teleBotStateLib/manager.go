@@ -1,8 +1,10 @@
 package teleBotStateLib
 
 import (
+	"fmt"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
+	"runtime/debug"
 )
 
 const (
@@ -34,6 +36,12 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 	var handlerResponse HandlerResponse
 	var isCommandProcess bool
 
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("stacktrace from panic: \n" + string(debug.Stack()))
+		}
+	}()
+
 	if c.incCallCount() > MaxCallCount {
 		return ToManyCalls
 	}
@@ -43,13 +51,13 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 
 	handlerResponse, isCommandProcess, err = m.processCommand(c)
 	if err != nil {
-		return err
+		panic(err)
 	}
 	if !isCommandProcess {
 		handlerResponse, err = m.defineNewState(c, currentState)
 	}
 	if err != nil {
-		return err
+		panic(err)
 	}
 
 	switch handlerResponse.TransitionType {
@@ -57,23 +65,23 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 		newState := handlerResponse.NextState
 		err = m.transactToNewState(c, currentState, newState, false)
 		if err != nil {
-			return err
+			panic(err)
 		}
 	case ReloadState:
 		err = m.transactToNewState(c, currentState, currentState, false)
 		if err != nil {
-			return err
+			panic(err)
 		}
 	case GoStateForce:
 		newState := handlerResponse.NextState
 		err = m.transactToNewState(c, currentState, newState, true)
 		if err != nil {
-			return err
+			panic(err)
 		}
 	case GoStateInPlace:
 		err = m.StateManger.SetState(c.GetMessageSenderId(), handlerResponse.NextState)
 		if err != nil {
-			return err
+			panic(err)
 		}
 		return m.ProcessMessage(c)
 	default:
@@ -120,7 +128,7 @@ func (m *BotStatesManager) transactToNewState(
 	if !forceTransition && currentState.MessageExit != nil {
 		exitMessages, err := currentState.MessageExit.ToStringArray(c)
 		if err != nil {
-			return err
+			panic(err)
 		}
 		messages = append(messages, exitMessages...)
 	}
@@ -128,7 +136,7 @@ func (m *BotStatesManager) transactToNewState(
 	if newState.MessageEnter != nil {
 		enterMessages, err := newState.MessageEnter.ToStringArray(c)
 		if err != nil {
-			return err
+			panic(err)
 		}
 		messages = append(messages, enterMessages...)
 	}
@@ -148,7 +156,7 @@ func (m *BotStatesManager) transactToNewState(
 		}
 		err = c.SendMessages(chattableMessages...)
 		if err != nil {
-			return err
+			panic(err)
 		}
 	} else if newState.Keyboard != nil {
 		log.Panicf("in state %s defined keyboard without enter message!", newState.BotStateName)
@@ -156,7 +164,7 @@ func (m *BotStatesManager) transactToNewState(
 
 	err = m.StateManger.SetState(c.GetMessageSenderId(), newState)
 	if err != nil {
-		return err
+		panic(err)
 	}
 
 	return nil

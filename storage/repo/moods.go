@@ -54,9 +54,6 @@ func SetMood(patientId uint, date time.Time, value int8) error {
 		Where("date = ?", castedDate).
 		First(&newMood).
 		Error
-	if err != nil {
-		return err
-	}
 	newMood.Value = value
 	newMood.Date = castedDate
 	newMood.PatientId = patientId
