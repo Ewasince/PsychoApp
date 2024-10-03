@@ -7,8 +7,9 @@ import (
 	"PsychoBot/stateBot/states"
 	tl "PsychoBot/teleBotStateLib"
 	"PsychoBot/teleBotStateLib/apiUtils"
+	"fmt"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"log"
+	"runtime/debug"
 )
 
 func GetProcessFunc(sender *apiUtils.BaseSenderHandler) func(*tg.Message) {
@@ -26,16 +27,13 @@ func GetProcessFunc(sender *apiUtils.BaseSenderHandler) func(*tg.Message) {
 	)
 
 	return func(message *tg.Message) {
-		ctx, err := context.NewMyBotContext(message, sender)
-		if err != nil {
-			log.Panic(err)
-			return
-		}
-		err = manager.ProcessMessage(ctx)
-		if err != nil {
-			_ = ctx.CreateAndSendMessage(msg.BotError)
-			log.Panic(err)
-			return
-		}
+		defer func() {
+			if r := recover(); r != nil {
+				fmt.Println("Error occurred when handle message: \n" + string(debug.Stack()))
+			}
+		}()
+
+		ctx := context.NewMyBotContext(message, sender, msg.BotError)
+		manager.ProcessMessage(ctx)
 	}
 }

@@ -10,4 +10,4 @@ type HandlerResponse struct {
 }
 
 // ContextHandler returns new state id, is new state flag and error
-type ContextHandler func(c BotContext) (HandlerResponse, error)
+type ContextHandler func(c BotContext) HandlerResponse

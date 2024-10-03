@@ -3,7 +3,6 @@ package teleBotStateLib
 import (
 	"PsychoBot/teleBotStateLib/apiUtils"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"log"
 )
 
 type BotContext interface {
@@ -11,14 +10,14 @@ type BotContext interface {
 	GetMessageText() string
 	GetMessageSenderId() int64
 
-	SendMessages(...tg.Chattable) error
+	SendMessages(...tg.Chattable)
 	CreateMessages(...string) []tg.MessageConfig
 
-	CreateAndSendMessage(string) error
+	CreateAndSendMessage(string)
 
 	SetKeyboard(*BotKeyboard)
 
-	botError(error)
+	SendErrorMessage()
 	incCallCount() uint
 }
 
@@ -30,15 +29,21 @@ type BaseBotContext struct {
 	DefaultKeyboard *BotKeyboard
 	BotHandler      apiUtils.SenderHandler
 	CallCount       uint
+	ErrorMessage    string
 }
 
-func NewContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHandler) *BaseBotContext {
+func NewContext(
+	message *tg.Message,
+	senderHandler *apiUtils.BaseSenderHandler,
+	errorMessage string,
+) *BaseBotContext {
 	return &BaseBotContext{
 		MessageText:     message.Text,
 		MessageCommand:  message.Command(),
 		MessageSenderId: message.From.ID,
 		MessageChatId:   message.Chat.ID,
 		BotHandler:      senderHandler,
+		ErrorMessage:    errorMessage,
 	}
 }
 
@@ -52,14 +57,12 @@ func (b *BaseBotContext) GetMessageSenderId() int64 {
 	return b.MessageSenderId
 }
 
-func (b *BaseBotContext) SendMessages(chattables ...tg.Chattable) error {
+func (b *BaseBotContext) SendMessages(chattables ...tg.Chattable) {
 	for _, msg := range chattables {
 		if err := b.BotHandler.SendMessage(msg); err != nil {
-			log.Panic(err)
-			return err
+			panic(err)
 		}
 	}
-	return nil
 }
 
 func (b *BaseBotContext) CreateMessages(messages ...string) []tg.MessageConfig {
@@ -76,22 +79,21 @@ func (b *BaseBotContext) CreateMessages(messages ...string) []tg.MessageConfig {
 	return chattableMessages
 }
 
-func (b *BaseBotContext) CreateAndSendMessage(message string) error {
+func (b *BaseBotContext) CreateAndSendMessage(message string) {
 	messageConfigs := b.CreateMessages(message)
 	var chattableMessages []tg.Chattable
 	for _, msg := range messageConfigs {
 		chattableMessages = append(chattableMessages, msg)
 	}
-	return b.SendMessages(chattableMessages...)
+	b.SendMessages(chattableMessages...)
 }
 
 func (b *BaseBotContext) SetKeyboard(keyboard *BotKeyboard) {
 	b.DefaultKeyboard = keyboard
 }
 
-func (b *BaseBotContext) botError(err error) {
-	_ = b.CreateAndSendMessage(err.Error())
-	log.Panic(err)
+func (b *BaseBotContext) SendErrorMessage() {
+	b.CreateAndSendMessage(b.ErrorMessage)
 }
 
 func (b *BaseBotContext) incCallCount() uint {

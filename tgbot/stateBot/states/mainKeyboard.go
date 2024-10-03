@@ -5,7 +5,6 @@ import (
 	"PsychoBot/stateBot/context"
 	tl "PsychoBot/teleBotStateLib"
 	"StorageModule/repo"
-	"errors"
 )
 
 var ButtonStart = tl.BotButton{
@@ -40,73 +39,73 @@ var MainKeyboard = tl.BotKeyboard{
 	},
 }
 
-func CommandStartHandler(c tl.BotContext) (tl.HandlerResponse, error) {
+func CommandStartHandler(c tl.BotContext) tl.HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 
 	if !ctx.IsPatientRegistered() {
 		return tl.HandlerResponse{
 			NextState:      &RegisterState,
 			TransitionType: tl.GoStateForce,
-		}, nil
+		}
 	}
 
 	return tl.HandlerResponse{
 		NextState:      &FillStoryState,
 		TransitionType: tl.GoStateForce,
-	}, nil
+	}
 }
 
-func CommandScheduleHandler(c tl.BotContext) (tl.HandlerResponse, error) {
+func CommandScheduleHandler(c tl.BotContext) tl.HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 	if !ctx.IsPatientRegistered() {
 		return tl.HandlerResponse{
 			NextState:      &RegisterState,
 			TransitionType: tl.GoStateForce,
-		}, nil
+		}
 	}
 	return tl.HandlerResponse{
 		NextState:      &FillScheduleState,
 		TransitionType: tl.GoStateForce,
-	}, nil
+	}
 }
 
-func CommandSetMoodHandler(c tl.BotContext) (tl.HandlerResponse, error) {
+func CommandSetMoodHandler(c tl.BotContext) tl.HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 	if !ctx.IsPatientRegistered() {
 		return tl.HandlerResponse{
 			NextState:      &RegisterState,
 			TransitionType: tl.GoStateForce,
-		}, nil
+		}
 	}
 	return tl.HandlerResponse{
 		NextState:      &SetMoodState,
 		TransitionType: tl.GoStateForce,
-	}, nil
+	}
 }
 
-func CommandNoScheduleHandler(c tl.BotContext) (tl.HandlerResponse, error) {
+func CommandNoScheduleHandler(c tl.BotContext) tl.HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 	if !ctx.IsPatientRegistered() {
 		return tl.HandlerResponse{
 			NextState:      &RegisterState,
 			TransitionType: tl.GoStateForce,
-		}, nil
+		}
 	}
 
 	ctx.Patient.NextSchedule = nil
 	err := repo.UpdateSchedule(ctx.Patient)
 	if err != nil {
-		return tl.HandlerResponse{}, err
+		panic(err)
 	}
 
 	if ctx.Patient.NextSchedule == nil {
-		_ = ctx.CreateAndSendMessage(messages.ResetScheduleSuccess)
+		ctx.CreateAndSendMessage(messages.ResetScheduleSuccess)
 	} else {
-		return tl.HandlerResponse{}, errors.New("cant reset schedule")
+		panic("cant reset schedule")
 	}
 
 	return tl.HandlerResponse{
 		NextState:      DefaultState,
 		TransitionType: tl.GoStateForce,
-	}, nil
+	}
 }

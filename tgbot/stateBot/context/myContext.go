@@ -2,6 +2,7 @@ package context
 
 import (
 	"PsychoBot/cache"
+	msg "PsychoBot/messages"
 	tl "PsychoBot/teleBotStateLib"
 	"PsychoBot/teleBotStateLib/apiUtils"
 	"StorageModule/models"
@@ -18,11 +19,15 @@ type MyBotContext struct {
 	MessageSender *tg.User
 }
 
-func NewMyBotContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHandler) (*MyBotContext, error) {
+func NewMyBotContext(
+	message *tg.Message,
+	senderHandler *apiUtils.BaseSenderHandler,
+	errorMessage string,
+) *MyBotContext {
 	patientTgId := message.From.ID
 	currentPatient, err := repo.GetPatientByTg(patientTgId)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, err
+		panic(err)
 	}
 	return &MyBotContext{
 		BaseBotContext: &tl.BaseBotContext{
@@ -31,11 +36,12 @@ func NewMyBotContext(message *tg.Message, senderHandler *apiUtils.BaseSenderHand
 			MessageSenderId: message.From.ID,
 			MessageChatId:   message.Chat.ID,
 			BotHandler:      senderHandler,
+			ErrorMessage:    errorMessage,
 		},
 		Patient:       currentPatient,
 		PatientTgId:   patientTgId,
 		MessageSender: message.From,
-	}, nil
+	}
 }
 
 func (c *MyBotContext) GetStory() *models.Story {
@@ -52,4 +58,7 @@ func (c *MyBotContext) NewStory() *models.Story {
 }
 func (c *MyBotContext) IsPatientRegistered() bool {
 	return c.Patient.ID != 0
+}
+func (c *MyBotContext) SendErrorMessage() {
+	c.CreateAndSendMessage(msg.BotError)
 }

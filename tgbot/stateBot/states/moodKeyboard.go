@@ -5,7 +5,6 @@ import (
 	"PsychoBot/stateBot/helpers"
 	. "PsychoBot/teleBotStateLib"
 	"StorageModule/repo"
-	"errors"
 	"strconv"
 	"time"
 )
@@ -25,23 +24,23 @@ func init() {
 	MoodKeyboard = BotKeyboard{Keyboard: rows}
 }
 
-func keyboardMoodHandler(c BotContext) (HandlerResponse, error) {
+func keyboardMoodHandler(c BotContext) HandlerResponse {
 	ctx := c.(*context.MyBotContext)
 	if !ctx.IsPatientRegistered() {
-		return HandlerResponse{}, errors.New("user not registered")
+		panic("user not registered")
 	}
 
 	value, err := strconv.Atoi(ctx.MessageText)
 	if err != nil {
-		return HandlerResponse{}, err
+		panic(err)
 	}
 
 	err = repo.SetMood(ctx.Patient.ID, time.Now(), int8(value))
 	if err != nil {
-		return HandlerResponse{}, err
+		panic(err)
 	}
 	return HandlerResponse{
 		NextState:      DefaultState,
 		TransitionType: GoState,
-	}, nil
+	}
 }

@@ -32,14 +32,14 @@ func (b *BotKeyboard) GetKeyBoard() tg.ReplyKeyboardMarkup {
 }
 
 // ProcessMessage return bot state id, is new state, is button pressed and error
-func (b *BotKeyboard) ProcessMessage(c BotContext) (HandlerResponse, bool, error) {
+func (b *BotKeyboard) ProcessMessage(c BotContext) (HandlerResponse, bool) {
 	for _, row := range b.Keyboard {
 		for _, button := range row {
 			if button.ButtonTitle == c.GetMessageText() {
-				handlerResponse, err := button.ButtonHandler(c)
-				return handlerResponse, true, err
+				handlerResponse := button.ButtonHandler(c)
+				return handlerResponse, true
 			}
 		}
 	}
-	return HandlerResponse{}, false, nil
+	return HandlerResponse{}, false
 }

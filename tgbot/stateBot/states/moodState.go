@@ -40,8 +40,8 @@ func enterMessageHandlerSetMoodState(c BotContext) ([]string, error) {
 //		message := fmt.Sprintf(msg.SetScheduleSuccess, strconv.Itoa(scheduleHour))
 //		return []string{message}, nil
 //	}
-func messageHandlerSetMoodState(c BotContext) (HandlerResponse, error) {
+func messageHandlerSetMoodState(c BotContext) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
-	err := ctx.CreateAndSendMessage(msg.SetMoodWrong)
-	return HandlerResponse{}, err
+	ctx.CreateAndSendMessage(msg.SetMoodWrong)
+	return HandlerResponse{}
 }

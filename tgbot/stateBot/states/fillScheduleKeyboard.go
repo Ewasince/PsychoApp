@@ -44,17 +44,17 @@ func init() {
 	ScheduleKeyboard = &BotKeyboard{Keyboard: rows}
 }
 
-func keyboardHourButtonHandler(c BotContext) (HandlerResponse, error) {
+func keyboardHourButtonHandler(c BotContext) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 	timeData := strings.Split(ctx.MessageText, ":")
 	if len(timeData) == 0 {
-		_ = ctx.CreateAndSendMessage(msg.DontRecognizeHour)
-		return HandlerResponse{}, nil
+		ctx.CreateAndSendMessage(msg.DontRecognizeHour)
+		return HandlerResponse{}
 	}
 	hour, err := strconv.Atoi(timeData[0])
 	if err != nil {
-		_ = ctx.CreateAndSendMessage(msg.DontRecognizeHour)
-		return HandlerResponse{}, nil
+		ctx.CreateAndSendMessage(msg.DontRecognizeHour)
+		return HandlerResponse{}
 	}
 	return FillSchedule(c, hour)
 }

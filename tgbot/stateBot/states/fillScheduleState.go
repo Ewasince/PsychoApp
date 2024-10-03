@@ -6,7 +6,6 @@ import (
 	"PsychoBot/stateBot/helpers"
 	. "PsychoBot/teleBotStateLib"
 	"StorageModule/repo"
-	"errors"
 	"fmt"
 	"strconv"
 )
@@ -36,26 +35,26 @@ func exitMessageHandlerFillScheduleState(c BotContext) ([]string, error) {
 	message := fmt.Sprintf(msg.SetScheduleSuccess, strconv.Itoa(scheduleHour))
 	return []string{message}, nil
 }
-func messageHandlerFillScheduleState(c BotContext) (HandlerResponse, error) {
+func messageHandlerFillScheduleState(c BotContext) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 
 	scheduleHour, err := strconv.Atoi(ctx.MessageText)
 	if err != nil {
-		_ = ctx.CreateAndSendMessage(msg.DontRecognizeHour)
-		return HandlerResponse{}, nil
+		ctx.CreateAndSendMessage(msg.DontRecognizeHour)
+		return HandlerResponse{}
 	}
 	if !ctx.IsPatientRegistered() {
-		return HandlerResponse{}, errors.New("no patient provided")
+		panic("no patient provided")
 	}
 	if !(0 <= scheduleHour && scheduleHour <= 23) {
-		_ = ctx.CreateAndSendMessage(msg.DontRecognizeHour)
-		return HandlerResponse{}, nil
+		ctx.CreateAndSendMessage(msg.DontRecognizeHour)
+		return HandlerResponse{}
 	}
 
 	return FillSchedule(c, scheduleHour)
 }
 
-func FillSchedule(c BotContext, scheduleHour int) (HandlerResponse, error) {
+func FillSchedule(c BotContext, scheduleHour int) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 
 	nextSchedule := helpers.GetScheduleTime(scheduleHour)
@@ -63,11 +62,11 @@ func FillSchedule(c BotContext, scheduleHour int) (HandlerResponse, error) {
 	ctx.Patient.TgChatId = &ctx.MessageChatId
 	err := repo.UpdateSchedule(ctx.Patient)
 	if err != nil {
-		return HandlerResponse{}, err
+		panic(err)
 	}
 
 	return HandlerResponse{
 		NextState:      DefaultState,
 		TransitionType: GoState,
-	}, nil
+	}
 }

@@ -21,24 +21,24 @@ var RegisterState = NewBotState(
 func exitMessageHandlerRegisterState(c BotContext) ([]string, error) {
 	ctx := *c.(*context.MyBotContext)
 	if ctx.IsPatientRegistered() {
-		_ = ctx.CreateAndSendMessage(msg.CantCreatePatient)
+		ctx.CreateAndSendMessage(msg.CantCreatePatient)
 		return []string{}, errors.New("patient was complete register, but wasn't registered ")
 	}
 	return []string{msg.RegisterComplete}, nil
 }
 
-func messageHandlerRegisterState(c BotContext) (HandlerResponse, error) {
+func messageHandlerRegisterState(c BotContext) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 
 	var user *User
 	user, err := repo.GetUserByUsername(ctx.MessageText)
 
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-		_ = ctx.CreateAndSendMessage(msg.UserNotFound)
-		return HandlerResponse{}, nil
+		ctx.CreateAndSendMessage(msg.UserNotFound)
+		return HandlerResponse{}
 	}
 	if err != nil {
-		return HandlerResponse{}, err
+		panic(err)
 	}
 
 	patient := &Patient{
@@ -56,12 +56,12 @@ func messageHandlerRegisterState(c BotContext) (HandlerResponse, error) {
 	}
 	err = repo.CreatePatient(patient)
 	if err != nil {
-		_ = ctx.CreateAndSendMessage(msg.CantCreatePatient)
-		return HandlerResponse{}, nil
+		ctx.CreateAndSendMessage(msg.CantCreatePatient)
+		return HandlerResponse{}
 	}
 	ctx.Patient = patient
 	return HandlerResponse{
 		NextState:      DefaultState,
 		TransitionType: GoState,
-	}, nil
+	}
 }

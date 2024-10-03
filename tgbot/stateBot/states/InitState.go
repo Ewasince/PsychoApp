@@ -10,18 +10,18 @@ var InitState = NewBotState(
 	nil,
 	nil,
 	nil,
-	func(c BotContext) (HandlerResponse, error) {
+	func(c BotContext) HandlerResponse {
 		ctx := *c.(*context.MyBotContext)
 		if ctx.IsPatientRegistered() {
 			return HandlerResponse{
 				NextState:      &FillStoryState,
 				TransitionType: GoStateInPlace,
-			}, nil
+			}
 		} else {
 			return HandlerResponse{
 				NextState:      &RegisterState,
 				TransitionType: GoStateInPlace,
-			}, nil
+			}
 		}
 
 	},

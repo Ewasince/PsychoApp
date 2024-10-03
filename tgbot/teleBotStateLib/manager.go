@@ -1,10 +1,8 @@
 package teleBotStateLib
 
 import (
-	"fmt"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
-	"runtime/debug"
 )
 
 const (
@@ -31,33 +29,32 @@ func NewBotStatesManager(
 	}
 }
 
-func (m *BotStatesManager) ProcessMessage(c BotContext) error {
+func (m *BotStatesManager) ProcessMessage(c BotContext) {
 	var err error
 	var handlerResponse HandlerResponse
-	var isCommandProcess bool
+	var isCommandProcessed bool
+
+	var callCount = c.incCallCount()
 
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println("stacktrace from panic: \n" + string(debug.Stack()))
+			if callCount == 1 {
+				c.SendErrorMessage()
+			}
+			panic(r)
 		}
 	}()
 
-	if c.incCallCount() > MaxCallCount {
-		return ToManyCalls
+	if callCount > MaxCallCount {
+		panic(ToManyCalls)
 	}
 
 	currentState := m.StateManger.GetState(c.GetMessageSenderId())
 	c.SetKeyboard(currentState.Keyboard)
 
-	handlerResponse, isCommandProcess, err = m.processCommand(c)
-	if err != nil {
-		panic(err)
-	}
-	if !isCommandProcess {
-		handlerResponse, err = m.defineNewState(c, currentState)
-	}
-	if err != nil {
-		panic(err)
+	handlerResponse, isCommandProcessed = m.processCommand(c)
+	if !isCommandProcessed {
+		handlerResponse = m.defineNewState(c, currentState)
 	}
 
 	switch handlerResponse.TransitionType {
@@ -83,37 +80,28 @@ func (m *BotStatesManager) ProcessMessage(c BotContext) error {
 		if err != nil {
 			panic(err)
 		}
-		return m.ProcessMessage(c)
+		m.ProcessMessage(c)
 	default:
 	}
-
-	return nil
 }
 
 // defineNewState returns new bot state id, new state availability flag and error
 func (m *BotStatesManager) defineNewState(
 	c BotContext,
 	currentState *BotState,
-) (HandlerResponse, error) {
+) HandlerResponse {
 	var handlerResponse HandlerResponse
 	var buttonPressed bool
-	var err error
 
 	if currentState.Keyboard != nil {
-		handlerResponse, buttonPressed, err = currentState.Keyboard.ProcessMessage(c)
-		if err != nil {
-			return HandlerResponse{}, err
-		}
+		handlerResponse, buttonPressed = currentState.Keyboard.ProcessMessage(c)
 		if buttonPressed {
-			return handlerResponse, nil
+			return handlerResponse
 		}
 	}
 
-	handlerResponse, err = currentState.Handler(c)
-	if err != nil {
-		return HandlerResponse{}, err
-	}
-	return handlerResponse, nil
+	handlerResponse = currentState.Handler(c)
+	return handlerResponse
 }
 
 func (m *BotStatesManager) transactToNewState(
@@ -154,10 +142,7 @@ func (m *BotStatesManager) transactToNewState(
 		for _, msg := range messagesForSend {
 			chattableMessages = append(chattableMessages, msg)
 		}
-		err = c.SendMessages(chattableMessages...)
-		if err != nil {
-			panic(err)
-		}
+		c.SendMessages(chattableMessages...)
 	} else if newState.Keyboard != nil {
 		log.Panicf("in state %s defined keyboard without enter message!", newState.BotStateName)
 	}
@@ -171,11 +156,11 @@ func (m *BotStatesManager) transactToNewState(
 }
 
 // processCommand returns new state, new state flag, command processed flag and err
-func (m *BotStatesManager) processCommand(c BotContext) (HandlerResponse, bool, error) {
+func (m *BotStatesManager) processCommand(c BotContext) (HandlerResponse, bool) {
 	botCommand, exists := m.BotCommands[c.GetMessageCommand()]
 	if !exists {
-		return HandlerResponse{}, false, nil
+		return HandlerResponse{}, false
 	}
-	handlerResponse, err := botCommand.CommandHandler(c)
-	return handlerResponse, true, err
+	handlerResponse := botCommand.CommandHandler(c)
+	return handlerResponse, true
 }
