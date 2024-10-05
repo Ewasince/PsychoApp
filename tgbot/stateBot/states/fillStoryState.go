@@ -29,19 +29,50 @@ func messageHandlerFillStoryState(c BotContext) HandlerResponse {
 
 	if story.Situation == "" {
 		story.Situation = ctx.MessageText
+
 		ctx.CreateAndSendMessage(msg.WhatMind)
 		return HandlerResponse{}
 	} else if story.Mind == "" {
 		story.Mind = ctx.MessageText
+
 		ctx.SetKeyboard(&EmotionsKeyboard)
-		ctx.CreateAndSendMessage(msg.WhatEmotion)
+		ctx.CreateAndSendMessage(msg.WhatMainEmotion)
 		return HandlerResponse{}
 	} else if story.Emotion == "" {
-		handlerResponse, shouldRerun := processKeyboard(ctx, &EmotionsKeyboard)
-		if shouldRerun {
-			return handlerResponse
+		//handlerResponse, isButtonPressed := kb.ProcessMessage(ctx)
+
+		//handlerResponse, shouldRerun := processKeyboard(ctx, &EmotionsKeyboard)
+		//if shouldRerun {
+		//	return handlerResponse
+		//}
+
+		handlerResponse, isButtonPressed := EmotionsKeyboard.ProcessMessage(ctx)
+		if isButtonPressed {
+			newKeyboard := EmotionsKeyboardMap[ctx.MessageText]
+
+			ctx.SetKeyboard(&PowerKeyboard)
+			ctx.CreateAndSendMessage(msg.WhatPower)
+		}
+
+		for _, kb := range []*BotKeyboard{
+			&EmotionsKeyboardHappy,
+			&EmotionsKeyboardAngry,
+			&EmotionsKeyboardSad,
+			&EmotionsKeyboardFear,
+		} {
+			handlerResponse, isButtonPressed := kb.ProcessMessage(ctx)
+
+			// back button was pressed
+			if isButtonPressed && handlerResponse.TransitionType == GoStateForce {
+				return handlerResponse
+			}
+			if isButtonPressed {
+
+			}
+
 		}
 		story.Emotion = ctx.MessageText
+
 		ctx.SetKeyboard(&PowerKeyboard)
 		ctx.CreateAndSendMessage(msg.WhatPower)
 		return HandlerResponse{}
