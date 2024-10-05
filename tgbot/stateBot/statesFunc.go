@@ -30,7 +30,7 @@ func GetProcessFunc(sender *apiUtils.BaseSenderHandler) func(*tg.Message) {
 	return func(message *tg.Message) {
 		defer func() {
 			if r := recover(); r != nil {
-				fmt.Println("Error occurred when handle message: \n" + string(debug.Stack()))
+				fmt.Println("Error occurred when handle message: " + r.(error).Error() + "\n" + string(debug.Stack()))
 			}
 		}()
 
