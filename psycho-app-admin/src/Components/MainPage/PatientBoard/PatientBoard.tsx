@@ -3,8 +3,11 @@ import {Fragment, useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import {
     getPatient,
+    getPatientMoods,
+    getPatientMoodsMinDate,
     getPatientStories,
     getPatientStoriesMinDate,
+    IMood,
     IPatient,
     IStory
 } from "../../../api/endpoints/apiPatients";
@@ -28,33 +31,10 @@ import Pagination from '@mui/material/Pagination';
 import "dayjs/locale/ru"
 import {generateBackButton, Heading} from "../../componetsCore";
 import {IStoryDto, KptTable} from "./KPTable";
-import { Line } from "react-chartjs-2";
-import { Chart as ChartJS, LineElement, PointElement, LinearScale, Title, CategoryScale } from 'chart.js';
+import {IMoodDto, MoodGraph} from "./MoodGraph";
 
 dayjs.extend(weekday)
 dayjs.locale('ru')
-
-ChartJS.register(LineElement, PointElement, LinearScale, Title, CategoryScale);
-
-const data = {
-    labels: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
-    datasets: [
-        {
-            label: "First dataset",
-            data: [-5, 2, 0, 1, 3, 5, 3],
-            // fill: true,
-            // backgroundColor: "rgba(75,192,192,0.2)",
-            borderColor: "rgba(75,192,192,1)",
-            tension: 0.4, // Увеличение сглаживания
-        },
-    ]
-};
-
-
-const options = {
-    responsive: true,
-    maintainAspectRatio: false, // Отключаем сохранение пропорций, чтобы растянуть график
-};
 
 
 export const PatientBoard = () => {
@@ -62,7 +42,8 @@ export const PatientBoard = () => {
 
     const [patient, setPatient] = useState<IPatient>();
     const [storiesByWeek, setStoriesByWeek] = useState<Map<number, IStoryDto[]>>(new Map([]));
-    const [countPages, setCountPages] = useState<number>(5);
+    const [moodsByWeek, setMoodsByWeek] = useState<Map<number, (IMoodDto | null)[]>>(new Map([]));
+    const [countPages, setCountPages] = useState<number>(1);
 
     const navigate = useNavigate()
     const {patientId} = useParams()
@@ -72,41 +53,54 @@ export const PatientBoard = () => {
         if (typeof patientId != "string") {
             handleError(new Error("no patientId param"), navigate)
         }
-        getPatient(patientId as string)
-            .then(res => {
-                setPatient(res.data);
-            })
-            .catch(err => {
+        (async () => {
+            try {
+                const patientData = await getPatient(patientId as string)
+                setPatient(patientData.data);
+
+                let countPages = 1
+
+                const storiesMinDateData = await getPatientStoriesMinDate(patientId as string)
+                const minDateStories = dayjs.unix(storiesMinDateData.data.minDate)
+                const todayDateStories = dayjs()
+                const storiesData = await getPatientStories(
+                    patientId as string,
+                    {
+                        dateStart: minDateStories.unix(),
+                        dateFinish: todayDateStories.unix(),
+                    },
+                )
+                const pages = processStoriesByWeek(storiesData.data.stories)
+                countPages = Math.max(countPages, pages)
+                console.log("pages", pages)
+                console.log("countPages", countPages)
+
+                const moodsMinDateData = await getPatientMoodsMinDate(patientId as string)
+                const minDateMoods = dayjs.unix(moodsMinDateData.data.minDate)
+                const todayDateMoods = dayjs()
+                const moodsData = await getPatientMoods(
+                    patientId as string,
+                    {
+                        dateStart: minDateMoods.unix(),
+                        dateFinish: todayDateMoods.unix(),
+                    },
+                )
+                const pages2 = processMoodsByWeek(moodsData.data.moods)
+                countPages = Math.max(countPages, pages2)
+                console.log("pages2", pages2)
+                console.log("countPages", countPages)
+
+                setCurrentPage(0)
+                setCountPages(countPages)
+            } catch (err) {
                 handleError(err, navigate)
-            })
-        getPatientStoriesMinDate(patientId as string)
-            .then(res => {
-                const minDate = dayjs.unix(res.data.minDate)
-                const todayDate = dayjs()
-                fetchStories(minDate, todayDate)
-            })
-            .catch(err => {
-                handleError(err, navigate)
-            })
+            }
+
+        })()
+
     }, [])
 
-    function fetchStories(dateStart: Dayjs, dateFinish: Dayjs) {
-        getPatientStories(
-            patientId as string,
-            {
-                dateStart: dateStart.unix(),
-                dateFinish: dateFinish.unix(),
-            },
-        )
-            .then(res => {
-                processStoriesByWeek(res.data.stories)
-            })
-            .catch(err => {
-                handleError(err, navigate)
-            })
-    }
-
-    function processStoriesByWeek(stories: IStory[]) {
+    function processStoriesByWeek(stories: IStory[]): number {
         const storiesByWeek = new Map<number, IStoryDto[]>();
         let maxWeekAgo = 0
         for (const story of stories) {
@@ -129,23 +123,43 @@ export const PatientBoard = () => {
         }
         setStoriesByWeek(storiesByWeek)
 
-        maxWeekAgo++
-        setCountPages(maxWeekAgo)
-        setCurrentPage(0)
+        return maxWeekAgo + 1
+    }
+
+    function processMoodsByWeek(moods: IMood[]) {
+        const moodsByWeek = new Map<number, (IMoodDto | null)[]>();
+        let maxWeekAgo = 0
+        for (const mood of moods) {
+            const moodDate = dayjs.unix(mood.date)
+            const weekNum = getWeekNumFromDate(moodDate)
+            maxWeekAgo = Math.max(maxWeekAgo, weekNum)
+            if (!moodsByWeek.has(weekNum)) {
+                moodsByWeek.set(weekNum, [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ])
+            }
+            const moodDto: IMoodDto = { // TODO: конечно хуёвый способ так делать, нужно это в отдельный класс вынести
+                id: mood.id,
+                date: dayjs.unix(mood.date),
+                value: mood.value,
+            }
+            const weekDayNum = moodDate.day()
+            moodsByWeek.get(weekNum)?.splice(weekDayNum, 1, moodDto)
+        }
+        console.log("processMoodsByWeek moodsByWeek", moodsByWeek)
+
+        setMoodsByWeek(moodsByWeek)
+        return maxWeekAgo + 1
+
     }
 
     const [currentPage, setCurrentPage] = useState(1);
-
-    function getWeekNumFromDate(date: Dayjs): number { // 0 week means is current, 1 – week ago
-        const nextMonday = dayjs()
-            .weekday(7)
-            .set("millisecond", 0)
-            .set("seconds", 0)
-            .set("minutes", 0)
-            .set("hours", 3) // shift from UTC to GMT+3
-
-        return nextMonday.diff(date, 'week')
-    }
 
     const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
     const open = Boolean(menuAnchor);
@@ -225,9 +239,11 @@ export const PatientBoard = () => {
             <div className={`flex flex-col items-center space-y-5 flex-grow overflow-hidden`}>
                 <div className={`flex flex-row justify-between w-full`}>
                     <div className={`flex flex-row w-full space-x-5 items-center`}>
-                        <p>Недель назад: </p>
+                        <p onClick={() => {
+                            console.log("countPages", countPages)
+                        }}>Недель назад: </p>
 
-                        <Pagination
+                        {countPages ? <Pagination
                             count={countPages}
                             page={currentPage + 1}
                             onChange={(event, value) => setCurrentPage(value - 1)}
@@ -247,12 +263,12 @@ export const PatientBoard = () => {
                                     }
                                 />
                             )}
-                        />
+                        /> : "Хуй"}
                     </div>
 
                     {CustomMenu()}
                 </div>
-                <div className="flex flex-col justify-between flex-grow overflow-hidden w-full">
+                <div className="flex flex-col justify-between flex-grow overflow-hidden w-full space-y-3">
                     <div className={`h-2/3`}>
                         <KptTable
                             weekIndex={currentPage}
@@ -260,7 +276,10 @@ export const PatientBoard = () => {
                         />
                     </div>
                     <div className={`overflow-hidden h-1/3`}>
-                        <Line data={data} options={options}/>
+                        <MoodGraph
+                            weekIndex={currentPage}
+                            moodsByWeek={moodsByWeek}
+                        />
                     </div>
 
                 </div>
@@ -269,3 +288,15 @@ export const PatientBoard = () => {
         </div>
     );
 };
+
+
+function getWeekNumFromDate(date: Dayjs): number { // 0 week means is current, 1 – week ago
+    const nextMonday = dayjs()
+        .weekday(7)
+        .set("millisecond", 0)
+        .set("seconds", 0)
+        .set("minutes", 0)
+        .set("hours", 3) // shift from UTC to GMT+3
+
+    return nextMonday.diff(date, 'week')
+}
