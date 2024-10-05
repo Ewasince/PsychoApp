@@ -16,7 +16,7 @@ type Mood struct {
 func (m *Mood) ToMap() gin.H {
 	return map[string]any{
 		"id":    m.ID,
-		"date":  m.Date,
+		"date":  m.Date.Unix(),
 		"value": m.Value,
 	}
 }
