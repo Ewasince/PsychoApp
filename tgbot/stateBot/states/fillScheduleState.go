@@ -14,7 +14,7 @@ var FillScheduleState = NewBotState(
 	"Fill Schedule state",
 	BotMessageHandler(enterMessageHandlerFillScheduleState),
 	BotMessageHandler(exitMessageHandlerFillScheduleState),
-	nil,
+	&ScheduleKeyboard,
 	messageHandlerFillScheduleState,
 )
 

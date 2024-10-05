@@ -50,7 +50,7 @@ func CommandStartHandler(c tl.BotContext) tl.HandlerResponse {
 	}
 
 	return tl.HandlerResponse{
-		NextState:      &FillStoryState,
+		NextState:      DefaultState,
 		TransitionType: tl.GoStateForce,
 	}
 }

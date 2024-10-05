@@ -14,7 +14,7 @@ var InitState = NewBotState(
 		ctx := *c.(*context.MyBotContext)
 		if ctx.IsPatientRegistered() {
 			return HandlerResponse{
-				NextState:      &FillStoryState,
+				NextState:      DefaultState,
 				TransitionType: GoStateInPlace,
 			}
 		} else {

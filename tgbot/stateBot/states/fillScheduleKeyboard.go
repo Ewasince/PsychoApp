@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-var ScheduleKeyboard *BotKeyboard
+var ScheduleKeyboard BotKeyboard
 
 func init() {
 	start := 0
@@ -41,7 +41,7 @@ func init() {
 			ButtonHandler: CommandNoScheduleHandler,
 		},
 	})
-	ScheduleKeyboard = &BotKeyboard{Keyboard: rows}
+	ScheduleKeyboard = BotKeyboard{Keyboard: rows}
 }
 
 func keyboardHourButtonHandler(c BotContext) HandlerResponse {
