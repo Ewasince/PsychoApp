@@ -103,7 +103,7 @@ export const MainPage = () => {
                     </div>
                 </div>
             </div>
-            <div className="w-full min-h-full p-4 md:p-6 xl:p-8">
+            <div className="w-full h-screen p-4 md:p-6 xl:p-8">
                 <Outlet/>
             </div>
             <PredeclaredToastContainer/>

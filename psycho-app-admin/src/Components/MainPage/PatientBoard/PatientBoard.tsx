@@ -193,12 +193,12 @@ export const PatientBoard = () => {
     )
 
     return (
-        <>
+        <div className={`flex flex-col h-full`}>
             <Heading
                 heading={`Дневник ${patient?.firstName}`}
                 backButton={generateBackButton("/dashboard")}
             />
-            <div className={`flex flex-col items-center space-y-5`}>
+            <div className={`flex flex-col items-center space-y-5 flex-grow`}>
                 <div className={`flex flex-row justify-between w-full`}>
                     <div className={`flex flex-row w-full space-x-5 items-center`}>
                         <p>Недель назад: </p>
@@ -228,12 +228,16 @@ export const PatientBoard = () => {
 
                     {CustomMenu()}
                 </div>
+                <div className="flex flex-col justify-between w-full h-full">
+                    <KptTable
+                        weekIndex={currentPage}
+                        storiesByWeek={storiesByWeek}
+                    />
 
-                <KptTable
-                    weekIndex={currentPage}
-                    storiesByWeek={storiesByWeek}
-                />
+                    <p>Stub</p>
+                </div>
+
             </div>
-        </>
+        </div>
     );
 };
