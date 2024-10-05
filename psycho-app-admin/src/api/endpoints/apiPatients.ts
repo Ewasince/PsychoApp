@@ -55,3 +55,16 @@ export const getPatientStories = async (patientId: string, params?: IStoriesPara
         params ? {params: params} : {},
     )
 }
+
+export const getPatientMoodsMinDate = async (patientId: string) => {
+    return await credentialsRequest.get<IStoriesMinDate>(
+        generateUrl(PATIENTS_URL, patientId, "mood"),
+    )
+}
+
+export const getPatientMoods = async (patientId: string, params?: IStoriesParams) => {
+    return await credentialsRequest.get<IStoriesResponse>(
+        generateUrl(PATIENTS_URL, patientId, "mood"),
+        params ? {params: params} : {},
+    )
+}
