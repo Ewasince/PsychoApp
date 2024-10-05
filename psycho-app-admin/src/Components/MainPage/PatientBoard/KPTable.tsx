@@ -25,7 +25,7 @@ function getWeekDates(weekIndex: number): [Dayjs, Dayjs] { // 0 week means is cu
 export const KptTable = (
     {
         weekIndex,
-        storiesByWeek
+        storiesByWeek,
     }: {
         weekIndex: number,
         storiesByWeek: Map<number, IStoryDto[]>,
@@ -54,23 +54,22 @@ export const KptTable = (
         </TableRow>
     </>
 
-    return (<>
-            <TableContainer component={Paper} className="shadow-md rounded-lg">
-                <Table>
-                    <TableHead className="bg-primary-color">
-                        <TableRow>
-                            <TableCell className="text-white">Время</TableCell>
-                            <TableCell className="text-white">Ситуация</TableCell>
-                            <TableCell className="text-white">Автоматическая мысль</TableCell>
-                            <TableCell className="text-white">Эмоция</TableCell>
-                            <TableCell className="text-white">Сила эмоции</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {currentStories ? currentStories.map(getStoryRow) : emptyTable}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </>
+    return (
+        <TableContainer component={Paper} className={`shadow-md rounded-lg h-fit max-h-full overflow-auto`}>
+            <Table stickyHeader>
+                <TableHead>
+                    <TableRow> {/* TODO: разобраться почему stickyHeader перезаписывает backgroundColor */}
+                        <TableCell style={{backgroundColor: "var(--primary-color)"}}>Время</TableCell>
+                        <TableCell style={{backgroundColor: "var(--primary-color)"}}>Ситуация</TableCell>
+                        <TableCell style={{backgroundColor: "var(--primary-color)"}}>Автоматическая мысль</TableCell>
+                        <TableCell style={{backgroundColor: "var(--primary-color)"}}>Эмоция</TableCell>
+                        <TableCell style={{backgroundColor: "var(--primary-color)"}}>Сила эмоции</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {currentStories ? currentStories.map(getStoryRow) : emptyTable}
+                </TableBody>
+            </Table>
+        </TableContainer>
     );
 }

@@ -28,9 +28,33 @@ import Pagination from '@mui/material/Pagination';
 import "dayjs/locale/ru"
 import {generateBackButton, Heading} from "../../componetsCore";
 import {IStoryDto, KptTable} from "./KPTable";
+import { Line } from "react-chartjs-2";
+import { Chart as ChartJS, LineElement, PointElement, LinearScale, Title, CategoryScale } from 'chart.js';
 
 dayjs.extend(weekday)
 dayjs.locale('ru')
+
+ChartJS.register(LineElement, PointElement, LinearScale, Title, CategoryScale);
+
+const data = {
+    labels: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
+    datasets: [
+        {
+            label: "First dataset",
+            data: [-5, 2, 0, 1, 3, 5, 3],
+            // fill: true,
+            // backgroundColor: "rgba(75,192,192,0.2)",
+            borderColor: "rgba(75,192,192,1)",
+            tension: 0.4, // Увеличение сглаживания
+        },
+    ]
+};
+
+
+const options = {
+    responsive: true,
+    maintainAspectRatio: false, // Отключаем сохранение пропорций, чтобы растянуть график
+};
 
 
 export const PatientBoard = () => {
@@ -198,7 +222,7 @@ export const PatientBoard = () => {
                 heading={`Дневник ${patient?.firstName}`}
                 backButton={generateBackButton("/dashboard")}
             />
-            <div className={`flex flex-col items-center space-y-5 flex-grow`}>
+            <div className={`flex flex-col items-center space-y-5 flex-grow overflow-hidden`}>
                 <div className={`flex flex-row justify-between w-full`}>
                     <div className={`flex flex-row w-full space-x-5 items-center`}>
                         <p>Недель назад: </p>
@@ -228,13 +252,17 @@ export const PatientBoard = () => {
 
                     {CustomMenu()}
                 </div>
-                <div className="flex flex-col justify-between w-full h-full">
-                    <KptTable
-                        weekIndex={currentPage}
-                        storiesByWeek={storiesByWeek}
-                    />
+                <div className="flex flex-col justify-between flex-grow overflow-hidden w-full">
+                    <div className={`h-2/3`}>
+                        <KptTable
+                            weekIndex={currentPage}
+                            storiesByWeek={storiesByWeek}
+                        />
+                    </div>
+                    <div className={`overflow-hidden h-1/3`}>
+                        <Line data={data} options={options}/>
+                    </div>
 
-                    <p>Stub</p>
                 </div>
 
             </div>
