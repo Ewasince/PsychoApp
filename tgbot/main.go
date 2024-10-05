@@ -4,7 +4,7 @@ import (
 	. "EnvironmentModule"
 	"PsychoBot/scheduler"
 	"PsychoBot/stateBot"
-	"PsychoBot/teleBotStateLib/apiUtils"
+	"github.com/Ewasince/go-telegram-state-bot/apiUtils"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
 	"sync"

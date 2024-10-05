@@ -3,8 +3,8 @@ package states
 import (
 	"PsychoBot/messages"
 	"PsychoBot/stateBot/context"
-	tl "PsychoBot/teleBotStateLib"
 	"StorageModule/repo"
+	tl "github.com/Ewasince/go-telegram-state-bot"
 )
 
 var ButtonStart = tl.BotButton{

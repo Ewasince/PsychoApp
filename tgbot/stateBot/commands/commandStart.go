@@ -2,7 +2,7 @@ package commands
 
 import (
 	"PsychoBot/stateBot/states"
-	. "PsychoBot/teleBotStateLib"
+	. "github.com/Ewasince/go-telegram-state-bot"
 )
 
 var StartCommand = BotCommand{

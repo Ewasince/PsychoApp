@@ -1,7 +1,7 @@
 package helpers
 
 import (
-	. "PsychoBot/teleBotStateLib"
+	. "github.com/Ewasince/go-telegram-state-bot"
 	"strconv"
 )
 

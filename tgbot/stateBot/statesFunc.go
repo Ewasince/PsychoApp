@@ -5,9 +5,9 @@ import (
 	"PsychoBot/stateBot/commands"
 	"PsychoBot/stateBot/context"
 	"PsychoBot/stateBot/states"
-	tl "PsychoBot/teleBotStateLib"
-	"PsychoBot/teleBotStateLib/apiUtils"
 	"fmt"
+	tl "github.com/Ewasince/go-telegram-state-bot"
+	"github.com/Ewasince/go-telegram-state-bot/apiUtils"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"runtime/debug"
 )

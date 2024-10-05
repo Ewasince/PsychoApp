@@ -1,6 +1,6 @@
 package states
 
-import . "PsychoBot/teleBotStateLib"
+import . "github.com/Ewasince/go-telegram-state-bot"
 
 func keyboardEmptyHandler(c BotContext) HandlerResponse {
 	return HandlerResponse{}

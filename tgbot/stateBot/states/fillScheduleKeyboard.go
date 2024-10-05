@@ -3,8 +3,8 @@ package states
 import (
 	msg "PsychoBot/messages"
 	"PsychoBot/stateBot/context"
-	. "PsychoBot/teleBotStateLib"
 	"fmt"
+	. "github.com/Ewasince/go-telegram-state-bot"
 	"strconv"
 	"strings"
 )

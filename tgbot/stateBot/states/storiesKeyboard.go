@@ -2,7 +2,7 @@ package states
 
 import (
 	"PsychoBot/stateBot/helpers"
-	. "PsychoBot/teleBotStateLib"
+	. "github.com/Ewasince/go-telegram-state-bot"
 )
 
 var EmotionsKeyboard BotKeyboard

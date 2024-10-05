@@ -2,9 +2,9 @@ package scheduler
 
 import (
 	msg "PsychoBot/messages"
-	"PsychoBot/teleBotStateLib/apiUtils"
 	. "StorageModule/models"
 	"StorageModule/repo"
+	"github.com/Ewasince/go-telegram-state-bot/apiUtils"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/madflojo/tasks"
 	"log"

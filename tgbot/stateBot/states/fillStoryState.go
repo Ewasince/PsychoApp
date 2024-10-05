@@ -4,8 +4,8 @@ import (
 	msg "PsychoBot/messages"
 	"PsychoBot/stateBot/context"
 	"PsychoBot/stateBot/helpers"
-	. "PsychoBot/teleBotStateLib"
 	"StorageModule/repo"
+	. "github.com/Ewasince/go-telegram-state-bot"
 	"strconv"
 )
 

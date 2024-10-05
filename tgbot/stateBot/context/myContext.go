@@ -3,11 +3,11 @@ package context
 import (
 	"PsychoBot/cache"
 	msg "PsychoBot/messages"
-	tl "PsychoBot/teleBotStateLib"
-	"PsychoBot/teleBotStateLib/apiUtils"
 	"StorageModule/models"
 	"StorageModule/repo"
 	"errors"
+	tl "github.com/Ewasince/go-telegram-state-bot"
+	"github.com/Ewasince/go-telegram-state-bot/apiUtils"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"gorm.io/gorm"
 )

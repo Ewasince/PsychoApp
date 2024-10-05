@@ -3,10 +3,10 @@ package states
 import (
 	msg "PsychoBot/messages"
 	"PsychoBot/stateBot/context"
-	. "PsychoBot/teleBotStateLib"
 	"StorageModule/repo"
 	"errors"
 	"fmt"
+	. "github.com/Ewasince/go-telegram-state-bot"
 	"gorm.io/gorm"
 	"time"
 )
