@@ -134,3 +134,73 @@ func GetPatientStoriesHandler(c *gin.Context) {
 
 	c.JSON(200, Response)
 }
+
+// GetPatientMoodsHandler return moods of selected patient, which belongs to user
+func GetPatientMoodsHandler(c *gin.Context) {
+	// user id
+	claims := jwt.ExtractClaims(c)
+	userId := uint(claims[IdentityKey].(float64))
+
+	// patient id
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		panic(err)
+	}
+	patientId := uint(id)
+
+	// check access to patient
+	patient, err := repo.GetPatient(patientId)
+	if err != nil {
+		e.JSONError(c, e.PatientNotFound)
+		return
+	}
+	if patient.UserId != userId {
+		e.JSONError(c, e.AccessForbidden)
+		return
+	}
+
+	dateStartQuery := c.Query("dateStart")
+	dateFinishQuery := c.Query("dateFinish")
+
+	if dateStartQuery == "" && dateFinishQuery == "" {
+		// Just get min date and return
+		minDate, err := repo.GetMoodMinDate(patientId)
+		if err != nil {
+			c.JSON(200, gin.H{
+				"minDate": time.Now().Unix(),
+			})
+		} else {
+			c.JSON(200, gin.H{
+				"minDate": minDate.Unix(),
+			})
+		}
+		return
+	}
+
+	dateStartTs, err := strconv.Atoi(dateStartQuery)
+	if err != nil {
+		e.JSONError(c, e.WrongDateFormat)
+		return
+	}
+	dateFinishTs, err := strconv.Atoi(dateFinishQuery)
+	if err != nil {
+		e.JSONError(c, e.WrongDateFormat)
+		return
+	}
+
+	dateStart := time.Unix(int64(dateStartTs), 0).In(loc)
+	dateFinish := time.Unix(int64(dateFinishTs), 0).In(loc)
+
+	moods, err := repo.GetMoods(patientId, dateStart, dateFinish)
+
+	var JSONMoods = make([]gin.H, 0)
+	for _, mood := range moods {
+		JSONMoods = append(JSONMoods, mood.ToMap())
+	}
+
+	var Response = gin.H{
+		"moods": JSONMoods,
+	}
+
+	c.JSON(200, Response)
+}

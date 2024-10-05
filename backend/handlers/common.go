@@ -34,6 +34,7 @@ func registerApi(api *gin.RouterGroup) {
 	api.GET("/patient", GetPatientsHandler)
 	api.GET("/patient/:id", GetPatientHandler)
 	api.GET("/patient/:id/story", GetPatientStoriesHandler)
+	api.GET("/patient/:id/mood", GetPatientMoodsHandler)
 }
 
 func registerAuth(auth *gin.RouterGroup) {

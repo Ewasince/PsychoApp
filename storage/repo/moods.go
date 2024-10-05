@@ -5,9 +5,7 @@ import (
 	"time"
 )
 
-type dateForMood time.Time
-
-func GetMoods(patientId uint, dateStart, dateFinish time.Time) (*[]Mood, error) {
+func GetMoods(patientId uint, dateStart, dateFinish time.Time) ([]Mood, error) {
 	var moods = make([]Mood, 0)
 	err := DB.
 		Where("patient_id = ?", patientId).
@@ -17,7 +15,7 @@ func GetMoods(patientId uint, dateStart, dateFinish time.Time) (*[]Mood, error) 
 		Find(&moods).
 		Error
 
-	return &moods, err
+	return moods, err
 }
 
 func GetMoodMinDate(patientId uint) (time.Time, error) {
