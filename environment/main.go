@@ -25,7 +25,8 @@ type environmentVariables struct {
 	DB_PATH         string
 	FRONTEND_PATH   string
 
-	BOT_TOKEN string
+	BOT_TOKEN      string
+	DEV_USER_TG_ID int64
 }
 
 var Env = environmentVariables{}
@@ -71,6 +72,13 @@ func init() {
 
 	// JWT_REALM
 	Env.JWT_REALM = getEnv("JWT_REALM", "default zone")
+
+	// DEV_USER_TG_ID
+	DEV_USER_TG_ID, err := strconv.Atoi(getEnv("DEV_USER_TG_ID", "0"))
+	if err != nil {
+		panic(err)
+	}
+	Env.DEV_USER_TG_ID = int64(DEV_USER_TG_ID)
 
 	printEnvVariables()
 }
