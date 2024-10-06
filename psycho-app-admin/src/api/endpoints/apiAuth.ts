@@ -3,7 +3,7 @@ import {credentialsEmptyRequest, refreshRequest} from "../requestAuth";
 
 export const LOGIN_URL = "api/auth/login";
 export const REFRESH_URL = "api/auth/refresh_token";
-export const GET_ME_URL = "api/auth/get_me";
+export const GET_ME_URL = "api/get_me";
 
 export const SIGN_UP_STUDENT_URL = "api/auth/student/register";
 export const SIGN_UP_TUTOR_URL = "api/auth/tutor/register";

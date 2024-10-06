@@ -31,14 +31,14 @@ func RegisterRoutes(e *gin.Engine) {
 
 func registerApi(api *gin.RouterGroup) {
 	api.Use(skipLoginAuthentication(Handle.MiddlewareFunc()))
-	api.GET("/patient", GetPatientsHandler)
-	api.GET("/patient/:id", GetPatientHandler)
-	api.GET("/patient/:id/story", GetPatientStoriesHandler)
-	api.GET("/patient/:id/mood", GetPatientMoodsHandler)
+	api.GET("/patient", GetPatientsHandler)                 // api/patient
+	api.GET("/patient/:id", GetPatientHandler)              // api/patient/:id
+	api.GET("/patient/:id/story", GetPatientStoriesHandler) // api/patient/:id/story
+	api.GET("/patient/:id/mood", GetPatientMoodsHandler)    // api/patient/:id/mood
+	api.GET("/get_me", GetMeHandler)                        // api/get_me
 }
 
 func registerAuth(auth *gin.RouterGroup) {
-	auth.POST("/login", Handle.LoginHandler)
-	auth.GET("/get_me", GetMeHandler)
-	auth.POST("/refresh_token", Handle.RefreshHandler)
+	auth.POST("/login", Handle.LoginHandler)           // api/auth/login
+	auth.POST("/refresh_token", Handle.RefreshHandler) // api/auth/refresh_token
 }
