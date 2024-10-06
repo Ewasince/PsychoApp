@@ -147,7 +147,18 @@ export function Login() {
                     className="flex flex-col sm:flex-row sm:gap-8 font-bold items-center sm:justify-center mt-[30px]">
                     <p className="text-lg sm:text-2xl">Нет аккаунта?</p>
                     <p onClick={() => setIsLogin(false)}
-                       className="w-fit text-lg sm:text-2xl border-b-[3px] border-blue-color rounded-bl-sm rounded-br-sm text-blue-color cursor-pointer hover:text-dark-blue-color">Зарегистрироваться</p>
+                       className="
+                           w-fit
+                           text-lg
+                           sm:text-2xl
+                           border-b-[3px]
+                           border-blue-color
+                           rounded-bl-sm
+                           rounded-br-sm
+                           text-blue-color
+                           cursor-pointer
+                           hover:text-dark-blue-color
+                       ">Зарегистрироваться</p>
                 </div>
             </div>
         </div>
@@ -215,6 +226,7 @@ export function Login() {
                            rounded-bl-sm
                            rounded-br-sm 
                            text-blue-color
+                           cursor-pointer
                            hover:text-dark-blue-color
                         `}>Войти</p>
                 </div>
