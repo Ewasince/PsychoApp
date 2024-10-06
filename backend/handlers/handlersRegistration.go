@@ -40,5 +40,6 @@ func registerApi(api *gin.RouterGroup) {
 
 func registerAuth(auth *gin.RouterGroup) {
 	auth.POST("/login", Handle.LoginHandler)           // api/auth/login
+	auth.POST("/sing_up", SingUpUser)                  // api/auth/register
 	auth.POST("/refresh_token", Handle.RefreshHandler) // api/auth/refresh_token
 }

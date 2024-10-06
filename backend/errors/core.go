@@ -45,8 +45,8 @@ func JSONError(c *gin.Context, err error) {
 		})
 
 		//fmt.Printf("unexpected type %T", v)
-	case WebError:
-		webError := err.(WebError)
+	case *WebError:
+		webError := err.(*WebError)
 		c.JSON(int(webError.responseCode), webError.ToMap())
 	}
 }

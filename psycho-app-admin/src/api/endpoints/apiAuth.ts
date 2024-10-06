@@ -5,8 +5,7 @@ export const LOGIN_URL = "api/auth/login";
 export const REFRESH_URL = "api/auth/refresh_token";
 export const GET_ME_URL = "api/get_me";
 
-export const SIGN_UP_STUDENT_URL = "api/auth/student/register";
-export const SIGN_UP_TUTOR_URL = "api/auth/tutor/register";
+export const SIGN_UP = "api/auth/sing_up";
 // export const SIGN_UP_SUPPORT_URL = "api/auth/support/register";
 // auth
 
@@ -30,9 +29,10 @@ export type IMeResponse = {
 }
 
 export type IReg = {
+    name: string;
+    email: string;
     username: string;
     password: string;
-    fio: string;
     // email: string;
     // phone: string;
     // firstname: string;
@@ -57,16 +57,9 @@ export type ILogin = {
     // isTutor: boolean;
 }
 
-export const postSingUpStudent = async (regForm: IReg) => {
-    return await credentialsEmptyRequest.post<IAuthResponse>(
-        SIGN_UP_STUDENT_URL,
-        regForm,
-    )
-}
-
-export const postSingUpTutor = async (regForm: IReg) => {
-    return await credentialsEmptyRequest.post<IAuthResponse>(
-        SIGN_UP_TUTOR_URL,
+export const postSingUp = async (regForm: IReg) => {
+    return await credentialsEmptyRequest.post(
+        SIGN_UP,
         regForm,
     )
 }
