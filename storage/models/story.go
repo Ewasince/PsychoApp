@@ -13,6 +13,7 @@ type Story struct {
 	Emotion   string
 	Power     uint8 // 1 to 10
 	PatientId uint
+	Mark      uint8 `gorm:"default:null"`
 }
 
 // ToMap turn Patient struct into map
