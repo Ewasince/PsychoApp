@@ -118,6 +118,7 @@ export const PatientBoard = () => {
                 mind: story.mind,
                 emotion: story.emotion,
                 emotionPower: story.emotionPower,
+                mark: story.mark,
             }
             storiesByWeek.get(weekNum)?.push(storyDto)
         }

@@ -1,6 +1,7 @@
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import * as React from "react";
 import dayjs, {Dayjs} from "dayjs";
+import {Marks} from "../../../api/endpoints/apiPatients";
 
 export type IStoryDto = {
     id: number
@@ -9,6 +10,7 @@ export type IStoryDto = {
     mind: string
     emotion: string
     emotionPower: number
+    mark: Marks
 }
 
 function getWeekDates(weekIndex: number): [Dayjs, Dayjs] { // 0 week means is current

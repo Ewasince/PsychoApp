@@ -11,6 +11,8 @@ export type IPatient = {
     lastName: string
 }
 
+export type Marks = 0 | 1 | 2 | 3
+
 export type IStory = {
     id: number
     date: number
@@ -18,6 +20,7 @@ export type IStory = {
     mind: string
     emotion: string
     emotionPower: number
+    mark: Marks
 }
 
 export type IMood = {
