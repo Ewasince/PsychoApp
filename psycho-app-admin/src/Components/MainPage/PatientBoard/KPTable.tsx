@@ -4,6 +4,7 @@ import dayjs, {Dayjs} from "dayjs";
 import {Marks} from "../../../api/endpoints/apiPatients";
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import ErrorIcon from '@mui/icons-material/Error';
+import {useEffect, useRef} from "react";
 
 export type IStoryDto = {
     id: number

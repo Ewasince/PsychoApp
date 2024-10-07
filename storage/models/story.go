@@ -25,5 +25,6 @@ func (s *Story) ToMap() gin.H {
 		"mind":         s.Mind,
 		"emotion":      s.Emotion,
 		"emotionPower": s.Power,
+		"mark":         s.Mark,
 	}
 }
