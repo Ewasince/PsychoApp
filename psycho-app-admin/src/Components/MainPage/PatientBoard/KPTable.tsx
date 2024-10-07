@@ -58,14 +58,14 @@ export const KptTable = (
 
     return (
         <TableContainer component={Paper} className={`shadow-md rounded-lg h-fit max-h-full overflow-auto`}>
-            <Table stickyHeader>
+            <Table sx={{ tableLayout: 'fixed' }} stickyHeader>
                 <TableHead>
-                    <TableRow> {/* TODO: разобраться почему stickyHeader перезаписывает backgroundColor */}
-                        <TableCell style={{backgroundColor: "var(--primary-color)"}}>Время</TableCell>
-                        <TableCell style={{backgroundColor: "var(--primary-color)"}}>Ситуация</TableCell>
-                        <TableCell style={{backgroundColor: "var(--primary-color)"}}>Автоматическая мысль</TableCell>
-                        <TableCell style={{backgroundColor: "var(--primary-color)"}}>Эмоция</TableCell>
-                        <TableCell style={{backgroundColor: "var(--primary-color)"}}>Сила эмоции</TableCell>
+                    <TableRow > {/* TODO: разобраться почему stickyHeader перезаписывает backgroundColor */}
+                        <TableCell width="10%" style={{backgroundColor: "var(--primary-color)"}}>Время</TableCell>
+                        <TableCell width="30%" style={{backgroundColor: "var(--primary-color)"}}>Ситуация</TableCell>
+                        <TableCell width="30%" style={{backgroundColor: "var(--primary-color)"}}>Автоматическая мысль</TableCell>
+                        <TableCell width="10%" style={{backgroundColor: "var(--primary-color)"}}>Эмоция</TableCell>
+                        <TableCell width="10%" style={{backgroundColor: "var(--primary-color)"}}>Сила эмоции</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
