@@ -43,10 +43,19 @@ func keyboardHandlerFillStoryPowerState(c BotContext) HandlerResponse {
 	story.Power = uint8(power)
 
 	story.Date = helpers.GetDate()
-	err = repo.CreateStory(story)
+	tx := repo.DB.Begin()
+	err = repo.CreateStory(story, tx)
 	if err != nil {
+		tx.Rollback()
 		panic(err)
 	}
+	err = repo.SetMark(story, tx)
+	if err != nil {
+		tx.Rollback()
+		panic(err)
+	}
+	tx.Commit()
+
 	_ = ctx.NewStory()
 	return HandlerResponse{
 		NextState:      DefaultState,
