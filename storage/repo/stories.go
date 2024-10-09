@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+const maxPower = 7
 
 type MarksByCount map[uint8]SeverityMark
 type CountByPower map[uint8]MarksByCount
@@ -19,9 +20,6 @@ var severities = CountByPower{
 	6: MarksByCount{1: Attention2, 2: Attention3, 3: Attention3, 4: Attention3},
 	7: MarksByCount{1: Attention3, 2: Attention3, 3: Attention3, 4: Attention3},
 }
-
-const maxPower = 7
-const maxCount = 4
 
 func GetStories(patientId uint, dateStart, dateFinish time.Time) ([]*Story, error) {
 	var stories []*Story
