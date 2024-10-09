@@ -13,5 +13,5 @@ func GetScheduleTime(scheduleHour int) time.Time {
 }
 
 func GetDate() time.Time {
-	return time.Now().Truncate(time.Minute)
+	return time.Now()
 }
