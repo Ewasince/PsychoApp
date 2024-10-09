@@ -5,6 +5,15 @@ import (
 	"time"
 )
 
+type SeverityMark uint8
+
+const (
+	Attention0 SeverityMark = iota
+	Attention1 SeverityMark = iota
+	Attention2 SeverityMark = iota
+	Attention3 SeverityMark = iota
+)
+
 type Story struct {
 	BaseModel
 	Date      time.Time
@@ -13,7 +22,7 @@ type Story struct {
 	Emotion   string
 	Power     uint8 // 1 to 10
 	PatientId uint
-	Mark      uint8 `gorm:"default:null"`
+	Mark      SeverityMark `gorm:"default:null"`
 }
 
 // ToMap turn Patient struct into map

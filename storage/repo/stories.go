@@ -6,14 +6,6 @@ import (
 	"time"
 )
 
-type SeverityMark uint8
-
-const (
-	Attention0 SeverityMark = iota
-	Attention1 SeverityMark = iota
-	Attention2 SeverityMark = iota
-	Attention3 SeverityMark = iota
-)
 
 type MarksByCount map[uint8]SeverityMark
 type CountByPower map[uint8]MarksByCount
