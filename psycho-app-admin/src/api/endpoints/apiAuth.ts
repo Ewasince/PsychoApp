@@ -3,11 +3,9 @@ import {credentialsEmptyRequest, refreshRequest} from "../requestAuth";
 
 export const LOGIN_URL = "api/auth/login";
 export const REFRESH_URL = "api/auth/refresh_token";
-export const GET_ME_URL = "api/get_me";
 
 export const SIGN_UP = "api/auth/sing_up";
-// export const SIGN_UP_SUPPORT_URL = "api/auth/support/register";
-// auth
+export const GET_CONFIG_URL = "api/auth/config";
 
 export type IMe = {
     id: string
@@ -15,18 +13,6 @@ export type IMe = {
     email: string
 }
 
-export type IConfig = {
-    // accessRights: {
-    //     isTutor?: boolean,
-    //     isStudent?: boolean,
-    // },
-    // userId: string
-    is_dev: boolean
-}
-export type IMeResponse = {
-    user: IMe
-    config: IConfig
-}
 
 export type IReg = {
     name: string;
@@ -57,6 +43,10 @@ export type ILogin = {
     // isTutor: boolean;
 }
 
+export type IConfig = {
+    is_dev: boolean
+}
+
 export const postSingUp = async (regForm: IReg) => {
     return await credentialsEmptyRequest.post(
         SIGN_UP,
@@ -75,5 +65,11 @@ export const postLogin = async (regForm: ILogin) => {
 export const postRefresh = async () => {
     return await refreshRequest.post<IAuthResponse>(
         REFRESH_URL
+    )
+}
+
+export const getConfigFromBack = async () => {
+    return await credentialsEmptyRequest.get<IConfig>(
+        GET_CONFIG_URL,
     )
 }

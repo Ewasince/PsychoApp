@@ -9,18 +9,28 @@ import {Dashboard} from "./Components/MainPage/Dashboard/Dashboard";
 import {TestPage} from "./Components/MainPage/TestPage/TestPage";
 import {PatientBoard} from "./Components/MainPage/PatientBoard/PatientBoard";
 import {Account} from "./Components/MainPage/Account/Account";
+import {getConfigFromBack} from "./api/endpoints/apiAuth";
+import {setConfig} from "./core/storage/config";
 import {ErrorPage} from "./Components/ErrorPage/ErrorPage";
+
+const loaderFunc = async () => {
+    const res = await getConfigFromBack();
+    setConfig(res.data);
+    return null
+}
 
 const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login/>,
         errorElement: <ErrorPage/>,
+        loader: loaderFunc,
     },
     {
         path: "/",
         element: <MainPage/>,
         errorElement: <ErrorPage/>,
+        loader: loaderFunc,
         children: [
             {
                 path: "dashboard",

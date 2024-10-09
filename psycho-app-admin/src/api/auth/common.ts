@@ -1,5 +1,5 @@
 import {clearTokens, setTokenData} from "../../core/storage/tokens";
-import {clearConfig, clearGlobalUser, getGlobalUser, setConfig, setGlobalUser} from "../../core/storage/config";
+import {clearConfig, clearGlobalUser, getGlobalUser, setGlobalUser} from "../../core/storage/config";
 import {handleError} from "../../core/errors";
 import {postRefresh} from "../endpoints/apiAuth";
 import {getMe} from "../endpoints/apiUser";
@@ -15,9 +15,7 @@ export const refreshToken = async () => {
 export const setUser = async () => {
     try {
         const res = await getMe();
-        const meResponse = res.data;
-        setConfig(meResponse.config);
-        setGlobalUser(meResponse.user);
+        setGlobalUser(res.data.user);
     } catch (error) {
         handleError(error);
     }

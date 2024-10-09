@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	. "EnvironmentModule"
 	e "PsychoAppAdmin/errors"
 	. "StorageModule/models"
 	"StorageModule/repo"
@@ -16,11 +15,9 @@ func GetMeHandler(c *gin.Context) {
 		return
 	}
 	userStruct := user.(*User).ToMap()
-	userConfig := GetFrontConfig()
 
 	c.JSON(200, gin.H{
-		"user":   userStruct,
-		"config": userConfig,
+		"user": userStruct,
 	})
 }
 
