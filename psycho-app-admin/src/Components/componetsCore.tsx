@@ -50,16 +50,3 @@ export function Forbidden() {
         </>
     )
 }
-
-export function Page404() {
-    return (
-        <>
-            <div className="flex flex-col w-full h-full items-center justify-center">
-                <p>Такой страницы не существует!</p>
-                <a className="font-bold text-3xl"
-                   href="/">Вернуться на главную</a>
-            </div>
-        </>
-
-    )
-}

@@ -8,19 +8,19 @@ import {MainPage} from "./Components/MainPage/MainPage";
 import {Dashboard} from "./Components/MainPage/Dashboard/Dashboard";
 import {TestPage} from "./Components/MainPage/TestPage/TestPage";
 import {PatientBoard} from "./Components/MainPage/PatientBoard/PatientBoard";
-import {Page404} from "./Components/componetsCore";
 import {Account} from "./Components/MainPage/Account/Account";
+import {ErrorPage} from "./Components/ErrorPage/ErrorPage";
 
 const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login/>,
-        errorElement: Page404(),
+        errorElement: <ErrorPage/>,
     },
     {
         path: "/",
         element: <MainPage/>,
-        errorElement: Page404(),
+        errorElement: <ErrorPage/>,
         children: [
             {
                 path: "dashboard",
