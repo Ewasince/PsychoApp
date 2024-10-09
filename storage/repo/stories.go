@@ -50,39 +50,73 @@ func CreateStory(story *Story, db *gorm.DB) error {
 	return db.Create(story).Error
 }
 func SetMark(story *Story, db *gorm.DB) error {
-	finishDate := story.Date // TODO: тк время истории округляется до минут, может быть неочевидное поведение
+	finishDate := story.Date
 	startDate := finishDate.Add(-7 * 24 * time.Hour)
 	lastWeekStories, err := GetStories(story.PatientId, startDate, finishDate)
 	if err != nil {
 		panic(err)
 	}
+	lastWeekStories = append([]*Story{story}, lastWeekStories...)
 
-	var lastWeekPowers []uint8 // силы данной эмоции за прошедшую неделю
-	for _, s := range *lastWeekStories {
-		if s.Emotion == story.Emotion {
-			lastWeekPowers = append(lastWeekPowers, s.Power)
+	lastWeekPowersStats := make(map[uint8]*PowerStat)
+	for _, weekStory := range lastWeekStories {
+		if weekStory.Emotion != story.Emotion {
+			continue
+		}
+
+		isReal := true
+		for i := weekStory.Power; i >= uint8(1); i-- {
+			powerStat, exists := lastWeekPowersStats[i]
+			if !exists {
+				powerStat = &PowerStat{}
+				lastWeekPowersStats[i] = powerStat
+			}
+			if isReal {
+				powerStat.RealEntries++
+				isReal = false
+			}
+			powerStat.AbstractEntries++
+			powerStat.LastMark = weekStory.Mark
+		}
+
+	}
+
+	currentPower := story.Power
+	if currentPower > maxPower {
+		currentPower = 7
+	}
+	var maxRealMark = Attention0
+	var maxAbstractMark = Attention0
+	var lastMarkForAbstract = Attention0
+
+	for power := currentPower; power >= 1; power-- {
+
+		countByPower := severities[power]
+
+		emotionStat := lastWeekPowersStats[power]
+
+		realCount := emotionStat.getRealCount()
+		realMark := countByPower[realCount]
+		if realMark > maxRealMark {
+			maxRealMark = realMark
+		}
+
+		abstractCount := emotionStat.getAbstractCount()
+		abstractMark := countByPower[abstractCount]
+		if abstractMark > maxAbstractMark {
+			maxAbstractMark = abstractMark
+			lastMarkForAbstract = emotionStat.LastMark
 		}
 	}
-	lastWeekPowers = append(lastWeekPowers, story.Power)
 
-	emotionsPowers := make(map[uint8]int)
-	for _, num := range lastWeekPowers {
-		emotionsPowers[num] = emotionsPowers[num] + 1
+	if maxRealMark > maxAbstractMark {
+		story.Mark = maxRealMark
+		return db.Save(story).Error
+	}
+	if maxAbstractMark > lastMarkForAbstract {
+		story.Mark = maxAbstractMark
+		return db.Save(story).Error
 	}
 
-	power := story.Power
-	count := emotionsPowers[power]
-
-	if power > maxPower {
-		power = 7
-	}
-	countByPower := severities[power]
-	if count > maxCount {
-		count = 4
-	}
-	mark := countByPower[uint8(count)]
-
-	story.Mark = uint8(mark)
-
-	return db.Save(story).Error
+	return nil
 }
