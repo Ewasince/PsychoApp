@@ -291,7 +291,8 @@ function getWeekNumFromDate(date: Dayjs): number { // 0 week means is current, 1
         .set("millisecond", 0)
         .set("seconds", 0)
         .set("minutes", 0)
-        .set("hours", 3) // shift from UTC to GMT+3
+        .set("hours", 0) // shift from UTC to GMT+3
+        .subtract(1, "millisecond")
 
     return nextMonday.diff(date, 'week')
 }
