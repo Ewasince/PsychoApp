@@ -31,7 +31,7 @@ import Pagination from '@mui/material/Pagination';
 import "dayjs/locale/ru"
 import {generateBackButton, Heading} from "../../componetsCore";
 import {IStoryDto, KptTable} from "./KPTable";
-import {IMoodDto, MoodGraph} from "./MoodGraph";
+import {IMoodDto, MoodGraph, MoodsArray} from "./MoodGraph";
 
 dayjs.extend(weekday)
 dayjs.locale('ru')
@@ -42,7 +42,7 @@ export const PatientBoard = () => {
 
     const [patient, setPatient] = useState<IPatient>();
     const [storiesByWeek, setStoriesByWeek] = useState<Map<number, IStoryDto[]>>(new Map([]));
-    const [moodsByWeek, setMoodsByWeek] = useState<Map<number, (IMoodDto | null)[]>>(new Map([]));
+    const [moodsByWeek, setMoodsByWeek] = useState<Map<number, MoodsArray>>(new Map([]));
     const [countPages, setCountPages] = useState<number>(1);
 
     const navigate = useNavigate()
@@ -123,7 +123,7 @@ export const PatientBoard = () => {
     }
 
     function processMoodsByWeek(moods: IMood[]) {
-        const moodsByWeek = new Map<number, (IMoodDto | null)[]>();
+        const moodsByWeek = new Map<number, MoodsArray>();
         let maxWeekAgo = 0
         for (const mood of moods) {
             const moodDate = dayjs.unix(mood.date)

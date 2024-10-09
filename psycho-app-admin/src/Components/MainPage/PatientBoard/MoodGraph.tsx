@@ -12,6 +12,8 @@ export type IMoodDto = {
     date: Dayjs
     value: number
 }
+export type MoodsArray = (IMoodDto | undefined)[]
+
 
 function graphPrepareData(data: (number | undefined)[]): ChartData<"line", (number | undefined)[], string> {
     return {
@@ -53,7 +55,7 @@ export const MoodGraph = (
         moodsByWeek,
     }: {
         weekIndex: number,
-        moodsByWeek: Map<number, (IMoodDto | null)[]>,
+        moodsByWeek: Map<number, MoodsArray>,
     }) => {
     const currentMoods = moodsByWeek.get(weekIndex) || []
 
