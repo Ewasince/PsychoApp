@@ -1,7 +1,9 @@
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
 import * as React from "react";
 import dayjs, {Dayjs} from "dayjs";
 import {Marks} from "../../../api/endpoints/apiPatients";
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import ErrorIcon from '@mui/icons-material/Error';
 
 export type IStoryDto = {
     id: number
@@ -42,13 +44,14 @@ export const KptTable = (
                 <TableCell>{story.mind}</TableCell>
                 <TableCell>{story.emotion}</TableCell>
                 <TableCell>{story.emotionPower}</TableCell>
+                <TableCell>{getSeverityIcon(story.mark)}</TableCell>
             </TableRow>
         </>)
     }
 
     const emptyTable = <>
         <TableRow key={0} className="hover:bg-thirdy-color transition duration-300">
-            <TableCell colSpan={5}>
+            <TableCell colSpan={6}>
                 <div className="text-center font-medium">
                     На выбранной неделе записей нет
                 </div>
@@ -57,15 +60,19 @@ export const KptTable = (
     </>
 
     return (
-        <TableContainer component={Paper} className={`shadow-md rounded-lg h-fit max-h-full overflow-auto`}>
-            <Table sx={{ tableLayout: 'fixed' }} stickyHeader>
+        <TableContainer
+            component={Paper}
+            className={`shadow-md rounded-lg h-fit max-h-full overflow-scroll`}
+        >
+            <Table sx={{tableLayout: 'fixed'}} stickyHeader>
                 <TableHead>
-                    <TableRow > {/* TODO: разобраться почему stickyHeader перезаписывает backgroundColor */}
+                    <TableRow> {/* TODO: разобраться почему stickyHeader перезаписывает backgroundColor */}
                         <TableCell width="10%" style={{backgroundColor: "var(--primary-color)"}}>Время</TableCell>
                         <TableCell width="30%" style={{backgroundColor: "var(--primary-color)"}}>Ситуация</TableCell>
                         <TableCell width="30%" style={{backgroundColor: "var(--primary-color)"}}>Автоматическая мысль</TableCell>
-                        <TableCell width="10%" style={{backgroundColor: "var(--primary-color)"}}>Эмоция</TableCell>
-                        <TableCell width="10%" style={{backgroundColor: "var(--primary-color)"}}>Сила эмоции</TableCell>
+                        <TableCell width="15%" style={{backgroundColor: "var(--primary-color)"}}>Эмоция</TableCell>
+                        <TableCell width="7%" style={{backgroundColor: "var(--primary-color)"}}>Сила эмоции</TableCell>
+                        <TableCell width="5%" style={{backgroundColor: "var(--primary-color)"}}></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -74,4 +81,27 @@ export const KptTable = (
             </Table>
         </TableContainer>
     );
+}
+
+function getSeverityIcon(severity: Marks) {
+    switch (severity) {
+        case 0: {
+            return <></>
+        }
+        case 1: {
+            return <Tooltip title="Не требует пристального внимания" arrow>
+                <ErrorOutlineIcon sx={{color: '#ffbc29'}}/>
+            </Tooltip>
+        }
+        case 2: {
+            return <Tooltip title="Возможно стоит обратить внимание" arrow>
+                <ErrorIcon sx={{color: '#ff8928'}}/>
+            </Tooltip>
+        }
+        case 3: {
+            return <Tooltip title="Стоит обратить внимание" arrow>
+                <ErrorIcon sx={{color: '#ff5722'}}/>
+            </Tooltip>
+        }
+    }
 }

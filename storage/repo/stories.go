@@ -9,23 +9,23 @@ import (
 type SeverityMark uint8
 
 const (
-	NoAttention       SeverityMark = iota
-	LowAttention      SeverityMark = iota
-	ProbablyAttention SeverityMark = iota
-	Attention         SeverityMark = iota
+	Attention0 SeverityMark = iota
+	Attention1 SeverityMark = iota
+	Attention2 SeverityMark = iota
+	Attention3 SeverityMark = iota
 )
 
 type MarksByCount map[uint8]SeverityMark
 type CountByPower map[uint8]MarksByCount
 
 var severities = CountByPower{
-	1: MarksByCount{1: NoAttention, 2: NoAttention, 3: NoAttention, 4: NoAttention},
-	2: MarksByCount{1: NoAttention, 2: NoAttention, 3: LowAttention, 4: LowAttention},
-	3: MarksByCount{1: NoAttention, 2: LowAttention, 3: ProbablyAttention, 4: ProbablyAttention},
-	4: MarksByCount{1: NoAttention, 2: ProbablyAttention, 3: Attention, 4: Attention},
-	5: MarksByCount{1: LowAttention, 2: Attention, 3: Attention, 4: Attention},
-	6: MarksByCount{1: ProbablyAttention, 2: Attention, 3: Attention, 4: Attention},
-	7: MarksByCount{1: Attention, 2: Attention, 3: Attention, 4: Attention},
+	1: MarksByCount{1: Attention0, 2: Attention0, 3: Attention0, 4: Attention0},
+	2: MarksByCount{1: Attention0, 2: Attention0, 3: Attention1, 4: Attention1},
+	3: MarksByCount{1: Attention0, 2: Attention1, 3: Attention2, 4: Attention2},
+	4: MarksByCount{1: Attention1, 2: Attention1, 3: Attention2, 4: Attention3},
+	5: MarksByCount{1: Attention1, 2: Attention2, 3: Attention3, 4: Attention3},
+	6: MarksByCount{1: Attention2, 2: Attention3, 3: Attention3, 4: Attention3},
+	7: MarksByCount{1: Attention3, 2: Attention3, 3: Attention3, 4: Attention3},
 }
 
 const maxPower = 7
