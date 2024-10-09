@@ -124,22 +124,21 @@ export const PatientBoard = () => {
 
     function processMoodsByWeek(moods: IMood[]) {
         const moodsByWeek = new Map<number, MoodsArray>();
+
+        function getMoodsArray(weekNum: number): MoodsArray{
+            if (!moodsByWeek.has(weekNum)) {
+                moodsByWeek.set(weekNum, new Array(7))
+            }
+            // @ts-ignore
+            return moodsByWeek.get(weekNum)
+        }
+
         let maxWeekAgo = 0
         for (const mood of moods) {
             const moodDate = dayjs.unix(mood.date)
             const weekNum = getWeekNumFromDate(moodDate)
+            const moodsArray = getMoodsArray(weekNum)
             maxWeekAgo = Math.max(maxWeekAgo, weekNum)
-            if (!moodsByWeek.has(weekNum)) {
-                moodsByWeek.set(weekNum, [
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                ])
-            }
             const moodDto: IMoodDto = { // TODO: конечно хуёвый способ так делать, нужно это в отдельный класс вынести
                 id: mood.id,
                 date: dayjs.unix(mood.date),
