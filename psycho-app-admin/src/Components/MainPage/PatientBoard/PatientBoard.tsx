@@ -138,14 +138,14 @@ export const PatientBoard = () => {
             const moodDate = dayjs.unix(mood.date)
             const weekNum = getWeekNumFromDate(moodDate)
             const moodsArray = getMoodsArray(weekNum)
+            const weekDayNum = moodDate.day() - 1
             maxWeekAgo = Math.max(maxWeekAgo, weekNum)
             const moodDto: IMoodDto = { // TODO: конечно хуёвый способ так делать, нужно это в отдельный класс вынести
                 id: mood.id,
                 date: dayjs.unix(mood.date),
                 value: mood.value,
             }
-            const weekDayNum = moodDate.day()
-            moodsByWeek.get(weekNum)?.splice(weekDayNum, 1, moodDto)
+            moodsArray.splice(weekDayNum, 1, moodDto)
         }
         console.log("processMoodsByWeek moodsByWeek", moodsByWeek)
 
