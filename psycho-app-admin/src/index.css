@@ -42,19 +42,6 @@
     }
 }
 
-.clickable-img {
-    filter: invert(100%);
-    width: 2em; /* Ширина чекбокса равна размеру шрифта */
-    height: 2em; /* Высота чекбокса равна размеру шрифта */
-    border: 2px solid rgba(0, 0, 0, 255);
-    border-radius: 3px;
-}
-
-.clickable-img:hover {
-    filter: invert(100%) brightness(70%);
-    /*border: 2px solid #000000;*/
-}
-
 .entry-container, .entry-container-disabled {
     border: 2px solid #ecc8a2; /* Добавляем границы */
     border-radius: 10px; /* Добавляем закругления углов */
@@ -68,67 +55,4 @@
 
 .entry-container-disabled {
     background-color: #2d2f2f; /* Цвет фона контейнера */
-}
-
-.checkbox-container, .custom-checkbox, .checkmark {
-    width: 2em; /* Ширина чекбокса равна размеру шрифта */
-    height: 2em; /* Высота чекбокса равна размеру шрифта */
-}
-
-/*img {*/
-/*    filter: invert(100%);*/
-/*    width: 2em; !* Ширина чекбокса равна размеру шрифта *!*/
-/*    height: 2em; !* Высота чекбокса равна размеру шрифта *!*/
-/*    border: 2px solid rgba(0, 0, 0, 255);*/
-/*    border-radius: 3px;*/
-/*}*/
-
-/*img:hover {*/
-/*    filter: invert(100%) brightness(70%);*/
-/*    !*border: 2px solid #000000;*!*/
-/*}*/
-
-/* Общие стили */
-.custom-checkbox {
-    display: inline-block;
-    position: relative;
-    /*padding-left: 25px;*/
-    cursor: pointer;
-}
-
-/* Скрываем стандартный чекбокс */
-.custom-checkbox input[type="checkbox"] {
-    visibility: hidden;
-}
-
-/* Создаем кастомный чекбокс */
-/*.custom-checkbox .checkmark {*/
-.checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    /*width: 2em;*/
-    /*height: 2em;*/
-    background-color: transparent;
-    border: 2px solid #fff;
-    border-radius: 3px;
-}
-
-/* Стили для чекбокса при наведении курсора мыши */
-.custom-checkbox input:checked ~ .checkmark {
-    background-color: #3b81f4;
-}
-
-/* Стили галочки при активированном чекбоксе */
-.custom-checkbox input:checked ~ .checkmark:after {
-    content: "";
-    position: absolute;
-    display: block;
-    left: 6px;
-    top: 1px;
-    width: 1em;
-    height: 1em;
-    border: solid #fff;
-    border-width: 0 3px 3px 0;
-    transform: rotate(45deg);
 }
