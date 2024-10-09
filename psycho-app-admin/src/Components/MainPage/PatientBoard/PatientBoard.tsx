@@ -125,7 +125,7 @@ export const PatientBoard = () => {
     function processMoodsByWeek(moods: IMood[]) {
         const moodsByWeek = new Map<number, MoodsArray>();
 
-        function getMoodsArray(weekNum: number): MoodsArray{
+        function getMoodsArray(weekNum: number): MoodsArray {
             if (!moodsByWeek.has(weekNum)) {
                 moodsByWeek.set(weekNum, new Array(7))
             }
