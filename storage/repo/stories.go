@@ -62,21 +62,21 @@ func CreateStory(story *Story, db *gorm.DB) error {
 func SetMark(story *Story, db *gorm.DB) error {
 	finishDate := story.Date // TODO: тк время истории округляется до минут, может быть неочевидное поведение
 	startDate := finishDate.Add(-7 * 24 * time.Hour)
-	weekStories, err := GetStories(story.PatientId, startDate, finishDate)
+	lastWeekStories, err := GetStories(story.PatientId, startDate, finishDate)
 	if err != nil {
 		panic(err)
 	}
 
-	var weekStoriesCurrentEmotionPowers []uint8
-	for _, s := range *weekStories {
+	var lastWeekPowers []uint8 // силы данной эмоции за прошедшую неделю
+	for _, s := range *lastWeekStories {
 		if s.Emotion == story.Emotion {
-			weekStoriesCurrentEmotionPowers = append(weekStoriesCurrentEmotionPowers, s.Power)
+			lastWeekPowers = append(lastWeekPowers, s.Power)
 		}
 	}
-	weekStoriesCurrentEmotionPowers = append(weekStoriesCurrentEmotionPowers, story.Power)
+	lastWeekPowers = append(lastWeekPowers, story.Power)
 
 	emotionsPowers := make(map[uint8]int)
-	for _, num := range weekStoriesCurrentEmotionPowers {
+	for _, num := range lastWeekPowers {
 		emotionsPowers[num] = emotionsPowers[num] + 1
 	}
 
