@@ -124,7 +124,7 @@ func GetPatientStoriesHandler(c *gin.Context) {
 	stories, err := repo.GetStories(patientId, dateStart, dateFinish)
 
 	var JSONStories = make([]gin.H, 0)
-	for _, story := range *stories {
+	for _, story := range stories {
 		JSONStories = append(JSONStories, story.ToMap())
 	}
 

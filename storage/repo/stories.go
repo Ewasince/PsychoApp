@@ -31,8 +31,8 @@ var severities = CountByPower{
 const maxPower = 7
 const maxCount = 4
 
-func GetStories(patientId uint, dateStart, dateFinish time.Time) (*[]Story, error) {
-	var stories = make([]Story, 0)
+func GetStories(patientId uint, dateStart, dateFinish time.Time) ([]*Story, error) {
+	var stories []*Story
 	err := DB.
 		Where("patient_id = ?", patientId).
 		Where("date >= ?", dateStart).
@@ -41,7 +41,7 @@ func GetStories(patientId uint, dateStart, dateFinish time.Time) (*[]Story, erro
 		Find(&stories).
 		Error
 
-	return &stories, err
+	return stories, err
 }
 
 func GetStoryMinDate(patientId uint) (time.Time, error) {
