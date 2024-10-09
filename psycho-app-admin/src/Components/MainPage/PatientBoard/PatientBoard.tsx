@@ -72,8 +72,6 @@ export const PatientBoard = () => {
                 )
                 const pages = processStoriesByWeek(storiesData.data.stories)
                 countPages = Math.max(countPages, pages)
-                console.log("pages", pages)
-                console.log("countPages", countPages)
 
                 const moodsMinDateData = await getPatientMoodsMinDate(patientId as string)
                 const minDateMoods = dayjs.unix(moodsMinDateData.data.minDate)
@@ -87,8 +85,6 @@ export const PatientBoard = () => {
                 )
                 const pages2 = processMoodsByWeek(moodsData.data.moods)
                 countPages = Math.max(countPages, pages2)
-                console.log("pages2", pages2)
-                console.log("countPages", countPages)
 
                 setCurrentPage(0)
                 setCountPages(countPages)
@@ -106,7 +102,6 @@ export const PatientBoard = () => {
         for (const story of stories) {
             const storyDate = dayjs.unix(story.date)
             const weekNum = getWeekNumFromDate(storyDate)
-            console.log(`weekNum=${weekNum} storyDate=${storyDate}`)
             maxWeekAgo = Math.max(maxWeekAgo, weekNum)
             if (!storiesByWeek.has(weekNum)) {
                 storiesByWeek.set(weekNum, [])

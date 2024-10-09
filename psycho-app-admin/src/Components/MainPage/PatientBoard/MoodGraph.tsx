@@ -56,14 +56,12 @@ export const MoodGraph = (
         moodsByWeek: Map<number, (IMoodDto | null)[]>,
     }) => {
     const currentMoods = moodsByWeek.get(weekIndex) || []
-    console.log("MoodGraph currentMoods", currentMoods)
 
     const currentMoodsVals = []
 
     for (const mood of currentMoods) {
         currentMoodsVals.push(mood?.value)
     }
-    console.log("MoodGraph currentMoodsVals", currentMoodsVals)
 
     return (
         <Line data={graphPrepareData(currentMoodsVals)} options={graphOptions}/>
