@@ -16,5 +16,7 @@ func (u *User) ToMap() gin.H {
 	return map[string]any{
 		"id":       u.ID,
 		"username": u.Username,
+		"email":    u.Email,
+		"name":     u.Name,
 	}
 }
