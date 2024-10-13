@@ -62,7 +62,7 @@ export const KptTable = (
     return (
         <TableContainer
             component={Paper}
-            className={`shadow-md rounded-lg h-fit max-h-full overflow-scroll`}
+            className={`shadow-md rounded-lg h-fit max-h-full`}
         >
             <Table sx={{tableLayout: 'fixed'}} stickyHeader>
                 <TableHead>
