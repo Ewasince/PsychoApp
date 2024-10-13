@@ -20,9 +20,9 @@ export const Account = () => {
                 heading={`Профиль ${user?.name}`}
             />
 
-            <div className="container mt-5">
-                <div className="entry-container flex flex-col-reverse 2xl:flex-row gap-1 sm:gap-2">
-                    <div className="w-full 2xl:max-w-[310px] grid grid-cols-2 gap-4 text-lg sm:text-xl space-x-2 ">
+            <div className="w-full container mt-5">
+                <div className="flex flex-row w-full entry-container 2xl:flex-row gap-1 sm:gap-2">
+                    <div className="w-full grid grid-cols-2 gap-4 text-lg sm:text-xl space-x-2">
 
                         <div className="font-medium text-right">Ваш никнейм:</div>
                         <div className="mr-2">{user?.username}</div>
@@ -32,13 +32,18 @@ export const Account = () => {
 
                     </div>
                 </div>
+
+                <button
+                    onClick={() => {
+                        alert("Находится в разработке. Пока пациенты могут свободно добавляться")
+                    }}
+                    className="w-full text-xl px-6 py-2 bg-blue-color rounded-xl mt-4 sm:mt-6 hover:bg-dark-blue-color"
+                >Добавить пациента
+                </button>
+
+
             </div>
 
-
-            <button onClick={() => {alert("Находится в разработке. Пока пациенты могут свободно добавляться")}}
-                    className="text-xl px-6 py-2 bg-blue-color rounded-xl mt-4 sm:mt-6 hover:bg-dark-blue-color"
-            >Добавить пациента
-            </button>
 
         </div>
     )
