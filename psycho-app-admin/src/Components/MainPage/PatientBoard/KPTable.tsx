@@ -95,7 +95,7 @@ function getSeverityIcon(severity: Marks) {
         }
         case 2: {
             return <Tooltip title="Возможно стоит обратить внимание" arrow>
-                <ErrorIcon sx={{color: '#ff8928'}}/>
+                <ErrorIcon sx={{color: '#ffbc29'}}/>
             </Tooltip>
         }
         case 3: {
