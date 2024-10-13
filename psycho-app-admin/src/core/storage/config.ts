@@ -30,7 +30,7 @@ export function setGlobalUser(user: IMe) {
 }
 
 export function getGlobalUser(): IMe | undefined {
-    const config = localStorage.getItem(CONFIG_KEY);
+    const config = localStorage.getItem(USER_KEY);
     return config ? JSON.parse(config) : undefined
 }
 
