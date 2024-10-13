@@ -56,7 +56,7 @@ export const Dashboard = () => {
             <div
                 className="w-full bg-secondary-color rounded-lg sm:rounded-xl p-4 sm:p-6 xl:p-8 text-font-color flex flex-col">
                 <Heading
-                    heading="Мои кореша"
+                    heading="Мои пациенты"
                 />
                 <div className="flex flex-col gap-6">
                     {patients && patients.length ?
