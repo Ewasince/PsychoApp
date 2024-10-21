@@ -10,7 +10,7 @@ var FillStorySituationState = NewBotState(
 	"Fill Story situation state",
 	BotMessageHandler(enterMessageHandlerFillStorySituationState),
 	nil,
-	nil,
+	&DefaultKeyboard,
 	messageHandlerFillStorySituationState,
 )
 

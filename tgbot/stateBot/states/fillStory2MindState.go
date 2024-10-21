@@ -10,7 +10,7 @@ var FillStoryMindState = NewBotState(
 	"Fill Story mind state",
 	BotMessages{msg.WhatMind},
 	nil,
-	nil,
+	&DefaultKeyboard,
 	messageHandlerFillStoryMindState,
 )
 
