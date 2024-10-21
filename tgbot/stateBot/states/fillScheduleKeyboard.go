@@ -3,6 +3,7 @@ package states
 import (
 	msg "PsychoBot/messages"
 	"PsychoBot/stateBot/context"
+	"PsychoBot/stateBot/helpers"
 	"fmt"
 	. "github.com/Ewasince/go-telegram-state-bot"
 	"strconv"
@@ -12,25 +13,16 @@ import (
 var ScheduleKeyboard BotKeyboard
 
 func init() {
-	start := 0
-	finish := 23
-	separateBy := 8
-
 	var rows []ButtonsRow
-	var row ButtonsRow
 
-	for i := start; i <= finish; i++ {
-		button := BotButton{
-			ButtonTitle:   fmt.Sprintf("%v:00", i),
-			ButtonHandler: keyboardHourButtonHandler,
-		}
-		row = append(row, button)
+	hours := helpers.MakeRangeStr(0, 23)
+	var fullHours []string
 
-		if (i+1)%separateBy == 0 {
-			rows = append(rows, row)
-			row = ButtonsRow{}
-		}
+	for _, hour := range hours {
+		fullHours = append(fullHours, fmt.Sprintf("%v:00", hour))
 	}
+
+	rows = helpers.CreateArrayKeyboard(fullHours, 8, keyboardHourButtonHandler)
 	rows = append(rows, ButtonsRow{
 		BotButton{
 			ButtonTitle:   "Назад",
