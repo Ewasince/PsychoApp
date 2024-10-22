@@ -1,0 +1,13 @@
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: go_backend
+    volumes:
+      - ./.env:/app/.env:ro
+      - ./database.db:/app/database.db
+      - ./migrations:/app/migrations:ro
+    ports:
+      - 8181:8181

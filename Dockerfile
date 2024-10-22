@@ -1,33 +1,53 @@
 ARG GO_BACKEND_EXECUTABLE=psychoapp
 ARG GO_BOT_EXECUTABLE=psychoapp_bot
 
-FROM golang:1.22-bookworm AS go_builder
+FROM golang:1.22-bookworm AS go_backend
 
 ARG GO_BACKEND_EXECUTABLE
-ARG GO_BOT_EXECUTABLE
 
 ENV GOPATH=/root/go
+ENV GO_BACKEND_EXECUTABLE=$GO_BACKEND_EXECUTABLE
 
-WORKDIR /root
+WORKDIR /tmp
 
 COPY environment environment
 COPY storage storage
 COPY backend backend
+RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build --mount=type=cache,mode=0755,target=/root/go \
+    cd /tmp/environment && \
+    go mod download && \
+    cd /tmp/storage && \
+    go mod download && \
+    cd /tmp/backend && \
+    go mod download && \
+    go build -o /app/$GO_BACKEND_EXECUTABLE main.go && \
+    rm -rf /tmp/* \
+RUN echo qwer
+WORKDIR /app
+CMD ./$GO_BACKEND_EXECUTABLE
+
+FROM golang:1.22-bookworm AS go_bot
+
+ARG GO_BOT_EXECUTABLE
+
+ENV GOPATH=/root/go
+
+WORKDIR /tmp
+
+COPY environment environment
+COPY storage storage
 COPY tgbot tgbot
-
 RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build --mount=type=cache,mode=0755,target=/root/go \
-    cd /root/environment && \
+    cd /tmp/environment && \
     go mod download && \
-    cd /root/storage && \
+    cd /tmp/storage && \
     go mod download && \
-    cd /root/backend && \
+    cd /tmp/tgbot && \
     go mod download && \
-    go build -o /tmp/$GO_BACKEND_EXECUTABLE main.go
+    go build -o /app/$GO_BOT_EXECUTABLE main.go && \
+    rm -rf /tmp/*
 
-RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build --mount=type=cache,mode=0755,target=/root/go \
-    cd /root/tgbot && \
-    go mod download && \
-    go build -o /tmp/$GO_BOT_EXECUTABLE main.go
+CMD ["/app/$GO_BOT_EXECUTABLE"]
 
 FROM node:14-bullseye-slim
 
@@ -37,9 +57,6 @@ ARG GO_BOT_EXECUTABLE
 ARG FRONT_TEMP_FOLDER=/tmp/front
 ARG FRONT_LOCAL_FOLDER=psycho-app-admin
 ARG APP_FOLDER=/opt/psychoapp
-
-#RUN apt update && \
-#    apt install build-essential debhelper -y
 
 # build front
 WORKDIR $FRONT_TEMP_FOLDER
@@ -54,8 +71,8 @@ RUN npm run build
 WORKDIR $APP_FOLDER
 RUN mkdir -p build && \
     mv $FRONT_TEMP_FOLDER/build .
-COPY --from=go_builder /tmp/$GO_BACKEND_EXECUTABLE $GO_BACKEND_EXECUTABLE
-COPY --from=go_builder /tmp/$GO_BOT_EXECUTABLE $GO_BOT_EXECUTABLE
+COPY --from=go_backend /app/$GO_BACKEND_EXECUTABLE $GO_BACKEND_EXECUTABLE
+COPY --from=go_bot /app/$GO_BOT_EXECUTABLE $GO_BOT_EXECUTABLE
 COPY migrations migrations
 
 # make archive
