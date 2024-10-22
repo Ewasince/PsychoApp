@@ -59,7 +59,7 @@ func init() {
 			BotMessages{msg.WhatEmotion},
 			nil,
 			&kb,
-			nil,
+			pleaseChooseFromListHandler,
 		)
 
 		EmotionsStatesMap[mainEmotion] = &emotionSate
@@ -75,8 +75,14 @@ var FillStoryPrimaryEmotionState = NewBotState(
 	BotMessages{msg.WhatMainEmotion},
 	nil,
 	&EmotionsKeyboard,
-	nil,
+	pleaseChooseFromListHandler,
 )
+
+func pleaseChooseFromListHandler(c BotContext) HandlerResponse {
+	ctx := c.(*context.MyBotContext)
+	ctx.CreateAndSendMessage(msg.WhatEmotionError)
+	return HandlerResponse{}
+}
 
 func keyboardEmotionHandler(c BotContext) HandlerResponse {
 	ctx := c.(*context.MyBotContext)
