@@ -1,7 +1,17 @@
-for start 
+# Fast start
+
+## local
+
 ```bash
 go run -C backend main.go
 ```
+
+## docker
+
+1. Если нет файла дб то скопировать `database.db.example` -> `database.db`
+2. `docker compose up --build backend`
+3. Зайти в аккаунт с данными `admin` `admin`
+
 
 # build package
 ```
