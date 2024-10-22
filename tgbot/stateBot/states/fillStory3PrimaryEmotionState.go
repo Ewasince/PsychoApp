@@ -95,7 +95,7 @@ func keyboardEmotionHandler(c BotContext) HandlerResponse {
 		TransitionType: GoState,
 	}
 }
-func keyboardBackEmotionHandler(c BotContext) HandlerResponse {
+func keyboardBackEmotionHandler(_ BotContext) HandlerResponse {
 	return HandlerResponse{
 		NextState:      &FillStoryPrimaryEmotionState,
 		TransitionType: GoStateForce,
