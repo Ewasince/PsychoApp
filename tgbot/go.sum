@@ -1,5 +1,11 @@
 github.com/Ewasince/go-telegram-state-bot v0.1.1 h1:7Wy5nuvldKWXq4qVNOu9d9LcCBeh1AzB8fqil2Ah6vs=
 github.com/Ewasince/go-telegram-state-bot v0.1.1/go.mod h1:3WUGlPYsRuJs4NmnDpCEH2RTZhBZFIklk3v0L/B6bkk=
+github.com/Ewasince/go-telegram-state-bot v0.1.2-0.20241027184128-b0cf1c8678e6 h1:KlM5Jq1ZAaWnvf7zXsT9ghLfviXEf7gCw9jndiiH/vM=
+github.com/Ewasince/go-telegram-state-bot v0.1.2-0.20241027184128-b0cf1c8678e6/go.mod h1:3WUGlPYsRuJs4NmnDpCEH2RTZhBZFIklk3v0L/B6bkk=
+github.com/Ewasince/go-telegram-state-bot v0.1.2-0.20241027200006-d23295944ccb h1:zyAVbxGizk6JZN4VYEzgClX+rGgrfGvic7JndF7ATqQ=
+github.com/Ewasince/go-telegram-state-bot v0.1.2-0.20241027200006-d23295944ccb/go.mod h1:3WUGlPYsRuJs4NmnDpCEH2RTZhBZFIklk3v0L/B6bkk=
+github.com/Ewasince/go-telegram-state-bot v0.1.2-0.20241031173829-cda63502d041 h1:RGuPCQXxqpd935qF/bSxg5sq/O5YbwIi2Tqpbhrk8Bk=
+github.com/Ewasince/go-telegram-state-bot v0.1.2-0.20241031173829-cda63502d041/go.mod h1:3WUGlPYsRuJs4NmnDpCEH2RTZhBZFIklk3v0L/B6bkk=
 github.com/bytedance/sonic v1.11.6 h1:oUp34TzMlL+OY1OUWxHqsdkgC/Zfc85zGqw9siXjrc0=
 github.com/bytedance/sonic v1.11.6/go.mod h1:LysEHSvpvDySVdC2f87zGWf6CIKJcAvqab1ZaiQtds4=
 github.com/bytedance/sonic/loader v0.1.1 h1:c+e5Pt1k/cy5wMveRDyk2X4B9hF4g7an8N3zCYjJFNM=

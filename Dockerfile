@@ -36,11 +36,14 @@ WORKDIR /tmp
 
 COPY environment environment
 COPY storage storage
+COPY telegram_state_bot telegram_state_bot
 COPY tgbot tgbot
 RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build --mount=type=cache,mode=0755,target=/root/go \
     cd /tmp/environment && \
     go mod download && \
     cd /tmp/storage && \
+    go mod download && \
+    cd /tmp/telegram_state_bot && \
     go mod download && \
     cd /tmp/tgbot && \
     go mod download && \

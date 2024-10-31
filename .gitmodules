@@ -1,0 +1,3 @@
+[submodule "telegram_state_bot"]
+	path = telegram_state_bot
+	url = git@github.com:Ewasince/go-telegram-state-bot.git
