@@ -78,7 +78,7 @@ func init() {
 
 var FillStoryPrimaryEmotionState = NewBotState(
 	"Fill Story main emotion state",
-	TextMessage(msg.WhatEmotion),
+	TextMessage(msg.WhatMainEmotion),
 	nil,
 	&EmotionsKeyboard,
 	pleaseChooseFromListHandler,
