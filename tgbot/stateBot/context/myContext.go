@@ -41,7 +41,6 @@ func NewMyBotContext(
 			MessageSenderId: message.From.ID,
 			MessageChatId:   message.Chat.ID,
 			BotHandler:      senderHandler,
-			ErrorMessage:    errorMessage,
 		},
 		Patient:       currentPatient,
 		PatientTgId:   patientTgId,
