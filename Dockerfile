@@ -65,8 +65,9 @@ ARG BUILD_FOLDER=/tmp/build
 # build front
 WORKDIR $FRONT_TEMP_FOLDER
 COPY $FRONT_LOCAL_FOLDER/package*.json .
-RUN npm i -d typescript && \
-    npm install
+RUN --mount=type=cache,mode=0755,target=/root/.npm \
+    npm i -d typescript && \
+    npm i
 
 COPY $FRONT_LOCAL_FOLDER .
 RUN npm run build
