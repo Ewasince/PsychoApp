@@ -14,7 +14,7 @@ const CantSaveStory = "Не получилось сохранить запись
 const WhatHappened = "Для заполнения новой истории просто напиши мне что случилось✍️"
 const WhatMind = "Что ты подумал в этот момент?"
 const WhatMainEmotion = "Какую эмоцию ты почуствовал?"
-const WhatEmotion = "Уточни какую конкретно эмоцию ты почувствовал"
+const WhatEmotion = "Уточни какую конкретно эмоцию ты почувствовал(-а)"
 const WhatEmotionError = "Пожалуйста, выбери эмоцию из списка"
 const WhatPower = "Насколько она была сильна (от 1 до 10)?"
 const WhatEntryDone = "Запись заполнена! Буду ждать новых записей"
@@ -28,6 +28,6 @@ const DontRecognizeHour = "Не распознал формат часа. Ото
 const ScheduleNotification = "Привет! Напоминаю записать какую-нибудь свою интересную ситуацию"
 
 const SetMood = "Укажи своё настроение за сегодня (от -5 до 5)"
-const AlreadySetMood = ". За сегодня ты указал настрение %d"
+const AlreadySetMood = ". За сегодня ты указал(-а) настрение %d"
 const SetMoodWrong = "Выбери опцию из спика"
 const SetMoodSuccess = "Записал настроение"
