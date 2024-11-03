@@ -4,7 +4,10 @@ import (
 	msg "PsychoBot/messages"
 	"PsychoBot/stateBot/context"
 	"PsychoBot/stateBot/helpers"
-	. "github.com/Ewasince/go-telegram-state-bot"
+
+	. "github.com/Ewasince/go-telegram-state-bot/helpers"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/keyboard"
 )
 
 var HelpKeyboard BotKeyboard
@@ -31,19 +34,19 @@ func keyboardHelpButtonHandler(c BotContext) HandlerResponse {
 
 	switch ctx.MessageText {
 	case msg.BeliefButtonHelp:
-		ctx.CreateAndSendMessage(msg.BeliefHelp)
+		CreateAndSendMessage(msg.BeliefHelp, ctx)
 		return HandlerResponse{}
 	case msg.MindButtonHelp:
-		ctx.CreateAndSendMessage(msg.MindHelp)
+		CreateAndSendMessage(msg.MindHelp, ctx)
 		return HandlerResponse{}
 	case msg.SituationButtonHelp:
-		ctx.CreateAndSendMessage(msg.SituationHelp)
+		CreateAndSendMessage(msg.SituationHelp, ctx)
 		return HandlerResponse{}
 	case msg.ReactionsButtonHelp:
-		ctx.CreateAndSendMessage(msg.ReactionsHelp)
+		CreateAndSendMessage(msg.ReactionsHelp, ctx)
 		return HandlerResponse{}
 	default:
-		ctx.CreateAndSendMessage(msg.NotFoundHelp)
+		CreateAndSendMessage(msg.NotFoundHelp, ctx)
 		return HandlerResponse{}
 	}
 }

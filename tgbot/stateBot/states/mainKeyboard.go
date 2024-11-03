@@ -1,32 +1,37 @@
 package states
 
 import (
-	"PsychoBot/messages"
+	msg "PsychoBot/messages"
 	"PsychoBot/stateBot/context"
 	"StorageModule/repo"
-	tl "github.com/Ewasince/go-telegram-state-bot"
+	//tl "github.com/Ewasince/go-telegram-state-bot"
+
+	. "github.com/Ewasince/go-telegram-state-bot/enums"
+	. "github.com/Ewasince/go-telegram-state-bot/helpers"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/keyboard"
 )
 
-var ButtonStart = tl.BotButton{
+var ButtonStart = BotButton{
 	ButtonTitle:   "Новая запись",
 	ButtonHandler: CommandStartHandler,
 }
-var ButtonSchedule = tl.BotButton{
+var ButtonSchedule = BotButton{
 	ButtonTitle:   "Напоминание",
 	ButtonHandler: CommandScheduleHandler,
 }
 
-//	var ButtonNoSchedule = tl.BotButton{
+//	var ButtonNoSchedule = BotButton{
 //		ButtonTitle:   "Убрать напоминание",
 //		ButtonHandler: CommandNoScheduleHandler,
 //	}
-var ButtonSetMood = tl.BotButton{
+var ButtonSetMood = BotButton{
 	ButtonTitle:   "Указать настроение",
 	ButtonHandler: CommandSetMoodHandler,
 }
 
-var MainKeyboard = tl.BotKeyboard{
-	Keyboard: []tl.ButtonsRow{
+var MainKeyboard = BotKeyboard{
+	Keyboard: []ButtonsRow{
 		{
 			ButtonStart,
 		},
@@ -39,56 +44,56 @@ var MainKeyboard = tl.BotKeyboard{
 	},
 }
 
-func CommandStartHandler(c tl.BotContext) tl.HandlerResponse {
+func CommandStartHandler(c BotContext) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 
 	if !ctx.IsPatientRegistered() {
-		return tl.HandlerResponse{
+		return HandlerResponse{
 			NextState:      &RegisterState,
-			TransitionType: tl.GoStateForce,
+			TransitionType: GoStateForce,
 		}
 	}
 
-	return tl.HandlerResponse{
+	return HandlerResponse{
 		NextState:      DefaultState,
-		TransitionType: tl.GoStateForce,
+		TransitionType: GoStateForce,
 	}
 }
 
-func CommandScheduleHandler(c tl.BotContext) tl.HandlerResponse {
+func CommandScheduleHandler(c BotContext) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 	if !ctx.IsPatientRegistered() {
-		return tl.HandlerResponse{
+		return HandlerResponse{
 			NextState:      &RegisterState,
-			TransitionType: tl.GoStateForce,
+			TransitionType: GoStateForce,
 		}
 	}
-	return tl.HandlerResponse{
+	return HandlerResponse{
 		NextState:      &FillScheduleState,
-		TransitionType: tl.GoStateForce,
+		TransitionType: GoStateForce,
 	}
 }
 
-func CommandSetMoodHandler(c tl.BotContext) tl.HandlerResponse {
+func CommandSetMoodHandler(c BotContext) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 	if !ctx.IsPatientRegistered() {
-		return tl.HandlerResponse{
+		return HandlerResponse{
 			NextState:      &RegisterState,
-			TransitionType: tl.GoStateForce,
+			TransitionType: GoStateForce,
 		}
 	}
-	return tl.HandlerResponse{
+	return HandlerResponse{
 		NextState:      &SetMoodState,
-		TransitionType: tl.GoStateForce,
+		TransitionType: GoStateForce,
 	}
 }
 
-func CommandNoScheduleHandler(c tl.BotContext) tl.HandlerResponse {
+func CommandNoScheduleHandler(c BotContext) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 	if !ctx.IsPatientRegistered() {
-		return tl.HandlerResponse{
+		return HandlerResponse{
 			NextState:      &RegisterState,
-			TransitionType: tl.GoStateForce,
+			TransitionType: GoStateForce,
 		}
 	}
 
@@ -99,13 +104,13 @@ func CommandNoScheduleHandler(c tl.BotContext) tl.HandlerResponse {
 	}
 
 	if ctx.Patient.NextSchedule == nil {
-		ctx.CreateAndSendMessage(messages.ResetScheduleSuccess)
+		CreateAndSendMessage(msg.ResetScheduleSuccess, ctx)
 	} else {
 		panic("cant reset schedule")
 	}
 
-	return tl.HandlerResponse{
+	return HandlerResponse{
 		NextState:      DefaultState,
-		TransitionType: tl.GoStateForce,
+		TransitionType: GoStateForce,
 	}
 }

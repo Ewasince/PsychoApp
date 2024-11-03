@@ -6,7 +6,11 @@ import (
 	"StorageModule/repo"
 	"errors"
 	"fmt"
-	. "github.com/Ewasince/go-telegram-state-bot"
+	. "github.com/Ewasince/go-telegram-state-bot/message_types"
+
+	. "github.com/Ewasince/go-telegram-state-bot/helpers"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/states"
 	"gorm.io/gorm"
 	"time"
 )
@@ -14,12 +18,12 @@ import (
 var SetMoodState = NewBotState(
 	"Set mood state",
 	BotMessageHandler(enterMessageHandlerSetMoodState),
-	BotMessages{msg.SetMoodSuccess},
+	TextMessage(msg.SetMoodSuccess),
 	&MoodKeyboard,
 	messageHandlerSetMoodState,
 )
 
-func enterMessageHandlerSetMoodState(c BotContext) ([]string, error) {
+func enterMessageHandlerSetMoodState(c BotContext) (Messagables, error) {
 	ctx := *c.(*context.MyBotContext)
 	message := msg.SetMood
 	if ctx.IsPatientRegistered() {
@@ -31,7 +35,7 @@ func enterMessageHandlerSetMoodState(c BotContext) ([]string, error) {
 			return nil, err
 		}
 	}
-	return []string{message}, nil
+	return TextMessage(message), nil
 }
 
 //	func exitMessageHandlerSetMoodState(c BotContext) ([]string, error) {
@@ -42,6 +46,6 @@ func enterMessageHandlerSetMoodState(c BotContext) ([]string, error) {
 //	}
 func messageHandlerSetMoodState(c BotContext) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
-	ctx.CreateAndSendMessage(msg.SetMoodWrong)
+	CreateAndSendMessage(msg.SetMoodWrong, ctx)
 	return HandlerResponse{}
 }

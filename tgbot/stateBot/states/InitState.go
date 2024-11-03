@@ -2,7 +2,10 @@ package states
 
 import (
 	"PsychoBot/stateBot/context"
-	. "github.com/Ewasince/go-telegram-state-bot"
+
+	. "github.com/Ewasince/go-telegram-state-bot/enums"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/states"
 )
 
 var InitState = NewBotState(

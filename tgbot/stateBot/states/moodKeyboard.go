@@ -4,7 +4,10 @@ import (
 	"PsychoBot/stateBot/context"
 	"PsychoBot/stateBot/helpers"
 	"StorageModule/repo"
-	. "github.com/Ewasince/go-telegram-state-bot"
+
+	. "github.com/Ewasince/go-telegram-state-bot/enums"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/keyboard"
 	"strconv"
 	"time"
 )

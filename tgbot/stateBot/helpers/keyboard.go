@@ -1,7 +1,9 @@
 package helpers
 
 import (
-	. "github.com/Ewasince/go-telegram-state-bot"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/keyboard"
+
 	"strconv"
 )
 

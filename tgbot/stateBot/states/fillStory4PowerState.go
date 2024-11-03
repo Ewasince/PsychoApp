@@ -5,7 +5,13 @@ import (
 	"PsychoBot/stateBot/context"
 	"PsychoBot/stateBot/helpers"
 	"StorageModule/repo"
-	. "github.com/Ewasince/go-telegram-state-bot"
+	. "github.com/Ewasince/go-telegram-state-bot/message_types"
+
+	. "github.com/Ewasince/go-telegram-state-bot/enums"
+	. "github.com/Ewasince/go-telegram-state-bot/helpers"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/keyboard"
+	. "github.com/Ewasince/go-telegram-state-bot/states"
 	"strconv"
 )
 
@@ -20,8 +26,8 @@ func init() {
 
 var FillStoryPowerState = NewBotState(
 	"Fill Story mind state",
-	BotMessages{msg.WhatPower},
-	BotMessages{msg.WhatEntryDone},
+	TextMessage(msg.WhatPower),
+	TextMessage(msg.WhatEntryDone),
 	&PowerKeyboard,
 	nil,
 )
@@ -31,11 +37,11 @@ func keyboardHandlerFillStoryPowerState(c BotContext) HandlerResponse {
 
 	power, err := strconv.Atoi(ctx.MessageText)
 	if err != nil {
-		ctx.CreateAndSendMessage(msg.DontRecognizePower)
+		CreateAndSendMessage(msg.DontRecognizePower, ctx)
 		return HandlerResponse{}
 	}
 	if power < 1 || power > 10 {
-		ctx.CreateAndSendMessage(msg.DontRecognizePower)
+		CreateAndSendMessage(msg.DontRecognizePower, ctx)
 		return HandlerResponse{}
 	}
 	story := ctx.GetStory()

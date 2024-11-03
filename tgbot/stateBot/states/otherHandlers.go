@@ -1,6 +1,10 @@
 package states
 
-import . "github.com/Ewasince/go-telegram-state-bot"
+import (
+	. "github.com/Ewasince/go-telegram-state-bot/enums"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/keyboard"
+)
 
 func keyboardEmptyHandler(c BotContext) HandlerResponse {
 	return HandlerResponse{}

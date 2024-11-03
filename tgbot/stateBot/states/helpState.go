@@ -2,12 +2,14 @@ package states
 
 import (
 	msg "PsychoBot/messages"
-	. "github.com/Ewasince/go-telegram-state-bot"
+	. "github.com/Ewasince/go-telegram-state-bot/message_types"
+
+	. "github.com/Ewasince/go-telegram-state-bot/states"
 )
 
 var HelpState = NewBotState(
 	"Help state",
-	BotMessages{msg.StartHelp},
+	TextMessage(msg.StartHelp),
 	nil,
 	&HelpKeyboard,
 	nil,

@@ -5,7 +5,9 @@ import (
 	"PsychoBot/stateBot/context"
 	"PsychoBot/stateBot/helpers"
 	"fmt"
-	. "github.com/Ewasince/go-telegram-state-bot"
+	. "github.com/Ewasince/go-telegram-state-bot/helpers"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/keyboard"
 	"strconv"
 	"strings"
 )
@@ -40,12 +42,12 @@ func keyboardHourButtonHandler(c BotContext) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 	timeData := strings.Split(ctx.MessageText, ":")
 	if len(timeData) == 0 {
-		ctx.CreateAndSendMessage(msg.DontRecognizeHour)
+		CreateAndSendMessage(msg.DontRecognizeHour, ctx)
 		return HandlerResponse{}
 	}
 	hour, err := strconv.Atoi(timeData[0])
 	if err != nil {
-		ctx.CreateAndSendMessage(msg.DontRecognizeHour)
+		CreateAndSendMessage(msg.DontRecognizeHour, ctx)
 		return HandlerResponse{}
 	}
 	return FillSchedule(c, hour)

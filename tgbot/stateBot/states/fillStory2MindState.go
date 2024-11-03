@@ -3,12 +3,15 @@ package states
 import (
 	msg "PsychoBot/messages"
 	"PsychoBot/stateBot/context"
-	. "github.com/Ewasince/go-telegram-state-bot"
+	. "github.com/Ewasince/go-telegram-state-bot/enums"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/message_types"
+	. "github.com/Ewasince/go-telegram-state-bot/states"
 )
 
 var FillStoryMindState = NewBotState(
 	"Fill Story mind state",
-	BotMessages{msg.WhatMind},
+	TextMessage(msg.WhatMind),
 	nil,
 	&DefaultKeyboard,
 	messageHandlerFillStoryMindState,

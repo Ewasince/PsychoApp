@@ -5,6 +5,8 @@ import (
 	"PsychoBot/stateBot/context"
 	"StorageModule/repo"
 	. "github.com/Ewasince/go-telegram-state-bot"
+	"github.com/Ewasince/go-telegram-state-bot/helpers"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
 	"strings"
 )
 
@@ -24,7 +26,7 @@ func CommandDevHandler(c BotContext) HandlerResponse {
 	message = strings.Replace(message, "/dev ", "", 1)
 	messageParts := strings.Split(message, " ")
 	if len(messageParts) == 0 {
-		ctx.CreateAndSendMessage("нет команды")
+		helpers.CreateAndSendMessage("нет команды", ctx)
 		return HandlerResponse{}
 	}
 	command := messageParts[0]
@@ -32,15 +34,15 @@ func CommandDevHandler(c BotContext) HandlerResponse {
 	switch command {
 	case "invite":
 		if len(messageParts) < 2 {
-			ctx.CreateAndSendMessage("нет имейла")
+			helpers.CreateAndSendMessage("нет имейла", ctx)
 			return HandlerResponse{}
 		}
 		email := messageParts[1]
 		if !repo.CheckEmail(email) {
 			repo.AddEmail(email)
-			ctx.CreateAndSendMessage("добавил")
+			helpers.CreateAndSendMessage("добавил", ctx)
 		} else {
-			ctx.CreateAndSendMessage("уже есть")
+			helpers.CreateAndSendMessage("уже есть", ctx)
 		}
 	}
 	return HandlerResponse{}

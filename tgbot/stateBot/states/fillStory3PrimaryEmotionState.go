@@ -4,7 +4,13 @@ import (
 	msg "PsychoBot/messages"
 	"PsychoBot/stateBot/context"
 	"PsychoBot/stateBot/helpers"
-	. "github.com/Ewasince/go-telegram-state-bot"
+	. "github.com/Ewasince/go-telegram-state-bot/message_types"
+
+	. "github.com/Ewasince/go-telegram-state-bot/enums"
+	. "github.com/Ewasince/go-telegram-state-bot/helpers"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/keyboard"
+	. "github.com/Ewasince/go-telegram-state-bot/states"
 )
 
 var EmotionsKeyboard BotKeyboard
@@ -56,7 +62,7 @@ func init() {
 		kb := BotKeyboard{Keyboard: rows}
 		emotionSate := NewBotState(
 			"Fill Story emotion state for "+mainEmotion,
-			BotMessages{msg.WhatEmotion},
+			TextMessage(msg.WhatEmotion),
 			nil,
 			&kb,
 			pleaseChooseFromListHandler,
@@ -72,7 +78,7 @@ func init() {
 
 var FillStoryPrimaryEmotionState = NewBotState(
 	"Fill Story main emotion state",
-	BotMessages{msg.WhatMainEmotion},
+	TextMessage(msg.WhatEmotion),
 	nil,
 	&EmotionsKeyboard,
 	pleaseChooseFromListHandler,
@@ -80,7 +86,7 @@ var FillStoryPrimaryEmotionState = NewBotState(
 
 func pleaseChooseFromListHandler(c BotContext) HandlerResponse {
 	ctx := c.(*context.MyBotContext)
-	ctx.CreateAndSendMessage(msg.WhatEmotionError)
+	CreateAndSendMessage(msg.WhatEmotionError, ctx)
 	return HandlerResponse{}
 }
 

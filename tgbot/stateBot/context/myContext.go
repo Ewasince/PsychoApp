@@ -6,11 +6,16 @@ import (
 	"StorageModule/models"
 	"StorageModule/repo"
 	"errors"
-	tl "github.com/Ewasince/go-telegram-state-bot"
-	"github.com/Ewasince/go-telegram-state-bot/apiUtils"
+	"github.com/Ewasince/go-telegram-state-bot/api_utils"
+	tl "github.com/Ewasince/go-telegram-state-bot/context"
+	"github.com/Ewasince/go-telegram-state-bot/helpers"
+	"github.com/Ewasince/go-telegram-state-bot/interfaces"
+
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"gorm.io/gorm"
 )
+
+var _ interfaces.BotContext = (*MyBotContext)(nil) // interface hint
 
 type MyBotContext struct {
 	*tl.BaseBotContext
@@ -21,7 +26,7 @@ type MyBotContext struct {
 
 func NewMyBotContext(
 	message *tg.Message,
-	senderHandler *apiUtils.BaseSenderHandler,
+	senderHandler *api_utils.BaseSenderHandler,
 	errorMessage string,
 ) *MyBotContext {
 	patientTgId := message.From.ID
@@ -60,5 +65,5 @@ func (c *MyBotContext) IsPatientRegistered() bool {
 	return c.Patient.ID != 0
 }
 func (c *MyBotContext) SendErrorMessage() {
-	c.CreateAndSendMessage(msg.BotError)
+	helpers.CreateAndSendMessage(msg.BotError, c)
 }

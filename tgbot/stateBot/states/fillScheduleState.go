@@ -6,7 +6,11 @@ import (
 	"PsychoBot/stateBot/helpers"
 	"StorageModule/repo"
 	"fmt"
-	. "github.com/Ewasince/go-telegram-state-bot"
+	. "github.com/Ewasince/go-telegram-state-bot/enums"
+	. "github.com/Ewasince/go-telegram-state-bot/helpers"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/message_types"
+	. "github.com/Ewasince/go-telegram-state-bot/states"
 	"strconv"
 )
 
@@ -18,7 +22,7 @@ var FillScheduleState = NewBotState(
 	messageHandlerFillScheduleState,
 )
 
-func enterMessageHandlerFillScheduleState(c BotContext) ([]string, error) {
+func enterMessageHandlerFillScheduleState(c BotContext) (Messagables, error) {
 	ctx := *c.(*context.MyBotContext)
 	var message string
 	if ctx.Patient.NextSchedule != nil {
@@ -26,28 +30,28 @@ func enterMessageHandlerFillScheduleState(c BotContext) ([]string, error) {
 	} else {
 		message = msg.SetScheduleNotSet
 	}
-	return []string{message}, nil
+	return TextMessage(message), nil
 }
 
-func exitMessageHandlerFillScheduleState(c BotContext) ([]string, error) {
+func exitMessageHandlerFillScheduleState(c BotContext) (Messagables, error) {
 	ctx := *c.(*context.MyBotContext)
 	scheduleHour := ctx.Patient.NextSchedule.Hour()
 	message := fmt.Sprintf(msg.SetScheduleSuccess, strconv.Itoa(scheduleHour))
-	return []string{message}, nil
+	return TextMessage(message), nil
 }
 func messageHandlerFillScheduleState(c BotContext) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 
 	scheduleHour, err := strconv.Atoi(ctx.MessageText)
 	if err != nil {
-		ctx.CreateAndSendMessage(msg.DontRecognizeHour)
+		CreateAndSendMessage(msg.DontRecognizeHour, ctx)
 		return HandlerResponse{}
 	}
 	if !ctx.IsPatientRegistered() {
 		panic("no patient provided")
 	}
 	if !(0 <= scheduleHour && scheduleHour <= 23) {
-		ctx.CreateAndSendMessage(msg.DontRecognizeHour)
+		CreateAndSendMessage(msg.DontRecognizeHour, ctx)
 		return HandlerResponse{}
 	}
 

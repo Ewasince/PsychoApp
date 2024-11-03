@@ -1,7 +1,7 @@
 package states
 
-import tl "github.com/Ewasince/go-telegram-state-bot"
+import . "github.com/Ewasince/go-telegram-state-bot/keyboard"
 
-var DefaultKeyboard tl.BotKeyboard
+var DefaultKeyboard BotKeyboard
 
 var DefaultState = &FillStorySituationState

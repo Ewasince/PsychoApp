@@ -4,6 +4,8 @@ import (
 	"PsychoBot/stateBot/context"
 	. "PsychoBot/stateBot/states"
 	. "github.com/Ewasince/go-telegram-state-bot"
+	. "github.com/Ewasince/go-telegram-state-bot/enums"
+	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
 )
 
 var HelpCommand = BotCommand{
