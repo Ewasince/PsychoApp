@@ -25,7 +25,7 @@ const SetScheduleNotSet = setSchedule + " Сейчас у тебя не уста
 const SetScheduleSuccess = "Готово, в следующий раз я оповещу тебя в %s часа(-ов)"
 const ResetScheduleSuccess = "Хорошо, я больше не буду слать напоминания"
 const DontRecognizeHour = "Не распознал формат часа. Отошли мне час в формате от 0 до 23 или нажми на кнопку"
-const ScheduleNotification = "Привет! Напоминаю записать какую-нибудь свою интересную ситуацию"
+const ScheduleNotification = "Привет! Напоминаю записать, что важного для тебя происходило сегодня"
 
 const SetMood = "Укажи своё настроение за сегодня (от -5 до 5)"
 const AlreadySetMood = ". За сегодня ты указал(-а) настрение %d"
