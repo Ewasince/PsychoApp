@@ -60,6 +60,7 @@ ARG GO_BOT_EXECUTABLE
 ARG FRONT_TEMP_FOLDER=/tmp/front
 ARG FRONT_LOCAL_FOLDER=psycho-app-admin
 ARG APP_FOLDER=/opt/psychoapp
+ARG BUILD_FOLDER=/tmp/build
 
 # build front
 WORKDIR $FRONT_TEMP_FOLDER
@@ -80,6 +81,8 @@ COPY migrations migrations
 
 # make archive
 WORKDIR $APP_FOLDER/..
-CMD tar -cvzf psychoapp.tar.gz psychoapp && \
-    mv psychoapp.tar.gz /tmp/build
+ENV APP_FOLDER=$APP_FOLDER
+ENV BUILD_FOLDER=$BUILD_FOLDER
+CMD tar -cvzf psychoapp.tar.gz $(basename $APP_FOLDER) && \
+    mv psychoapp.tar.gz $BUILD_FOLDER
 
