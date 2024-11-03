@@ -21,6 +21,7 @@ type environmentVariables struct {
 	JWT_SECRET string
 	JWT_REALM  string
 
+	IMAGES_PATH     string
 	MIGRATIONS_PATH string
 	DB_PATH         string
 	FRONTEND_PATH   string
@@ -51,6 +52,9 @@ func init() {
 	if Env.DEV, err = strconv.ParseBool(getEnv("DEV", "false")); err != nil {
 		panic(err)
 	}
+
+	// IMAGES_PATH
+	Env.IMAGES_PATH = getEnv("IMAGES_PATH", "")
 
 	// MIGRATIONS_PATH
 	Env.MIGRATIONS_PATH = "file://" + getEnv("MIGRATIONS_PATH", "")
