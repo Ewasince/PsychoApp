@@ -3,9 +3,9 @@ package commands
 import (
 	"PsychoBot/stateBot/context"
 	. "PsychoBot/stateBot/states"
-	. "github.com/Ewasince/go-telegram-state-bot"
 	. "github.com/Ewasince/go-telegram-state-bot/enums"
 	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/models"
 )
 
 var InfoCommand = BotCommand{

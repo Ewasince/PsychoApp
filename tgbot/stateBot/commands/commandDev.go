@@ -4,9 +4,9 @@ import (
 	. "EnvironmentModule"
 	"PsychoBot/stateBot/context"
 	"StorageModule/repo"
-	. "github.com/Ewasince/go-telegram-state-bot"
 	"github.com/Ewasince/go-telegram-state-bot/helpers"
 	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
+	. "github.com/Ewasince/go-telegram-state-bot/models"
 	"strings"
 )
 

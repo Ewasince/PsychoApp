@@ -8,6 +8,7 @@ import (
 	"fmt"
 	tl "github.com/Ewasince/go-telegram-state-bot"
 	. "github.com/Ewasince/go-telegram-state-bot/api_utils"
+	"github.com/Ewasince/go-telegram-state-bot/models"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"runtime/debug"
 )
@@ -17,7 +18,7 @@ func GetProcessFunc(sender *BaseSenderHandler) func(*tg.Message) {
 
 	cache := tl.NewBaseStateCacheManager(&states.InitState)
 	manager := tl.NewBotStatesManager(
-		[]tl.BotCommand{
+		[]models.BotCommand{
 			commands.StartCommand,
 			commands.ScheduleCommand,
 			commands.NoScheduleCommand,
