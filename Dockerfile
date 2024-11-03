@@ -79,6 +79,7 @@ RUN mkdir -p build && \
 COPY --from=go_backend /app/$GO_BACKEND_EXECUTABLE $GO_BACKEND_EXECUTABLE
 COPY --from=go_bot /app/$GO_BOT_EXECUTABLE $GO_BOT_EXECUTABLE
 COPY migrations migrations
+COPY images images
 
 # make archive
 WORKDIR $APP_FOLDER/..
