@@ -45,3 +45,4 @@ Dockerfile
 # front
 psycho-app-admin/build
 psycho-app-admin/node_modules
+**/*.bak
