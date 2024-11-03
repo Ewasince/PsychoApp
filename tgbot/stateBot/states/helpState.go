@@ -8,10 +8,10 @@ import (
 	. "github.com/Ewasince/go-telegram-state-bot/states"
 )
 
-var HelpState = NewBotState(
-	"Help state",
-	BotMessages{img.HelpImage, TextMessage(msg.StartHelp)},
+var InfoState = NewBotState(
+	"Info state",
+	BotMessages{img.InfoImage, TextMessage(msg.StartInfo)},
 	nil,
-	&HelpKeyboard,
+	&InfoKeyboard,
 	nil,
 )

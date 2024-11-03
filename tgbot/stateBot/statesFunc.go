@@ -22,7 +22,7 @@ func GetProcessFunc(sender *BaseSenderHandler) func(*tg.Message) {
 			commands.ScheduleCommand,
 			commands.NoScheduleCommand,
 			commands.DevCommand,
-			commands.HelpCommand,
+			commands.InfoCommand,
 		},
 		cache,
 	)

@@ -8,12 +8,12 @@ import (
 	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
 )
 
-var HelpCommand = BotCommand{
-	CommandMessage: "help",
-	CommandHandler: CommandHelpHandler,
+var InfoCommand = BotCommand{
+	CommandMessage: "info",
+	CommandHandler: CommandInfoHandler,
 }
 
-func CommandHelpHandler(c BotContext) HandlerResponse {
+func CommandInfoHandler(c BotContext) HandlerResponse {
 	ctx := *c.(*context.MyBotContext)
 	if !ctx.IsPatientRegistered() {
 		return HandlerResponse{
@@ -22,7 +22,7 @@ func CommandHelpHandler(c BotContext) HandlerResponse {
 		}
 	}
 	return HandlerResponse{
-		NextState:      &HelpState,
+		NextState:      &InfoState,
 		TransitionType: GoStateForce,
 	}
 }

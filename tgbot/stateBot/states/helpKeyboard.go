@@ -10,7 +10,7 @@ import (
 	. "github.com/Ewasince/go-telegram-state-bot/keyboard"
 )
 
-var HelpKeyboard BotKeyboard
+var InfoKeyboard BotKeyboard
 
 func init() {
 	rows := helpers.CreateArrayKeyboard([]string{
@@ -26,7 +26,7 @@ func init() {
 			ButtonHandler: keyboardBackButtonHandler,
 		},
 	})
-	HelpKeyboard = BotKeyboard{Keyboard: rows}
+	InfoKeyboard = BotKeyboard{Keyboard: rows}
 }
 
 func keyboardHelpButtonHandler(c BotContext) HandlerResponse {
