@@ -4,9 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Environment variables
 
-created in root of frontend app in *.env* file 
+created in root of frontend app in _.env_ file
 
-* REACT_APP_BACKEND_HOST – sets backend host
+- REACT_APP_BACKEND_HOST – sets backend host
 
 ## Available Scripts
 
