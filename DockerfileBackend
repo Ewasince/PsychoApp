@@ -8,20 +8,18 @@ ARG GO_BACKEND_EXE_PATH
 
 ENV GOPATH=/root/go
 
-WORKDIR /tmp
+WORKDIR /opt
+
+ADD go.mod go.sum ./
+ADD telegram_state_bot telegram_state_bot
+RUN --mount=type=cache,mode=0755,target=/root/go \
+    go mod download
 
 COPY environment environment
 COPY storage storage
 COPY backend backend
-RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build --mount=type=cache,mode=0755,target=/root/go \
-    cd /tmp/environment && \
-    go mod download && \
-    cd /tmp/storage && \
-    go mod download && \
-    cd /tmp/backend && \
-    go mod download && \
-    go build -o $GO_BACKEND_EXE_PATH main.go && \
-    rm -rf /tmp/*
+RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build \
+    go build -o $GO_BACKEND_EXE_PATH backend/main.go
 
 FROM frolvlad/alpine-glibc AS go_backend-runner
 
