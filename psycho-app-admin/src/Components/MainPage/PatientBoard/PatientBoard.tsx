@@ -273,7 +273,7 @@ export const PatientBoard = () => {
                 )}
               />
             ) : (
-              "Хуй"
+              ""
             )}
           </div>
 
