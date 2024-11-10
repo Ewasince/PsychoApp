@@ -14,14 +14,14 @@ import (
 func main() {
 	loc, err := time.LoadLocation("Europe/Moscow")
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	// handle err
 	time.Local = loc // -> this is setting the global timezone
 
 	botAPI, err := tg.NewBotAPI(Env.BOT_TOKEN)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	senderHandler := &BaseSenderHandler{
