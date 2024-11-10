@@ -1,0 +1,23 @@
+ARG APP_FOLDER=/app
+
+FROM node:14-bullseye-slim as front-builder
+
+ARG APP_FOLDER
+
+ARG FRONT_TEMP_FOLDER=/tmp/front
+ARG FRONT_BUILD_FOLDER=/app/front
+ARG FRONT_LOCAL_FOLDER=psycho-app-admin
+
+# build front
+WORKDIR $FRONT_TEMP_FOLDER
+COPY $FRONT_LOCAL_FOLDER/package*.json .
+RUN --mount=type=cache,mode=0755,target=/root/.npm \
+    npm i
+
+COPY $FRONT_LOCAL_FOLDER .
+RUN mkdir -p $FRONT_BUILD_FOLDER && \
+    rm -rf $FRONT_BUILD_FOLDER/* && \
+    npm run build && \
+    mv build $FRONT_BUILD_FOLDER && \
+    rm -rf /tmp/*
+

@@ -11,6 +11,18 @@ services:
       - ./migrations:/app/migrations:ro
     ports:
       - 8181:8181
+
+  psychoapp_backend_front:
+    extends:
+      service: psychoapp_backend
+    depends_on:
+      psychoapp_front:
+        condition: service_started
+    volumes:
+      - front-container:/app/front:ro
+    environment:
+      - FRONTEND_PATH=front
+
   psychoapp_bot:
     build:
       context: .
@@ -20,3 +32,16 @@ services:
       - ./.env:/app/.env:ro
       - ./database.db:/app/database.db
       - ./migrations:/app/migrations:ro
+
+  psychoapp_front:
+    build:
+      context: .
+      dockerfile: DockerfileFront
+      args:
+        - FRONT_BUILD_FOLDER=/app/front
+#      target:
+    volumes:
+      - front-container:/app/front
+
+volumes:
+  front-container:
