@@ -1,7 +1,7 @@
 package states
 
 import (
-	"PsychoBot/stateBot/context"
+	"PsychoApp/tgbot/stateBot/context"
 
 	. "github.com/Ewasince/go-telegram-state-bot/enums"
 	. "github.com/Ewasince/go-telegram-state-bot/interfaces"

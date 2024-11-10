@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"PsychoBot/stateBot/states"
+	"PsychoApp/tgbot/stateBot/states"
 	. "github.com/Ewasince/go-telegram-state-bot/models"
 )
 

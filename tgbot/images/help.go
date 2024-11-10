@@ -1,7 +1,7 @@
 package images
 
 import (
-	. "PsychoBot/helpers"
+	. "PsychoApp/tgbot/helpers"
 	. "github.com/Ewasince/go-telegram-state-bot/message_types"
 )
 

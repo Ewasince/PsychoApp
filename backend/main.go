@@ -1,8 +1,8 @@
 package main
 
 import (
-	. "EnvironmentModule"
-	"PsychoAppAdmin/handlers"
+	"PsychoApp/backend/handlers"
+	. "PsychoApp/environment"
 	"log"
 	"net/http"
 	"time"

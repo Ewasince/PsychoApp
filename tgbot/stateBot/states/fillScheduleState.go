@@ -1,10 +1,10 @@
 package states
 
 import (
-	msg "PsychoBot/messages"
-	"PsychoBot/stateBot/context"
-	"PsychoBot/stateBot/helpers"
-	"StorageModule/repo"
+	"PsychoApp/storage/repo"
+	msg "PsychoApp/tgbot/messages"
+	"PsychoApp/tgbot/stateBot/context"
+	"PsychoApp/tgbot/stateBot/helpers"
 	"fmt"
 	. "github.com/Ewasince/go-telegram-state-bot/enums"
 	. "github.com/Ewasince/go-telegram-state-bot/helpers"

@@ -1,9 +1,9 @@
 package states
 
 import (
-	"PsychoBot/stateBot/context"
-	"PsychoBot/stateBot/helpers"
-	"StorageModule/repo"
+	"PsychoApp/storage/repo"
+	"PsychoApp/tgbot/stateBot/context"
+	"PsychoApp/tgbot/stateBot/helpers"
 
 	. "github.com/Ewasince/go-telegram-state-bot/enums"
 	. "github.com/Ewasince/go-telegram-state-bot/interfaces"

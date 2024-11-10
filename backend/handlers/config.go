@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	environment "EnvironmentModule"
+	environment "PsychoApp/environment"
 	"github.com/gin-gonic/gin"
 )
 

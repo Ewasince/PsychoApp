@@ -1,7 +1,7 @@
 package repo
 
 import (
-	. "StorageModule/models"
+	. "PsychoApp/storage/models"
 )
 
 func GetPatients(userId uint) (*[]Patient, error) {

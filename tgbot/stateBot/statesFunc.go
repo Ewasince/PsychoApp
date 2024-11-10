@@ -1,10 +1,10 @@
 package stateBot
 
 import (
-	msg "PsychoBot/messages"
-	"PsychoBot/stateBot/commands"
-	"PsychoBot/stateBot/context"
-	"PsychoBot/stateBot/states"
+	msg "PsychoApp/tgbot/messages"
+	"PsychoApp/tgbot/stateBot/commands"
+	"PsychoApp/tgbot/stateBot/context"
+	"PsychoApp/tgbot/stateBot/states"
 	"fmt"
 	tl "github.com/Ewasince/go-telegram-state-bot"
 	. "github.com/Ewasince/go-telegram-state-bot/api_utils"

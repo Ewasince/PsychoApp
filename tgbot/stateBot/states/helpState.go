@@ -1,8 +1,8 @@
 package states
 
 import (
-	img "PsychoBot/images"
-	msg "PsychoBot/messages"
+	img "PsychoApp/tgbot/images"
+	msg "PsychoApp/tgbot/messages"
 	. "github.com/Ewasince/go-telegram-state-bot/message_types"
 
 	. "github.com/Ewasince/go-telegram-state-bot/states"

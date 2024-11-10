@@ -1,10 +1,10 @@
 package context
 
 import (
-	"PsychoBot/cache"
-	msg "PsychoBot/messages"
-	"StorageModule/models"
-	"StorageModule/repo"
+	"PsychoApp/storage/models"
+	"PsychoApp/storage/repo"
+	"PsychoApp/tgbot/cache"
+	msg "PsychoApp/tgbot/messages"
 	"errors"
 	"github.com/Ewasince/go-telegram-state-bot/api_utils"
 	tl "github.com/Ewasince/go-telegram-state-bot/context"

@@ -1,9 +1,9 @@
 package repo
 
 import (
-	. "EnvironmentModule"
-	st "StorageModule"
-	"StorageModule/models"
+	. "PsychoApp/environment"
+	st "PsychoApp/storage"
+	"PsychoApp/storage/models"
 	"fmt"
 	"gorm.io/gorm"
 	"time"

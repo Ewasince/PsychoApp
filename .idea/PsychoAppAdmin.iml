@@ -6,6 +6,8 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/psycho-app-admin" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludePattern pattern="telegram_state_bot/README.md" />
+      <excludePattern pattern="README.md" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

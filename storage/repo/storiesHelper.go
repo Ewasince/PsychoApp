@@ -1,7 +1,7 @@
 package repo
 
 import (
-	. "StorageModule/models"
+	. "PsychoApp/storage/models"
 )
 
 type PowerStat struct {

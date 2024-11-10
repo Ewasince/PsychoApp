@@ -1,16 +1,16 @@
 package handlers
 
 import (
-	e "PsychoAppAdmin/errors"
+	e "PsychoApp/backend/errors"
 	"errors"
 	"gorm.io/gorm"
 	"net/http"
 	"strings"
 	"time"
 
-	//"PsychoAppAdmin"
-	. "StorageModule/models"
-	"StorageModule/repo"
+	//"PsychoApp/backend"
+	. "PsychoApp/storage/models"
+	"PsychoApp/storage/repo"
 	"fmt"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"

@@ -1,9 +1,9 @@
 package scheduler
 
 import (
-	msg "PsychoBot/messages"
-	. "StorageModule/models"
-	"StorageModule/repo"
+	. "PsychoApp/storage/models"
+	"PsychoApp/storage/repo"
+	msg "PsychoApp/tgbot/messages"
 	. "github.com/Ewasince/go-telegram-state-bot/api_utils"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/madflojo/tasks"

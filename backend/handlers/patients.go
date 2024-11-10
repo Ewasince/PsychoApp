@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	e "PsychoAppAdmin/errors"
-	"StorageModule/repo"
+	e "PsychoApp/backend/errors"
+	"PsychoApp/storage/repo"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"strconv"

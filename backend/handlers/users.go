@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	e "PsychoAppAdmin/errors"
-	. "StorageModule/models"
-	"StorageModule/repo"
+	e "PsychoApp/backend/errors"
+	. "PsychoApp/storage/models"
+	"PsychoApp/storage/repo"
 	"github.com/gin-gonic/gin"
 	"log"
 )

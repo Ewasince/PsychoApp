@@ -1,9 +1,9 @@
 package states
 
 import (
-	msg "PsychoBot/messages"
-	"PsychoBot/stateBot/context"
-	"StorageModule/repo"
+	"PsychoApp/storage/repo"
+	msg "PsychoApp/tgbot/messages"
+	"PsychoApp/tgbot/stateBot/context"
 	"errors"
 	"fmt"
 	. "github.com/Ewasince/go-telegram-state-bot/message_types"

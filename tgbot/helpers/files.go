@@ -1,7 +1,7 @@
 package helpers
 
 import (
-	. "EnvironmentModule"
+	. "PsychoApp/environment"
 )
 
 func GetImageFilename(path string) string {

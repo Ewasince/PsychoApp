@@ -1,10 +1,10 @@
 package main
 
 import (
-	. "EnvironmentModule"
-	"PsychoBot/scheduler"
-	"PsychoBot/stateBot"
-	. "github.com/Ewasince/go-telegram-state-bot/api_utils"
+	. "PsychoApp/environment"
+	"PsychoApp/tgbot/scheduler"
+	"PsychoApp/tgbot/stateBot"
+	"github.com/Ewasince/go-telegram-state-bot/api_utils"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
 	"sync"
@@ -24,7 +24,7 @@ func main() {
 		panic(err)
 	}
 
-	senderHandler := &BaseSenderHandler{
+	senderHandler := &api_utils.BaseSenderHandler{
 		BotApi:   botAPI,
 		BotMutex: &sync.Mutex{},
 	}

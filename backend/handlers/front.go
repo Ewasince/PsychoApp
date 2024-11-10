@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	. "EnvironmentModule"
-	e "PsychoAppAdmin/errors"
+	e "PsychoApp/backend/errors"
+	. "PsychoApp/environment"
 	"github.com/gin-gonic/gin"
 	"strings"
 )

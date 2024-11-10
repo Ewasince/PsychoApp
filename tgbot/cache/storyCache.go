@@ -1,7 +1,7 @@
 package cache
 
 import (
-	. "StorageModule/models"
+	. "PsychoApp/storage/models"
 	"gorm.io/gorm"
 )
 

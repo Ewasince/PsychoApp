@@ -1,9 +1,9 @@
 package commands
 
 import (
-	. "EnvironmentModule"
-	"PsychoBot/stateBot/context"
-	"StorageModule/repo"
+	. "PsychoApp/environment"
+	"PsychoApp/storage/repo"
+	"PsychoApp/tgbot/stateBot/context"
 	"github.com/Ewasince/go-telegram-state-bot/helpers"
 	. "github.com/Ewasince/go-telegram-state-bot/interfaces"
 	. "github.com/Ewasince/go-telegram-state-bot/models"
