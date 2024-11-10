@@ -5,6 +5,7 @@ services:
       context: .
       dockerfile: DockerfileBackend
       target: go_backend-runner
+    image: psychoapp-backend
     volumes:
       - ./.env:/app/.env:ro
       - ./database.db:/app/database.db
@@ -13,6 +14,7 @@ services:
       - 8181:8181
 
   psychoapp_backend_front:
+    image: psychoapp-backend-front
     extends:
       service: psychoapp_backend
     depends_on:
@@ -28,6 +30,7 @@ services:
       context: .
       dockerfile: DockerfileBot
       target: go_bot-runner
+    image: psychoapp-bot
     volumes:
       - ./.env:/app/.env:ro
       - ./database.db:/app/database.db
@@ -39,7 +42,7 @@ services:
       dockerfile: DockerfileFront
       args:
         - FRONT_BUILD_FOLDER=/app/front
-#      target:
+    image: psychoapp-front
     volumes:
       - front-container:/app/front
 
