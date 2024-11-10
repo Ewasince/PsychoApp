@@ -1,6 +1,7 @@
 import { Flip, ToastContainer } from "react-toastify";
 import React from "react";
-import { Link } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Button } from "@mui/material";
 
 export const PredeclaredToastContainer = () => {
   return (
@@ -29,34 +30,19 @@ export function Heading({
 }) {
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-        }}
-      >
-        <p className="mb-6 text-xl font-medium sm:text-2xl">{heading}</p>
+      <div className={"mb-6 flex items-center justify-between"}>
+        <p className="text-xl font-medium sm:text-2xl">{heading}</p>
         {backButton ? backButton : ""}
       </div>
     </>
   );
 }
 
-export function generateBackButton(
-  link: string,
-  caption?: string,
-  onClick?: any,
-) {
-  caption ??= "Назад";
+export function generateBackButton(link: string) {
   return (
-    <Link
-      className="mb-6 text-lg font-normal text-gray-700 hover:underline sm:text-xl"
-      to={link}
-      onClick={onClick}
-    >
-      {caption}
-    </Link>
+    <Button id="basic-button" aria-haspopup="true" component={"a"} href={link}>
+      <ArrowBackIcon className={"text-gray-600"} />
+    </Button>
   );
 }
 
