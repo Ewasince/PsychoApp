@@ -35,6 +35,8 @@ function getWeekDates(weekIndex: number): [Dayjs, Dayjs] {
   return [startDate, endDate];
 }
 
+const headerStyle = { backgroundColor: "var(--primary-color)" }
+
 export const KptTable = ({
   weekIndex,
   storiesByWeek,
@@ -85,41 +87,40 @@ export const KptTable = ({
       <Table sx={{ tableLayout: "fixed" }} stickyHeader>
         <TableHead>
           <TableRow>
-            {" "}
             {/* TODO: разобраться почему stickyHeader перезаписывает backgroundColor */}
             <TableCell
               width="10%"
-              style={{ backgroundColor: "var(--primary-color)" }}
+              style={headerStyle}
             >
               Время
             </TableCell>
             <TableCell
               width="30%"
-              style={{ backgroundColor: "var(--primary-color)" }}
+              style={headerStyle}
             >
               Ситуация
             </TableCell>
             <TableCell
               width="30%"
-              style={{ backgroundColor: "var(--primary-color)" }}
+              style={headerStyle}
             >
               Автоматическая мысль
             </TableCell>
             <TableCell
               width="15%"
-              style={{ backgroundColor: "var(--primary-color)" }}
+              style={headerStyle}
             >
               Эмоция
             </TableCell>
             <TableCell
               width="7%"
-              style={{ backgroundColor: "var(--primary-color)" }}
+              style={headerStyle}
             >
               Сила эмоции
             </TableCell>
             <TableCell
               width="5%"
-              style={{ backgroundColor: "var(--primary-color)" }}
+              style={headerStyle}
             ></TableCell>
           </TableRow>
         </TableHead>
