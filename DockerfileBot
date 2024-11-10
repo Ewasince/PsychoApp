@@ -1,0 +1,44 @@
+ARG GO_BOT_EXECUTABLE=psychoapp_bot
+ARG APP_FOLDER=/app
+ARG GO_BOT_EXE_PATH=$APP_FOLDER/$GO_BOT_EXECUTABLE
+
+FROM golang:1.22 AS go_bot-builder
+
+ARG GO_BOT_EXE_PATH
+
+ENV GOPATH=/root/go
+
+WORKDIR /tmp
+
+COPY environment environment
+COPY storage storage
+COPY telegram_state_bot telegram_state_bot
+COPY tgbot tgbot
+RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build --mount=type=cache,mode=0755,target=/root/go \
+    cd /tmp/environment && \
+    go mod download && \
+    cd /tmp/storage && \
+    go mod download && \
+    cd /tmp/telegram_state_bot && \
+    go mod download && \
+    cd /tmp/tgbot && \
+    go mod download && \
+    go build -o $GO_BOT_EXE_PATH main.go && \
+    rm -rf /tmp/*
+
+FROM frolvlad/alpine-glibc AS go_bot-runner
+
+ARG GO_BOT_EXECUTABLE
+ARG APP_FOLDER
+ARG GO_BOT_EXE_PATH
+
+RUN apk add --no-cache tzdata
+
+WORKDIR $APP_FOLDER
+COPY --from=go_bot-builder $GO_BOT_EXE_PATH $GO_BOT_EXECUTABLE
+COPY migrations migrations
+COPY images images
+
+ENV GO_BOT_EXE_PATH=$GO_BOT_EXE_PATH
+
+CMD $GO_BOT_EXE_PATH

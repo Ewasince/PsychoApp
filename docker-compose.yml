@@ -1,13 +1,22 @@
 
 services:
-  backend:
+  psychoapp_backend:
     build:
       context: .
-      dockerfile: Dockerfile
-      target: go_backend
+      dockerfile: DockerfileBackend
+      target: go_backend-runner
     volumes:
       - ./.env:/app/.env:ro
       - ./database.db:/app/database.db
       - ./migrations:/app/migrations:ro
     ports:
       - 8181:8181
+  psychoapp_bot:
+    build:
+      context: .
+      dockerfile: DockerfileBot
+      target: go_bot-runner
+    volumes:
+      - ./.env:/app/.env:ro
+      - ./database.db:/app/database.db
+      - ./migrations:/app/migrations:ro
