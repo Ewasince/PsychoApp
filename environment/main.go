@@ -63,7 +63,7 @@ func init() {
 	Env.DB_PATH = getEnv("DATABASE_PATH", "")
 
 	// FRONTEND_PATH
-	Env.FRONTEND_PATH = strings.Trim(getEnv("FRONTEND_PATH", ""), "/") + "/"
+	Env.FRONTEND_PATH = strings.Trim(getEnv("FRONTEND_PATH", ""), "/")
 
 	// FRONTEND_PATH
 	Env.CORS_ORIGINS = strings.Split(getEnv("CORS_ORIGINS", ""), ",")
