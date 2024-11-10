@@ -19,12 +19,16 @@ export const Account = () => {
       <Heading heading={`Профиль ${user?.name}`} />
 
       <div className="container mt-5 w-full">
-        <div className="entry-container flex w-full flex-row gap-1 sm:gap-2 2xl:flex-row">
-          <div className="grid w-full grid-cols-2 gap-4 space-x-2 text-lg sm:text-xl">
-            <div className="text-right font-medium">Ваш никнейм:</div>
-            <div className="mr-2">{user?.username}</div>
+        <div className="entry-container flex w-full flex-col gap-2 sm:flex-row sm:gap-4">
+          <div className="grid w-full grid-cols-1 text-base sm:grid-cols-2 sm:gap-4 sm:text-lg">
+            <div className="text-left font-medium sm:text-right">
+              Ваш никнейм:
+            </div>
+            <div className="mb-2 mr-2 sm:mb-0">{user?.username}</div>
 
-            <div className="text-right font-medium">Ваша почта:</div>
+            <div className="text-left font-medium sm:text-right">
+              Ваша почта:
+            </div>
             <div className="mr-2">{user?.email || "—"}</div>
           </div>
         </div>
@@ -35,7 +39,7 @@ export const Account = () => {
               "Находится в разработке. Пока пациенты могут свободно добавляться",
             );
           }}
-          className="mt-4 w-full rounded-xl bg-blue-color px-6 py-2 text-xl hover:bg-dark-blue-color sm:mt-6"
+          className="mt-4 w-full rounded-lg bg-blue-color px-4 py-2 text-base hover:bg-dark-blue-color sm:mt-6 sm:rounded-xl sm:px-6 sm:py-3 sm:text-xl"
         >
           Добавить пациента
         </button>

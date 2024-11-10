@@ -68,8 +68,8 @@ export const MainPage = () => {
 
   return (
     <div className="flex h-fit min-h-full w-full items-stretch justify-between bg-secondary-color text-font-color">
-      <div className="flex min-w-[50px] flex-row flex-col items-start justify-between bg-primary-color px-2 sm:min-w-[200px] sm:px-4">
-        <div className="ml-2 mt-12 flex flex-col">
+      <div className="flex min-w-[50px] flex-col items-start justify-between bg-primary-color px-2 sm:min-w-[200px] sm:px-4">
+        <div className="mt-12 flex flex-col sm:ml-2">
           <p className="mb-6 hidden text-xl sm:block">Меню</p>
           <div className="flex flex-col gap-4">
             <MenuElement
