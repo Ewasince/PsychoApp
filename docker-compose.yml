@@ -44,7 +44,7 @@ services:
       dockerfile: DockerfileFront
       args:
         - FRONT_BUILD_FOLDER=/app/front
-    image: psychoapp-front
+    image: psychoapp-front-builder
     volumes:
       - front-container:/app/front
 
