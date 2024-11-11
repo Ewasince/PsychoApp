@@ -1,6 +1,6 @@
-ARG GO_BOT_EXECUTABLE=psychoapp_bot
-ARG APP_FOLDER=/app
-ARG GO_BOT_EXE_PATH=$APP_FOLDER/$GO_BOT_EXECUTABLE
+ARG APP_FOLDER
+ARG GO_BOT_EXE
+ARG GO_BOT_EXE_PATH=$APP_FOLDER/$GO_BOT_EXE
 
 FROM golang:1.22 AS go_bot-builder
 
@@ -23,13 +23,14 @@ RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build \
 
 FROM frolvlad/alpine-glibc AS go_bot-runner
 
-ARG GO_BOT_EXECUTABLE
 RUN apk add --no-cache tzdata
+
+ARG GO_BOT_EXE
 ARG APP_FOLDER
 ARG GO_BOT_EXE_PATH
 
 WORKDIR $APP_FOLDER
-COPY --from=go_bot-builder $GO_BOT_EXE_PATH $GO_BOT_EXECUTABLE
+COPY --from=go_bot-builder $GO_BOT_EXE_PATH $GO_BOT_EXE
 COPY migrations migrations
 COPY images images
 

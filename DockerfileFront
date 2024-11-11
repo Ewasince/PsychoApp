@@ -1,12 +1,10 @@
-ARG APP_FOLDER=/app
-
 FROM node:14-bullseye-slim as front-builder
 
 ARG APP_FOLDER
+ARG FRONT_BUILD_FOLDER
+ARG FRONT_LOCAL_FOLDER
 
 ARG FRONT_TEMP_FOLDER=/tmp/front
-ARG FRONT_BUILD_FOLDER=/app/front
-ARG FRONT_LOCAL_FOLDER=psycho-app-admin
 
 # build front
 WORKDIR $FRONT_TEMP_FOLDER

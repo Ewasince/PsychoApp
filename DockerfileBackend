@@ -1,6 +1,6 @@
-ARG GO_BACKEND_EXECUTABLE=psychoapp
-ARG APP_FOLDER=/app
-ARG GO_BACKEND_EXE_PATH=$APP_FOLDER/$GO_BACKEND_EXECUTABLE
+ARG APP_FOLDER
+ARG GO_BACKEND_EXE
+ARG GO_BACKEND_EXE_PATH=$APP_FOLDER/$GO_BACKEND_EXE
 
 FROM golang:1.22-bookworm AS go_backend-builder
 
@@ -23,13 +23,14 @@ RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build \
 
 FROM frolvlad/alpine-glibc AS go_backend-runner
 
-ARG GO_BACKEND_EXECUTABLE
 RUN apk add --no-cache tzdata
+
+ARG GO_BACKEND_EXE
 ARG APP_FOLDER
 ARG GO_BACKEND_EXE_PATH
 
 WORKDIR $APP_FOLDER
-COPY --from=go_backend-builder  $GO_BACKEND_EXE_PATH $GO_BACKEND_EXECUTABLE
+COPY --from=go_backend-builder $GO_BACKEND_EXE_PATH $GO_BACKEND_EXE
 COPY migrations migrations
 
 ENV GO_BACKEND_EXE_PATH=$GO_BACKEND_EXE_PATH
