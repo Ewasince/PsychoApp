@@ -58,5 +58,47 @@ services:
     volumes:
       - front-container:/app/front
 
+  backend_builder:
+    build:
+      context: .
+      dockerfile: DockerfileBackend
+      target: go_backend-builder
+      args:
+        <<: *args
+    image: psychoapp-backend-builder
+
+  bot_builder:
+    build:
+      context: .
+      dockerfile: DockerfileBot
+      target: go_bot-builder
+      args:
+        <<: *args
+    image: psychoapp-bot-builder
+
+  # prod images
+
+  psychoapp:
+    build:
+      target: psychoapp-prod
+      args:
+        <<: *args
+    image: psychoapp
+    env_file:
+      - .env
+    environment:
+      FRONTEND_PATH: build
+    ports:
+      - 8181:8181
+
+  psychoapp_bot:
+    build:
+      target: psychoapp_bot-prod
+      args:
+        <<: *args
+    image: psychoapp-bot
+    env_file:
+      - .env
+
 volumes:
   front-container:
