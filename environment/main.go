@@ -70,7 +70,7 @@ func init() {
 
 	// DB_URI
 	Env.DB_URI = fmt.Sprintf(
-		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		"postgresql://%s:%s@%s:%s/%s?sslmode=disable",
 		postgresUser,
 		postgresPassword,
 		postgresHost,
