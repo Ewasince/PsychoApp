@@ -78,8 +78,6 @@ func init() {
 		postgresDb,
 	)
 
-	Env.DB_URI = getEnv("POSTGRES_DB", "")
-
 	// DB_DSN
 	Env.DB_DSN = fmt.Sprintf(
 		"host=%s "+
