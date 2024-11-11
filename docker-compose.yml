@@ -108,7 +108,7 @@ services:
       target: psychoapp-prod
       args:
         <<: *args
-    image: psychoapp
+    image: psychoapp:backend
     env_file:
       - .env
     environment:
@@ -121,7 +121,7 @@ services:
       target: psychoapp_bot-prod
       args:
         <<: *args
-    image: psychoapp-bot
+    image: psychoapp:bot
     env_file:
       - .env
 

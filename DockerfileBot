@@ -2,7 +2,7 @@ ARG APP_FOLDER
 ARG GO_BOT_EXE
 ARG GO_BOT_EXE_PATH=$APP_FOLDER/$GO_BOT_EXE
 
-FROM golang:1.22 AS go_bot-builder
+FROM golang:1.23 AS go_bot-builder
 
 ARG GO_BOT_EXE_PATH
 

@@ -26,7 +26,7 @@ ARG GO_BOT_EXE
 ARG GO_BOT_EXE_PATH=$APP_FOLDER/$GO_BOT_EXE
 
 WORKDIR $APP_FOLDER
-COPY --from=psychoapp-backend-builder $GO_BOT_EXE_PATH $GO_BOT_EXE
+COPY --from=psychoapp-bot-builder $GO_BOT_EXE_PATH $GO_BOT_EXE
 COPY migrations migrations
 
 ENV GO_BOT_EXE=$GO_BOT_EXE

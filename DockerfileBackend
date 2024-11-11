@@ -2,7 +2,7 @@ ARG APP_FOLDER
 ARG GO_BACKEND_EXE
 ARG GO_BACKEND_EXE_PATH=$APP_FOLDER/$GO_BACKEND_EXE
 
-FROM golang:1.22-bookworm AS go_backend-builder
+FROM golang:1.23-bookworm AS go_backend-builder
 
 ARG GO_BACKEND_EXE_PATH
 
