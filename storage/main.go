@@ -2,13 +2,11 @@ package storage
 
 import (
 	. "PsychoApp/environment"
-	"database/sql"
 	"fmt"
 	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/sqlite3"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	_ "github.com/mattn/go-sqlite3"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"log"
@@ -26,63 +24,14 @@ func init() {
 
 func migrateDb() {
 	fmt.Println("Migrating database...")
-	//Подключение к базе данных
-	db, err := sql.Open("sqlite3", Env.DB_PATH)
-	if err != nil {
-		log.Fatalf("Ошибка подключения к базе данных: %v", err)
-	}
-	defer db.Close()
-
-	// Настройка драйвера миграций для SQLite
-	driver, err := sqlite3.WithInstance(db, &sqlite3.Config{})
-	if err != nil {
-		log.Fatalf("Ошибка создания драйвера миграций: %v", err)
-	}
 
 	// Путь к миграциям
-	m, err := migrate.NewWithDatabaseInstance(
+	m, err := migrate.New(
 		Env.MIGRATIONS_PATH,
-		"sqlite3",
-		driver,
+		Env.DB_URI,
 	)
 	if err != nil {
 		log.Fatalf("Ошибка создания миграции: %v", err)
-	}
-
-	// Применение миграций "вперед"
-	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-		log.Fatalf("Ошибка применения миграций: %v", err)
-	}
-}
-
-func resetDb() {
-	fmt.Println("Reset database...")
-	//Подключение к базе данных
-	db, err := sql.Open("sqlite3", Env.DB_PATH)
-	if err != nil {
-		log.Fatalf("Ошибка подключения к базе данных: %v", err)
-	}
-	defer db.Close()
-
-	// Настройка драйвера миграций для SQLite
-	driver, err := sqlite3.WithInstance(db, &sqlite3.Config{})
-	if err != nil {
-		log.Fatalf("Ошибка создания драйвера миграций: %v", err)
-	}
-
-	// Путь к миграциям
-	m, err := migrate.NewWithDatabaseInstance(
-		Env.MIGRATIONS_PATH,
-		"sqlite3",
-		driver,
-	)
-	if err != nil {
-		log.Fatalf("Ошибка создания миграции: %v", err)
-	}
-
-	// Применение миграций "вперед"
-	if err := m.Down(); err != nil && err != migrate.ErrNoChange {
-		log.Fatalf("Ошибка сброса бд: %v", err)
 	}
 
 	// Применение миграций "вперед"
@@ -107,9 +56,45 @@ func GetSQLiteDB() *gorm.DB {
 		gormConfig.Logger = gormLogger
 	}
 
-	db, err := gorm.Open(sqlite.Open(Env.DB_PATH), &gormConfig)
+	db, err := gorm.Open(postgres.Open(Env.DB_DSN), &gormConfig)
 	if err != nil {
 		panic("failed to connect database")
 	}
 	return db
 }
+
+//func resetDb() {
+//	fmt.Println("Reset database...")
+//	//Подключение к базе данных
+//	db, err := postgres.Open(Env.DB_DSN)
+//	if err != nil {
+//		log.Fatalf("Ошибка подключения к базе данных: %v", err)
+//	}
+//	defer db.Close()
+//
+//	// Настройка драйвера миграций для SQLite
+//	driver, err := sqlite3.WithInstance(db, &sqlite3.Config{})
+//	if err != nil {
+//		log.Fatalf("Ошибка создания драйвера миграций: %v", err)
+//	}
+//
+//	// Путь к миграциям
+//	m, err := migrate.NewWithDatabaseInstance(
+//		Env.MIGRATIONS_PATH,
+//		"sqlite3",
+//		driver,
+//	)
+//	if err != nil {
+//		log.Fatalf("Ошибка создания миграции: %v", err)
+//	}
+//
+//	// Применение миграций "вперед"
+//	if err := m.Down(); err != nil && err != migrate.ErrNoChange {
+//		log.Fatalf("Ошибка сброса бд: %v", err)
+//	}
+//
+//	// Применение миграций "вперед"
+//	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+//		log.Fatalf("Ошибка применения миграций: %v", err)
+//	}
+//}

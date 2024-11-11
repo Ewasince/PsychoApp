@@ -23,7 +23,8 @@ type environmentVariables struct {
 
 	IMAGES_PATH     string
 	MIGRATIONS_PATH string
-	DB_PATH         string
+	DB_URI          string
+	DB_DSN          string
 	FRONTEND_PATH   string
 
 	BOT_TOKEN      string
@@ -59,8 +60,41 @@ func init() {
 	// MIGRATIONS_PATH
 	Env.MIGRATIONS_PATH = "file://" + getEnv("MIGRATIONS_PATH", "")
 
-	// DB_PATH
-	Env.DB_PATH = getEnv("DATABASE_PATH", "")
+	// helpers for db
+
+	postgresUser := getEnv("POSTGRES_USER", "")
+	postgresPassword := getEnv("POSTGRES_PASSWORD", "")
+	postgresDb := getEnv("POSTGRES_DB", "")
+	postgresPort := getEnv("POSTGRES_PORT", "")
+	postgresHost := getEnv("POSTGRES_HOST", "")
+
+	// DB_URI
+	Env.DB_URI = fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		postgresUser,
+		postgresPassword,
+		postgresHost,
+		postgresPort,
+		postgresDb,
+	)
+
+	Env.DB_URI = getEnv("POSTGRES_DB", "")
+
+	// DB_DSN
+	Env.DB_DSN = fmt.Sprintf(
+		"host=%s "+
+			"user=%s "+
+			"password=%s "+
+			"dbname=%s "+
+			"port=%s "+
+			"sslmode=disable "+
+			"TimeZone=Europe/Moscow",
+		postgresHost,
+		postgresUser,
+		postgresPassword,
+		postgresDb,
+		postgresPort,
+	)
 
 	// FRONTEND_PATH
 	Env.FRONTEND_PATH = strings.Trim(getEnv("FRONTEND_PATH", ""), "/")
