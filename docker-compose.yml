@@ -1,3 +1,9 @@
+x-args: &args
+  APP_FOLDER: /app
+  GO_BACKEND_EXE: psychoapp
+  GO_BOT_EXE: psychoapp_bot
+  FRONT_BUILD_FOLDER: /app/front
+  FRONT_LOCAL_FOLDER: psycho-app-admin
 
 services:
   psychoapp_dev:
@@ -5,6 +11,8 @@ services:
       context: .
       dockerfile: DockerfileBackend
       target: go_backend-runner
+      args:
+        <<: *args
     image: psychoapp-backend-dev
     volumes:
       - ./.env:/app/.env:ro
@@ -30,6 +38,8 @@ services:
       context: .
       dockerfile: DockerfileBot
       target: go_bot-runner
+      args:
+        <<: *args
     image: psychoapp-bot-dev
     volumes:
       - ./.env:/app/.env:ro
@@ -43,7 +53,7 @@ services:
       context: .
       dockerfile: DockerfileFront
       args:
-        - FRONT_BUILD_FOLDER=/app/front
+        <<: *args
     image: psychoapp-front-builder
     volumes:
       - front-container:/app/front
