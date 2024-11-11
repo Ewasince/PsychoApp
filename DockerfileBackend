@@ -24,10 +24,9 @@ RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build \
 FROM frolvlad/alpine-glibc AS go_backend-runner
 
 ARG GO_BACKEND_EXECUTABLE
+RUN apk add --no-cache tzdata
 ARG APP_FOLDER
 ARG GO_BACKEND_EXE_PATH
-
-RUN apk add --no-cache tzdata
 
 WORKDIR $APP_FOLDER
 COPY --from=go_backend-builder  $GO_BACKEND_EXE_PATH $GO_BACKEND_EXECUTABLE
