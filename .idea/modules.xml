@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/PsychoAppAdmin.iml" filepath="$PROJECT_DIR$/.idea/PsychoAppAdmin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/PsychoApp.iml" filepath="$PROJECT_DIR$/.idea/PsychoApp.iml" />
     </modules>
   </component>
 </project>
