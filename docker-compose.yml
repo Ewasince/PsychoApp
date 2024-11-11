@@ -1,11 +1,11 @@
 
 services:
-  psychoapp_backend:
+  psychoapp_dev:
     build:
       context: .
       dockerfile: DockerfileBackend
       target: go_backend-runner
-    image: psychoapp-backend
+    image: psychoapp-backend-dev
     volumes:
       - ./.env:/app/.env:ro
       - ./database.db:/app/database.db
@@ -13,30 +13,32 @@ services:
     ports:
       - 8181:8181
 
-  psychoapp_backend_front:
-    image: psychoapp-backend-front
+  psychoapp_front_dev:
+    image: psychoapp-backend-front-dev
     extends:
-      service: psychoapp_backend
+      service: psychoapp_dev
     depends_on:
-      psychoapp_front:
+      front_builder:
         condition: service_started
     volumes:
       - front-container:/app/front:ro
     environment:
       - FRONTEND_PATH=front
 
-  psychoapp_bot:
+  psychoapp_bot_dev:
     build:
       context: .
       dockerfile: DockerfileBot
       target: go_bot-runner
-    image: psychoapp-bot
+    image: psychoapp-bot-dev
     volumes:
       - ./.env:/app/.env:ro
       - ./database.db:/app/database.db
       - ./migrations:/app/migrations:ro
 
-  psychoapp_front:
+  # builder images
+
+  front_builder:
     build:
       context: .
       dockerfile: DockerfileFront
