@@ -23,6 +23,8 @@ services:
       - ./migrations:/app/migrations:ro
     ports:
       - 8181:8181
+    environment:
+      POSTGRES_HOST: psychoapp_db
 
   psychoapp_front_dev:
     image: psychoapp-backend-front-dev
