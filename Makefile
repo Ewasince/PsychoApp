@@ -25,12 +25,16 @@ define pin_tag_and_pull
 	@IMAGE_TAG=$(IMAGE_NAME):$(1) && \
 	LATEST_TAG=$(DOCKER_REPO)/$$IMAGE_TAG-latest && \
 	CURRENT_TAG=$(DOCKER_REPO)/$$IMAGE_TAG-$(shell git describe --tags) && \
-	echo $$LATEST_TAG && \
-	echo $$CURRENT_TAG && \
+	if docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "^$$CURRENT_TAG$$" ; \
+	then \
+		echo "Forbidden to re-upload version tags '$$CURRENT_TAG'" >&2; \
+	fi && \
 	docker tag $$IMAGE_TAG $$LATEST_TAG && \
 	docker tag $$IMAGE_TAG $$CURRENT_TAG && \
 	docker push $$LATEST_TAG && \
-	docker push $$CURRENT_TAG
+	docker push $$CURRENT_TAG && \
+	echo "$$LATEST_TAG pushed" && \
+	echo "$$CURRENT_TAG pushed"
 endef
 
 build:
