@@ -19,6 +19,7 @@ COPY environment environment
 COPY storage storage
 COPY backend backend
 RUN --mount=type=cache,mode=0755,target=/root/.cache/go-build \
+    --mount=type=cache,mode=0755,target=/root/go \
     go build -o $GO_BACKEND_EXE_PATH backend/main.go
 
 FROM frolvlad/alpine-glibc AS go_backend-runner
