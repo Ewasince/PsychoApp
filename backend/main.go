@@ -3,6 +3,7 @@ package main
 import (
 	"PsychoApp/backend/handlers"
 	. "PsychoApp/environment"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -14,6 +15,11 @@ import (
 
 func main() {
 	engine := gin.Default()
+
+	fmt.Println("Test! Test! Test! Test! Test! Test! Test! ")
+	fmt.Println("Test! Test! Test! Test! Test! Test! Test! ")
+	fmt.Println("Test! Test! Test! Test! Test! Test! Test! ")
+	fmt.Println("Test! Test! Test! Test! Test! Test! Test! ")
 
 	// add cors middleware
 	engine.Use(cors.New(cors.Config{
