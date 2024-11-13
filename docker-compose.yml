@@ -54,7 +54,7 @@ services:
   # third-party images
 
   psychoapp_db:
-    image: postgres:17-alpine
+    image: postgres:16-alpine
     env_file:
       - .env
     environment:
