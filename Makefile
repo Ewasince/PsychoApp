@@ -40,6 +40,7 @@ build:
 push:
 	$(call pin_tag_and_pull,$(BACKEND_TAG))
 	$(call pin_tag_and_pull,$(BOT_TAG))
+	@git push
 
 install:
 	@ssh -t $(REMOTE_HOST) '\
