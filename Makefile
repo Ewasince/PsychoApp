@@ -42,7 +42,7 @@ push:
 	$(call pin_tag_and_pull,$(BOT_TAG))
 
 install:
-	ssh -t $(REMOTE_HOST) '\
+	@ssh -t $(REMOTE_HOST) '\
 		cd $(REMOTE_INSTALL_LOCATION) && \
 		touch .env && \
 		docker compose down $(CONTAINER_NAME_BACKEND) $(CONTAINER_NAME_BOT) && \
