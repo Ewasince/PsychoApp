@@ -11,7 +11,6 @@ import (
 	//"PsychoApp/backend"
 	. "PsychoApp/storage/models"
 	"PsychoApp/storage/repo"
-	"fmt"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 )
@@ -42,7 +41,6 @@ func IdentityHandler() func(c *gin.Context) interface{} {
 	return func(c *gin.Context) interface{} {
 		claims := jwt.ExtractClaims(c)
 
-		fmt.Printf("identityHandler user_id0=%v\n", uint(claims[IdentityKey].(float64)))
 		userId := uint(claims[IdentityKey].(float64))
 
 		user, err := repo.GetUser(userId)
