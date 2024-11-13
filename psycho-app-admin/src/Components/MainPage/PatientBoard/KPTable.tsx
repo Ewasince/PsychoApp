@@ -38,9 +38,9 @@ function getWeekDates(weekIndex: number): [Dayjs, Dayjs] {
 const headerStyle = { backgroundColor: "var(--primary-color)" }
 
 export const KptTable = ({
-                           weekIndex,
-                           storiesByWeek,
-                         }: {
+  weekIndex,
+  storiesByWeek,
+}: {
   weekIndex: number;
   storiesByWeek: Map<number, IStoryDto[]>;
 }) => {
@@ -48,87 +48,87 @@ export const KptTable = ({
 
   function getStoryRow(story: IStoryDto) {
     return (
-        <>
-          <TableRow
-              key={story.id}
-              className="transition duration-300 hover:bg-thirdy-color"
-          >
-            <TableCell>qwe{story.date.format("DD.MM.YYYY")}</TableCell>
-            <TableCell>{story.situation}</TableCell>
-            <TableCell>{story.mind}</TableCell>
-            <TableCell>{story.emotion}</TableCell>
-            <TableCell>{story.emotionPower}</TableCell>
-            <TableCell>{getSeverityIcon(story.mark)}</TableCell>
-          </TableRow>
-        </>
+      <>
+        <TableRow
+          key={story.id}
+          className="transition duration-300 hover:bg-thirdy-color"
+        >
+          <TableCell>{story.date.format("DD.MM.YYYY")}</TableCell>
+          <TableCell>{story.situation}</TableCell>
+          <TableCell>{story.mind}</TableCell>
+          <TableCell>{story.emotion}</TableCell>
+          <TableCell>{story.emotionPower}</TableCell>
+          <TableCell>{getSeverityIcon(story.mark)}</TableCell>
+        </TableRow>
+      </>
     );
   }
 
   const emptyTable = (
-      <>
-        <TableRow
-            key={0}
-            className="transition duration-300 hover:bg-thirdy-color"
-        >
-          <TableCell colSpan={6}>
-            <div className="text-center font-medium">
-              На выбранной неделе записей нееет
-            </div>
-          </TableCell>
-        </TableRow>
-      </>
+    <>
+      <TableRow
+        key={0}
+        className="transition duration-300 hover:bg-thirdy-color"
+      >
+        <TableCell colSpan={6}>
+          <div className="text-center font-medium">
+            На выбранной неделе записей нет
+          </div>
+        </TableCell>
+      </TableRow>
+    </>
   );
 
   return (
-      <TableContainer
-          component={Paper}
-          className={`h-fit max-h-full rounded-lg shadow-md`}
-      >
-        <Table sx={{ tableLayout: "fixed" }} stickyHeader>
-          <TableHead>
-            <TableRow>
-              {/* TODO: разобраться почему stickyHeader перезаписывает backgroundColor */}
-              <TableCell
-                  width="10%"
-                  style={headerStyle}
-              >
-                Время
-              </TableCell>
-              <TableCell
-                  width="30%"
-                  style={headerStyle}
-              >
-                Ситуация
-              </TableCell>
-              <TableCell
-                  width="30%"
-                  style={headerStyle}
-              >
-                Автоматическая мысль
-              </TableCell>
-              <TableCell
-                  width="15%"
-                  style={headerStyle}
-              >
-                Эмоция
-              </TableCell>
-              <TableCell
-                  width="7%"
-                  style={headerStyle}
-              >
-                Сила эмоции
-              </TableCell>
-              <TableCell
-                  width="5%"
-                  style={headerStyle}
-              ></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {currentStories ? currentStories.map(getStoryRow) : emptyTable}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <TableContainer
+      component={Paper}
+      className={`h-fit max-h-full rounded-lg shadow-md`}
+    >
+      <Table sx={{ tableLayout: "fixed" }} stickyHeader>
+        <TableHead>
+          <TableRow>
+            {/* TODO: разобраться почему stickyHeader перезаписывает backgroundColor */}
+            <TableCell
+              width="10%"
+              style={headerStyle}
+            >
+              Время
+            </TableCell>
+            <TableCell
+              width="30%"
+              style={headerStyle}
+            >
+              Ситуация
+            </TableCell>
+            <TableCell
+              width="30%"
+              style={headerStyle}
+            >
+              Автоматическая мысль
+            </TableCell>
+            <TableCell
+              width="15%"
+              style={headerStyle}
+            >
+              Эмоция
+            </TableCell>
+            <TableCell
+              width="7%"
+              style={headerStyle}
+            >
+              Сила эмоции
+            </TableCell>
+            <TableCell
+              width="5%"
+              style={headerStyle}
+            ></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentStories ? currentStories.map(getStoryRow) : emptyTable}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
@@ -139,23 +139,23 @@ function getSeverityIcon(severity: Marks) {
     }
     case 1: {
       return (
-          <Tooltip title="Не требует пристального внимания" arrow>
-            <ErrorOutlineIcon sx={{ color: "#ffbc29" }} />
-          </Tooltip>
+        <Tooltip title="Не требует пристального внимания" arrow>
+          <ErrorOutlineIcon sx={{ color: "#ffbc29" }} />
+        </Tooltip>
       );
     }
     case 2: {
       return (
-          <Tooltip title="Возможно стоит обратить внимание" arrow>
-            <ErrorIcon sx={{ color: "#ffbc29" }} />
-          </Tooltip>
+        <Tooltip title="Возможно стоит обратить внимание" arrow>
+          <ErrorIcon sx={{ color: "#ffbc29" }} />
+        </Tooltip>
       );
     }
     case 3: {
       return (
-          <Tooltip title="Стоит обратить внимание" arrow>
-            <ErrorIcon sx={{ color: "#ff5722" }} />
-          </Tooltip>
+        <Tooltip title="Стоит обратить внимание" arrow>
+          <ErrorIcon sx={{ color: "#ff5722" }} />
+        </Tooltip>
       );
     }
   }

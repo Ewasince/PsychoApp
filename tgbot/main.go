@@ -4,7 +4,6 @@ import (
 	. "PsychoApp/environment"
 	"PsychoApp/tgbot/scheduler"
 	"PsychoApp/tgbot/stateBot"
-	"fmt"
 	"github.com/Ewasince/go-telegram-state-bot/api_utils"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
@@ -39,11 +38,6 @@ func main() {
 	go scheduler.Start(senderHandler)
 
 	processMessage := stateBot.GetProcessFunc(senderHandler)
-
-	fmt.Println("Test! Test! Test! Test! Test! Test! Test! ")
-	fmt.Println("Test! Test! Test! Test! Test! Test! Test! ")
-	fmt.Println("Test! Test! Test! Test! Test! Test! Test! ")
-	fmt.Println("Test! Test! Test! Test! Test! Test! Test! ")
 
 	for update := range updates {
 		if update.Message == nil {
