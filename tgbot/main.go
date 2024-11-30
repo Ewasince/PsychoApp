@@ -2,11 +2,11 @@ package main
 
 import (
 	. "PsychoApp/environment"
+	"PsychoApp/logger"
 	"PsychoApp/tgbot/scheduler"
 	"PsychoApp/tgbot/stateBot"
 	"github.com/Ewasince/go-telegram-state-bot/api_utils"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"log"
 	"sync"
 	"time"
 )
@@ -47,7 +47,7 @@ func main() {
 		messageMessage := update.Message
 		messageSender := messageMessage.From
 
-		log.Printf(
+		logger.Log.Printf(
 			"[%s, %d] %s",
 			messageSender.UserName,
 			messageSender.ID,

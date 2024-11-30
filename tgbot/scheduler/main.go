@@ -1,13 +1,13 @@
 package scheduler
 
 import (
+	"PsychoApp/logger"
 	. "PsychoApp/storage/models"
 	"PsychoApp/storage/repo"
 	msg "PsychoApp/tgbot/messages"
 	. "github.com/Ewasince/go-telegram-state-bot/api_utils"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/madflojo/tasks"
-	"log"
 	"time"
 )
 
@@ -21,7 +21,7 @@ func Start(apiHandler *BaseSenderHandler) {
 	scheduler := tasks.New()
 	defer scheduler.Stop()
 
-	log.Printf("Local zone = %s\n", time.Local)
+	logger.Log.Printf("Local zone = %s\n", time.Local)
 
 	startAfter := time.Now().Add(time.Hour).Truncate(time.Hour)
 
@@ -32,27 +32,27 @@ func Start(apiHandler *BaseSenderHandler) {
 		TaskFunc:   HandleScheduledNotifications,
 	})
 	if err != nil {
-		log.Println("Cant start scheduler ", err)
+		logger.Log.Println("Cant start scheduler ", err)
 		panic(err)
 	}
-	log.Printf("Scheduler will start after %s\n", startAfter)
+	logger.Log.Printf("Scheduler will start after %s\n", startAfter)
 	select {} // Блокирует выполнение, позволяя задаче продолжать работу
 }
 
 func HandleScheduledNotifications() error {
 	now := time.Now().Truncate(time.Millisecond)
-	log.Printf("Scheduler started at %s\n", now)
+	logger.Log.Printf("Scheduler started at %s\n", now)
 
 	patients, err := repo.GetScheduledPatients()
 	var patientsUpdate []*Patient
 
 	if err != nil {
-		log.Fatal("Cant get scheduled users: " + err.Error())
+		logger.Log.Fatal("Cant get scheduled users: " + err.Error())
 		return err
 	}
 	for _, patient := range patients {
 		if now.Before(*patient.NextSchedule) {
-			log.Printf("skip with time %s\n", *patient.NextSchedule)
+			logger.Log.Printf("skip with time %s\n", *patient.NextSchedule)
 			continue
 		}
 		err := sendNotification(patient)
@@ -65,13 +65,13 @@ func HandleScheduledNotifications() error {
 	}
 
 	if len(patientsUpdate) == 0 {
-		log.Println("No patients were handled")
+		logger.Log.Println("No patients were handled")
 		return nil
 	}
 
 	err = repo.UpdateSchedules(patientsUpdate)
 	if err != nil {
-		log.Fatal("Cant update scheduled users: " + err.Error())
+		logger.Log.Fatal("Cant update scheduled users: " + err.Error())
 		return nil
 	}
 	return nil
