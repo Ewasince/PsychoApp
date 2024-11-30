@@ -29,6 +29,8 @@ type environmentVariables struct {
 
 	BOT_TOKEN      string
 	DEV_USER_TG_ID int64
+
+	LOG_PATH string
 }
 
 var Env = environmentVariables{}
@@ -115,6 +117,9 @@ func init() {
 		panic(err)
 	}
 	Env.DEV_USER_TG_ID = int64(DEV_USER_TG_ID)
+
+	// LOG_PATH
+	Env.LOG_PATH = getEnv("LOG_PATH", "logs/logs.log")
 
 	printEnvVariables()
 }
