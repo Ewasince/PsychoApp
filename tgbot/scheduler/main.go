@@ -41,7 +41,7 @@ func Start(apiHandler *BaseSenderHandler) {
 
 func HandleScheduledNotifications() error {
 	now := time.Now().Truncate(time.Millisecond)
-	logger.Log.Printf("Scheduler started at %s\n", now)
+	//logger.Log.Printf("Scheduler started at %s\n", now)
 
 	patients, err := repo.GetScheduledPatients()
 	var patientsUpdate []*Patient
@@ -52,7 +52,7 @@ func HandleScheduledNotifications() error {
 	}
 	for _, patient := range patients {
 		if now.Before(*patient.NextSchedule) {
-			logger.Log.Printf("skip with time %s\n", *patient.NextSchedule)
+			//logger.Log.Printf("skip with time %s\n", *patient.NextSchedule)
 			continue
 		}
 		err := sendNotification(patient)
@@ -65,7 +65,7 @@ func HandleScheduledNotifications() error {
 	}
 
 	if len(patientsUpdate) == 0 {
-		logger.Log.Println("No patients were handled")
+		//logger.Log.Println("No patients were handled")
 		return nil
 	}
 
