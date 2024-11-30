@@ -3,7 +3,7 @@ package main
 import (
 	"PsychoApp/backend/handlers"
 	. "PsychoApp/environment"
-	"log"
+	"PsychoApp/logger"
 	"net/http"
 	"time"
 
@@ -31,7 +31,7 @@ func main() {
 	// add jwt middleware
 	authMiddleware, err := jwt.New(initParams())
 	if err != nil {
-		log.Fatal("JWT Error:" + err.Error())
+		logger.Log.Fatal("JWT Error:" + err.Error())
 	}
 	engine.Use(handlerMiddleWare(authMiddleware))
 
@@ -41,7 +41,7 @@ func main() {
 
 	// start http server
 	if err = http.ListenAndServe(":"+Env.PORT, engine); err != nil {
-		log.Fatal(err)
+		logger.Log.Fatal(err)
 	}
 }
 
@@ -49,7 +49,7 @@ func handlerMiddleWare(authMiddleware *jwt.GinJWTMiddleware) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		errInit := authMiddleware.MiddlewareInit()
 		if errInit != nil {
-			log.Fatal("authMiddleware.MiddlewareInit() Error:" + errInit.Error())
+			logger.Log.Fatal("authMiddleware.MiddlewareInit() Error:" + errInit.Error())
 		}
 	}
 }

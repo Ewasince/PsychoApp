@@ -2,10 +2,10 @@ package handlers
 
 import (
 	e "PsychoApp/backend/errors"
+	"PsychoApp/logger"
 	. "PsychoApp/storage/models"
 	"PsychoApp/storage/repo"
 	"github.com/gin-gonic/gin"
-	"log"
 )
 
 func GetMeHandler(c *gin.Context) {
@@ -33,14 +33,15 @@ func SingUpUser(c *gin.Context) {
 	var singUpForm SingUpForm
 	err := c.BindJSON(&singUpForm)
 	if err != nil {
-		log.Printf("error singup user: %s", err)
+		logger.Log.Printf("error singup user: %s", err)
 		e.JSONError(c, e.UserNotRegistered)
 		return
 	}
 
 	// check invite
 	if !repo.CheckEmail(singUpForm.Email) {
-		log.Printf("user try register without invite: %s", singUpForm)
+		singUpForm.Password = "" // for security
+		logger.Log.Printf("user try register without invite: %s", singUpForm)
 		e.JSONError(c, e.UserNotRegistered)
 		return
 	}
@@ -53,11 +54,11 @@ func SingUpUser(c *gin.Context) {
 		singUpForm.Password,
 	)
 	if err == nil {
-		log.Printf("user registered: %s", singUpForm.Username)
+		logger.Log.Printf("user registered: %s", singUpForm.Username)
 		repo.FireEmail(singUpForm.Email)
 		return
 	}
-	log.Printf("error singup user: %s", err)
+	logger.Log.Printf("error singup user: %s", err)
 	if err.Error() == "user already exists" {
 		e.JSONError(c, e.UserAlreadyExists)
 		return
