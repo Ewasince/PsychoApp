@@ -1,0 +1,3 @@
+ALTER TABLE patients
+    ALTER COLUMN tg_id TYPE INTEGER,
+    ALTER COLUMN tg_chat_id TYPE INTEGER;
