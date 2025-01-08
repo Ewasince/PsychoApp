@@ -11,34 +11,25 @@ import (
 	. "github.com/Ewasince/go-telegram-state-bot/keyboard"
 )
 
-var ButtonStart = BotButton{
-	ButtonTitle:   "Новая запись",
-	ButtonHandler: CommandStartHandler,
-}
-var ButtonSchedule = BotButton{
-	ButtonTitle:   "Напоминание",
-	ButtonHandler: CommandScheduleHandler,
-}
-
-//	var ButtonNoSchedule = BotButton{
-//		ButtonTitle:   "Убрать напоминание",
-//		ButtonHandler: CommandNoScheduleHandler,
-//	}
-var ButtonSetMood = BotButton{
-	ButtonTitle:   "Указать настроение",
-	ButtonHandler: CommandSetMoodHandler,
-}
-
 var MainKeyboard = BotKeyboard{
 	Keyboard: []ButtonsRow{
 		{
-			ButtonStart,
+			BotButton{
+				ButtonTitle:   "Новая запись",
+				ButtonHandler: CommandStartHandler,
+			},
 		},
 		{
-			ButtonSetMood,
+			BotButton{
+				ButtonTitle:   "Указать настроение",
+				ButtonHandler: CommandSetMoodHandler,
+			},
 		},
 		{
-			ButtonSchedule,
+			BotButton{
+				ButtonTitle:   "Напоминание",
+				ButtonHandler: CommandScheduleHandler,
+			},
 		},
 	},
 }
