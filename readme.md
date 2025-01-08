@@ -29,5 +29,5 @@ tar -xvf psychoapp.tar.gz
 ```
 
 # TODO
-- [ ] registration
+- [x] registration
 - [ ] ui for patients
