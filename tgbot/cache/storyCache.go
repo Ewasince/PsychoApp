@@ -17,6 +17,11 @@ func GetStory(patientId int64) *Story {
 	return story
 }
 
+func SetStory(patientId int64, story *Story) *Story {
+	storiesCache[patientId] = story
+	return storiesCache[patientId]
+}
+
 func ResetStory(patientId int64) *Story {
 	storiesCache[patientId] = &Story{
 		BaseModel: BaseModel{

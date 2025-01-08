@@ -34,6 +34,18 @@ func GetStories(patientId uint, dateStart, dateFinish time.Time) ([]*Story, erro
 	return stories, err
 }
 
+func GetStoriesByCount(patientId uint, count int) ([]*Story, error) {
+	var stories []*Story
+	err := DB.
+		Where("patient_id = ?", patientId).
+		Order("date desc").
+		Find(&stories).
+		Limit(count).
+		Error
+
+	return stories, err
+}
+
 func GetStoryMinDate(patientId uint) (time.Time, error) {
 	var story Story
 

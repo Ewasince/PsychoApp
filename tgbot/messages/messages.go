@@ -31,3 +31,7 @@ const SetMood = "Укажи своё настроение за сегодня (�
 const AlreadySetMood = ". За сегодня ты указал(-а) настрение %d"
 const SetMoodWrong = "Выбери опцию из спика"
 const SetMoodSuccess = "Записал настроение"
+
+const ShowStoriesPresentStories = "Вот твои последние несколько записей"
+const ShowStoriesPresentStoriesEdit = "Для редактирования записи пришли мне её номер"
+const ShowStoriesNoStories = "У тебя пока нет записей"

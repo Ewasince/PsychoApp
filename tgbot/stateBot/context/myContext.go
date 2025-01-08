@@ -55,6 +55,9 @@ func (c *MyBotContext) GetStory() *models.Story {
 	}
 	return story
 }
+func (c *MyBotContext) SetStory(story *models.Story) *models.Story {
+	return cache.SetStory(c.PatientTgId, story)
+}
 func (c *MyBotContext) NewStory() *models.Story {
 	newStory := cache.ResetStory(c.PatientTgId)
 	newStory.PatientId = c.Patient.ID

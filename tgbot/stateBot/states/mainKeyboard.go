@@ -2,6 +2,7 @@ package states
 
 import (
 	"PsychoApp/storage/repo"
+	"PsychoApp/tgbot/helpers"
 	msg "PsychoApp/tgbot/messages"
 	"PsychoApp/tgbot/stateBot/context"
 
@@ -21,6 +22,12 @@ var MainKeyboard = BotKeyboard{
 		},
 		{
 			BotButton{
+				ButtonTitle:   "Мои записи",
+				ButtonHandler: CommandMyStoriesHandler,
+			},
+		},
+		{
+			BotButton{
 				ButtonTitle:   "Указать настроение",
 				ButtonHandler: CommandSetMoodHandler,
 			},
@@ -34,73 +41,62 @@ var MainKeyboard = BotKeyboard{
 	},
 }
 
-func CommandStartHandler(c BotContext) HandlerResponse {
-	ctx := *c.(*context.MyBotContext)
-
-	if !ctx.IsPatientRegistered() {
+var CommandStartHandler = helpers.RegisterWrapper(
+	func(_ BotContext) HandlerResponse {
 		return HandlerResponse{
-			NextState:      &RegisterState,
+			NextState:      DefaultState,
 			TransitionType: GoStateForce,
 		}
-	}
+	},
+)
 
-	return HandlerResponse{
-		NextState:      DefaultState,
-		TransitionType: GoStateForce,
-	}
-}
+var CommandMyStoriesHandler = helpers.RegisterWrapper(
+	func(_ BotContext) HandlerResponse {
 
-func CommandScheduleHandler(c BotContext) HandlerResponse {
-	ctx := *c.(*context.MyBotContext)
-	if !ctx.IsPatientRegistered() {
 		return HandlerResponse{
-			NextState:      &RegisterState,
+			NextState:      DefaultState,
 			TransitionType: GoStateForce,
 		}
-	}
-	return HandlerResponse{
-		NextState:      &FillScheduleState,
-		TransitionType: GoStateForce,
-	}
-}
+	},
+)
 
-func CommandSetMoodHandler(c BotContext) HandlerResponse {
-	ctx := *c.(*context.MyBotContext)
-	if !ctx.IsPatientRegistered() {
+var CommandScheduleHandler = helpers.RegisterWrapper(
+	func(_ BotContext) HandlerResponse {
 		return HandlerResponse{
-			NextState:      &RegisterState,
+			NextState:      &FillScheduleState,
 			TransitionType: GoStateForce,
 		}
-	}
-	return HandlerResponse{
-		NextState:      &SetMoodState,
-		TransitionType: GoStateForce,
-	}
-}
+	},
+)
 
-func CommandNoScheduleHandler(c BotContext) HandlerResponse {
-	ctx := *c.(*context.MyBotContext)
-	if !ctx.IsPatientRegistered() {
+var CommandSetMoodHandler = helpers.RegisterWrapper(
+	func(_ BotContext) HandlerResponse {
 		return HandlerResponse{
-			NextState:      &RegisterState,
+			NextState:      &SetMoodState,
 			TransitionType: GoStateForce,
 		}
-	}
+	},
+)
 
-	ctx.Patient.NextSchedule = nil
-	err := repo.UpdateSchedule(ctx.Patient)
-	if err != nil {
-		panic(err)
-	}
+var CommandNoScheduleHandler = helpers.RegisterWrapper(
+	func(c BotContext) HandlerResponse {
+		ctx := *c.(*context.MyBotContext)
 
-	if ctx.Patient.NextSchedule == nil {
-		CreateAndSendMessage(msg.ResetScheduleSuccess, ctx)
-	} else {
-		panic("cant reset schedule")
-	}
+		ctx.Patient.NextSchedule = nil
+		err := repo.UpdateSchedule(ctx.Patient)
+		if err != nil {
+			panic(err)
+		}
 
-	return HandlerResponse{
-		NextState:      DefaultState,
-		TransitionType: GoStateForce,
-	}
-}
+		if ctx.Patient.NextSchedule == nil {
+			CreateAndSendMessage(msg.ResetScheduleSuccess, ctx)
+		} else {
+			panic("cant reset schedule")
+		}
+
+		return HandlerResponse{
+			NextState:      DefaultState,
+			TransitionType: GoStateForce,
+		}
+	},
+)
