@@ -1,17 +1,24 @@
-import { Patient } from '../types';
+import { Patient, CreatePatientRequest } from '../types';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Search, Plus, Calendar } from 'lucide-react';
 import { useState } from 'react';
+import { AddPatientForm } from './AddPatientForm';
+import { MiniLoader } from './MiniLoader';
+import { useLoading } from '../hooks/useLoading';
 
 interface PatientsPageProps {
   patients: Patient[];
   onSelectPatient: (patientId: string) => void;
+  onAddPatient: (patient: CreatePatientRequest) => void;
+  isLoading?: boolean;
 }
 
-export function PatientsPage({ patients, onSelectPatient }: PatientsPageProps) {
+export function PatientsPage({ patients, onSelectPatient, onAddPatient, isLoading = false }: PatientsPageProps) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [isAddFormOpen, setIsAddFormOpen] = useState(false);
+  const { isLoading: isAddingPatient, withLoading } = useLoading();
 
   const filteredPatients = patients.filter(patient =>
     `${patient.name} ${patient.lastName || ''}`.toLowerCase().includes(searchTerm.toLowerCase())
@@ -21,12 +28,23 @@ export function PatientsPage({ patients, onSelectPatient }: PatientsPageProps) {
     return new Date(dateString).toLocaleDateString('ru-RU');
   };
 
+  const handleAddPatient = async (patientData: CreatePatientRequest) => {
+    await withLoading(
+      Promise.resolve(onAddPatient(patientData)),
+      'Добавляем пациента...'
+    );
+    setIsAddFormOpen(false);
+  };
+
   return (
     <div className="p-8">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl text-gray-800">Мои пациенты</h1>
-          <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+          <Button 
+            className="bg-purple-600 hover:bg-purple-700 text-white"
+            onClick={() => setIsAddFormOpen(true)}
+          >
             <Plus className="mr-2 h-4 w-4" />
             Добавить пациента
           </Button>
@@ -44,23 +62,53 @@ export function PatientsPage({ patients, onSelectPatient }: PatientsPageProps) {
         </div>
 
         {/* Список пациентов */}
-        <div className="space-y-4">
+        <div className="space-y-4 relative">
+          {isLoading && (
+            <MiniLoader 
+              message="Загружаем пациентов..." 
+              variant="overlay"
+            />
+          )}
+          
           {filteredPatients.map((patient) => (
             <Card
               key={patient.id}
-              className="bg-white/80 backdrop-blur-sm border-gray-200 hover:shadow-md transition-all duration-200 cursor-pointer hover:bg-white/90"
+              className={`backdrop-blur-sm border-gray-200 hover:shadow-md transition-all duration-200 cursor-pointer ${
+                patient.isActive !== false 
+                  ? 'bg-white/80 hover:bg-white/90' 
+                  : 'bg-gray-50/80 hover:bg-gray-50/90 opacity-75'
+              }`}
               onClick={() => onSelectPatient(patient.id)}
             >
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg text-gray-800 mb-1">
+                    <h3 className={`text-lg mb-1 ${
+                      patient.isActive !== false 
+                        ? 'text-gray-800' 
+                        : 'text-gray-500'
+                    }`}>
                       {patient.name} {patient.lastName}
                     </h3>
                     {patient.email && (
-                      <p className="text-sm text-gray-600 mb-2">{patient.email}</p>
+                      <p className={`text-sm mb-1 ${
+                        patient.isActive !== false 
+                          ? 'text-gray-600' 
+                          : 'text-gray-400'
+                      }`}>{patient.email}</p>
                     )}
-                    <div className="flex items-center text-sm text-gray-500">
+                    {patient.telegramNick && (
+                      <p className={`text-sm mb-2 ${
+                        patient.isActive !== false 
+                          ? 'text-gray-600' 
+                          : 'text-gray-400'
+                      }`}>{patient.telegramNick}</p>
+                    )}
+                    <div className={`flex items-center text-sm ${
+                      patient.isActive !== false 
+                        ? 'text-gray-500' 
+                        : 'text-gray-400'
+                    }`}>
                       <Calendar className="mr-1 h-4 w-4" />
                       Создан: {formatDate(patient.createdAt)}
                       {patient.lastEntry && (
@@ -71,8 +119,16 @@ export function PatientsPage({ patients, onSelectPatient }: PatientsPageProps) {
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                    <span className="text-sm text-gray-600">Активный</span>
+                    <div 
+                      className={`w-3 h-3 rounded-full ${
+                        patient.isActive !== false 
+                          ? 'bg-green-400' 
+                          : 'bg-orange-400'
+                      }`}
+                    ></div>
+                    <span className="text-sm text-gray-600">
+                      {patient.isActive !== false ? 'Активный' : 'Деактивирован'}
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -86,6 +142,13 @@ export function PatientsPage({ patients, onSelectPatient }: PatientsPageProps) {
             <p className="text-gray-400">Попробуйте изменить параметры поиска</p>
           </div>
         )}
+
+        <AddPatientForm
+          isOpen={isAddFormOpen}
+          onClose={() => setIsAddFormOpen(false)}
+          onSubmit={handleAddPatient}
+          isLoading={isAddingPatient}
+        />
       </div>
     </div>
   );

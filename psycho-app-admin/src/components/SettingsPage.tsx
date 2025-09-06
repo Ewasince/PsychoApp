@@ -6,8 +6,10 @@ import { Label } from './ui/label';
 import { Separator } from './ui/separator';
 import { Avatar, AvatarFallback } from './ui/avatar';
 import { Badge } from './ui/badge';
-import { Mail, User as UserIcon, Shield, Calendar } from 'lucide-react';
-import { useState } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Mail, User as UserIcon, Shield, Calendar, Database, Cloud } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { DataSourceManager } from '../utils/dataSource';
 
 interface SettingsPageProps {
   user: User;
@@ -20,10 +22,32 @@ export function SettingsPage({ user, onUpdateUser }: SettingsPageProps) {
     name: user.name,
     email: user.email
   });
+  const [currentDataSource, setCurrentDataSource] = useState(DataSourceManager.getCurrentSource());
+  const [isApiAvailable, setIsApiAvailable] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    // Проверяем доступность API при загрузке
+    DataSourceManager.isApiAvailable().then(setIsApiAvailable);
+
+    // Слушаем изменения источника данных
+    const handleDataSourceChange = (event: CustomEvent) => {
+      setCurrentDataSource(event.detail);
+    };
+
+    window.addEventListener('dataSourceChanged', handleDataSourceChange as EventListener);
+    return () => {
+      window.removeEventListener('dataSourceChanged', handleDataSourceChange as EventListener);
+    };
+  }, []);
 
   const handleSave = () => {
     onUpdateUser(formData);
     setIsEditing(false);
+  };
+
+  const handleDataSourceChange = (newSource: 'api' | 'localStorage') => {
+    DataSourceManager.setDataSource(newSource);
+    setCurrentDataSource(newSource);
   };
 
   const handleCancel = () => {
@@ -132,6 +156,67 @@ export function SettingsPage({ user, onUpdateUser }: SettingsPageProps) {
                     >
                       Отмена
                     </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Источник данных */}
+            <Card className="bg-white/80 backdrop-blur-sm border-gray-200 mt-6">
+              <CardHeader>
+                <CardTitle className="text-gray-800 flex items-center">
+                  <Database className="mr-2 h-5 w-5" />
+                  Источник данных
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Текущий источник</Label>
+                  <Select value={currentDataSource} onValueChange={handleDataSourceChange}>
+                    <SelectTrigger className="border-gray-200 bg-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="localStorage">
+                        <div className="flex items-center">
+                          <Database className="mr-2 h-4 w-4" />
+                          Локальное хранилище
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="api" disabled={isApiAvailable === false}>
+                        <div className="flex items-center">
+                          <Cloud className="mr-2 h-4 w-4" />
+                          API сервер
+                          {isApiAvailable === false && (
+                            <span className="ml-2 text-xs text-red-500">(недоступен)</span>
+                          )}
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="text-sm text-gray-600 p-3 bg-gray-50 rounded-md">
+                  {currentDataSource === 'localStorage' ? (
+                    <>
+                      <strong>Локальное хранилище:</strong> Данные сохраняются в браузере. 
+                      Подходит для демонстрации и локального использования.
+                    </>
+                  ) : (
+                    <>
+                      <strong>API сервер:</strong> Данные синхронизируются с сервером. 
+                      Обеспечивает надежность и доступность с разных устройств.
+                    </>
+                  )}
+                </div>
+
+                {isApiAvailable !== null && (
+                  <div className={`text-sm p-2 rounded-md ${
+                    isApiAvailable 
+                      ? 'text-green-700 bg-green-50' 
+                      : 'text-orange-700 bg-orange-50'
+                  }`}>
+                    Статус API: {isApiAvailable ? 'Доступен' : 'Недоступен'}
                   </div>
                 )}
               </CardContent>

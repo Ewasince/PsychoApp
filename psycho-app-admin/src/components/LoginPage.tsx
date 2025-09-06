@@ -9,11 +9,12 @@ interface LoginPageProps {
 }
 
 export function LoginPage({ onLogin }: LoginPageProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('therapist@example.com');
+  const [password, setPassword] = useState('demo123');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('LoginPage: отправляем данные для авторизации', { email, password });
     onLogin(email, password);
   };
 
@@ -61,7 +62,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
               <Input
                 id="email"
                 type="email"
-                placeholder="mycoolnick"
+                placeholder="therapist@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="border-gray-200 bg-gray-50/50 focus:bg-white transition-colors"
@@ -80,17 +81,54 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                 required
               />
             </div>
-            <Button 
-              type="submit" 
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5"
-            >
-              Войти
-            </Button>
+            
+            {/* Демо подсказка */}
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+              <p className="text-amber-800 text-sm">
+                <strong>Для входа:</strong> Введите ваши данные или используйте демо-режим
+              </p>
+              <p className="text-amber-700 text-xs mt-1">
+                Демо-режим покажет рабочий пример с тестовыми данными
+              </p>
+            </div>
+            
+            <div className="space-y-3">
+              <Button 
+                type="submit" 
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5"
+              >
+                Войти
+              </Button>
+              
+              <Button 
+                type="button"
+                onClick={() => {
+                  console.log('LoginPage: Демо вход');
+                  onLogin('demo@example.com', 'demo123');
+                }}
+                variant="outline"
+                className="w-full border-purple-200 text-purple-600 hover:bg-purple-50 py-2.5"
+              >
+                Демо вход
+              </Button>
+            </div>
           </form>
-          <div className="mt-6 text-center">
-            <span className="text-gray-700">Нет аккаунта? </span>
-            <button className="text-purple-600 hover:text-purple-700 hover:underline transition-colors">
-              Зарегистрироваться
+          <div className="mt-6 text-center space-y-2">
+            <div>
+              <span className="text-gray-700">Нет аккаунта? </span>
+              <button className="text-purple-600 hover:text-purple-700 hover:underline transition-colors">
+                Зарегистрироваться
+              </button>
+            </div>
+            <button 
+              type="button"
+              onClick={() => {
+                localStorage.clear();
+                window.location.reload();
+              }}
+              className="text-gray-500 hover:text-gray-700 text-sm underline transition-colors"
+            >
+              Сбросить демо-данные
             </button>
           </div>
         </CardContent>
